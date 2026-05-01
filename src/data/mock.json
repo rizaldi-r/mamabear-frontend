@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "message": "Homepage data retrieved successfully",
+  "data": {
+    "categories": [
+      { "id": 1, "name": "Almond Mix", "color": "bg-orange-100" },
+      { "id": 2, "name": "Asi Booster", "color": "bg-pink-100" },
+      { "id": 3, "name": "Kukis Series", "color": "bg-amber-100" },
+      { "id": 4, "name": "Teh Pelancar Asi", "color": "bg-green-100" },
+      { "id": 5, "name": "ZoyaMix", "color": "bg-yellow-100" },
+      { "id": 6, "name": "Gift & Hampers", "color": "bg-rose-100" },
+      { "id": 7, "name": "Mama Support", "color": "bg-blue-100" },
+      {
+        "id": 8,
+        "name": "SALE",
+        "color": "bg-red-100",
+        "text": "text-red-500 font-bold"
+      }
+    ],
+    "products": [
+      {
+        "id": 1,
+        "name": "MamaBear ASI Booster Kapsul (30 Kapsul)",
+        "price": "Rp 65.073",
+        "originalPrice": "Rp 130.146",
+        "discount": "-50%",
+        "sold": "10RB+"
+      },
+      {
+        "id": 2,
+        "name": "MamaBear ASI Booster Teh Pelancar ASI",
+        "price": "Rp 45.000",
+        "originalPrice": "Rp 50.000",
+        "discount": "-10%",
+        "sold": "15RB+"
+      },
+      {
+        "id": 3,
+        "name": "Almond Mix Rasa Coklat 100gr",
+        "price": "Rp 35.000",
+        "originalPrice": "Rp 40.000",
+        "discount": "-12%",
+        "sold": "8RB+"
+      },
+      {
+        "id": 4,
+        "name": "Kukis Almond Oat Rasa Choco Chip",
+        "price": "Rp 55.000",
+        "originalPrice": "Rp 65.000",
+        "discount": "-15%",
+        "sold": "5RB+"
+      }
+    ]
+  }
+}
