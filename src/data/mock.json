@@ -1,7 +1,5 @@
 {
-  "success": true,
-  "message": "Homepage data retrieved successfully",
-  "data": {
+  "homepage": {
     "categories": [
       { "id": 1, "name": "Almond Mix", "color": "bg-orange-100" },
       { "id": 2, "name": "Asi Booster", "color": "bg-pink-100" },
@@ -51,5 +49,17 @@
         "sold": "5RB+"
       }
     ]
-  }
+  },
+  "users": [
+    {
+      "email": "mama@mamabear.co.id",
+      "password": "password123",
+      "profile": {
+        "id": "user_01",
+        "name": "Mama Bear",
+        "email": "mama@mamabear.co.id",
+        "token": "mock_jwt_token_xyz"
+      }
+    }
+  ]
 }

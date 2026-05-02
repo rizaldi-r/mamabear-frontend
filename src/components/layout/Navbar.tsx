@@ -1,9 +1,20 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
+import Link from "next/link";
 
 export function Navbar() {
+  const isLoggedIn = false;
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
@@ -37,13 +48,51 @@ export function Navbar() {
 
         {/* Actions - Using Shadcn Button & Badge */}
         <div className="flex items-center justify-end gap-2 lg:w-1/4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-gray-600 hover:text-primary"
-          >
-            <User className="w-6 h-6" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-primary"
+              >
+                <User className="w-6 h-6" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel>Akun Saya</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {isLoggedIn ? (
+                <>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Profil Saya
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    Pesanan
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                    Keluar
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem>
+                    <Link
+                      href="/login"
+                      className="cursor-pointer font-medium text-primary focus:text-primary w-full"
+                    >
+                      Masuk
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/register" className="cursor-pointer w-full">
+                      Daftar Akun Baru
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="ghost"
             size="icon"
