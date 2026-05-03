@@ -19,6 +19,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-quicksand)", "ui-sans-serif", "system-ui"],
+        heading: ["var(--font-quicksand)", "sans-serif"],
+      },
       colors: {
         border: "oklch(var(--border) / <alpha-value>)",
         input: "oklch(var(--input) / <alpha-value>)",
