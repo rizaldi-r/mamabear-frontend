@@ -20,8 +20,8 @@ export default function ProductFilters({ setSearch, setCategory }: Props) {
         className="border px-3 py-2 rounded-lg w-full md:w-48 focus:outline-none focus:ring-2 focus:ring-black"
       >
         <option value="">All Categories</option>
-        <option value="Dental">Dental</option>
-        <option value="Medical">Medical</option>
+        <option value="ASI Booster ">ASI Booster </option>
+        <option value="ASI Booster Capsule">ASI Booster Capsule</option>
       </select>
     </div>
   );
