@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { User, LogOut, Package, Settings, LogIn, UserPlus } from "lucide-react";
+import { User, LogOut, Package, LogIn, UserPlus } from "lucide-react";
 
 interface UserDropdownProps {
   isLoggedIn: boolean;
@@ -63,14 +63,6 @@ export function UserDropdown({ isLoggedIn }: UserDropdownProps) {
               >
                 <Package className="w-4 h-4" />
                 Pesanan
-              </Link>
-              <Link
-                href="/settings"
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-pink-50 hover:text-primary transition-colors"
-                onClick={closeDropdown}
-              >
-                <Settings className="w-4 h-4" />
-                Pengaturan
               </Link>
               <div className="h-px bg-stone-100 mx-2 my-1" />
               <button
