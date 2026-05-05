@@ -5,8 +5,10 @@ import { RegisterForm } from "@/features/auth/components/RegisterForm";
 export default function RegisterPage() {
   return (
     <AuthLayout
-      title="Daftar Akun Baru"
+      title="Buat Akun Baru"
       subtitle="Bergabunglah dengan jutaan mama lainnya"
+      backToHref="/"
+      backToLabel="Kembali ke Beranda"
     >
       <RegisterForm />
     </AuthLayout>
