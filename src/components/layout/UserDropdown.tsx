@@ -6,9 +6,15 @@ import { User, LogOut, Package, LogIn, UserPlus } from "lucide-react";
 
 interface UserDropdownProps {
   isLoggedIn: boolean;
+  children?: React.ReactNode;
+  className?: string;
 }
 
-export function UserDropdown({ isLoggedIn }: UserDropdownProps) {
+export function UserDropdown({
+  isLoggedIn,
+  children,
+  className,
+}: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -17,14 +23,22 @@ export function UserDropdown({ isLoggedIn }: UserDropdownProps) {
   return (
     <div className="relative">
       {/* THE TRIGGER */}
-      <button
-        type="button"
+      <div
         onClick={toggleDropdown}
-        className="text-[var(--mama-brown)] hover:bg-[color-mix(in_srgb,var(--mama-brown),transparent_90%)] p-2 rounded-md transition-all"
+        className="relative z-[61] cursor-pointer"
         aria-expanded={isOpen}
       >
-        <User className="w-8 h-8" />
-      </button>
+        {children ? (
+          children
+        ) : (
+          <button
+            type="button"
+            className="text-[var(--mama-brown)] hover:bg-[color-mix(in_srgb,var(--mama-brown),transparent_90%)] p-2 rounded-md transition-all"
+          >
+            <User className="w-8 h-8" />
+          </button>
+        )}
+      </div>
 
       {/* THE INVISIBLE OVERLAY */}
       {isOpen && (
@@ -37,7 +51,9 @@ export function UserDropdown({ isLoggedIn }: UserDropdownProps) {
 
       {/* THE DROPDOWN MENU */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-stone-100 py-2 z-[61] animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+        <div
+          className={`absolute z-[61] w-56 bg-white rounded-2xl shadow-xl border border-stone-100 py-2 animate-in fade-in zoom-in-95 duration-200 origin-top-right ${className || "right-0 mt-2"}`}
+        >
           <div className="px-4 py-2 mb-1">
             <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">
               Akun Saya
