@@ -18,7 +18,7 @@ export function AuthLayout({
    <div className="w-full max-w-6xl flex justify-between gap-4 items-start">
 
          {/* Form */}
-         <div className="w-full flex flex-[0.8] max-w-sm pr-16 flex-col justify-center font-sans selection:bg-primary/20">
+         <div className="w-full flex pr-16 flex-col justify-center font-sans selection:bg-primary/20">
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                <h2 className="text-xl font-extrabold text-[var(--mama-brown)] tracking-tight px-4">
@@ -27,7 +27,7 @@ export function AuthLayout({
             </div>
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-               <Card className="border-none shadow-none outline-none sm:rounded-3xl relative overflow-hidden">
+               <Card className="border-none border-0 shadow-none outline-none sm:rounded-3xl relative overflow-hidden">
                   {/* Decorative branding elements */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 -mr-16 -mt-16 rounded-full blur-3xl" />
                   <div className="absolute bottom-0 left-0 w-32 h-32 bg-yellow-500/5 -ml-16 -mb-16 rounded-full blur-3xl" />

@@ -237,10 +237,19 @@ export function RegisterForm() {
             />
             <Label
               htmlFor="terms"
-              className="text-xs text-stone-500 leading-tight font-medium"
+              className="flex flex-wrap items-center text-xs text-stone-500 leading-relaxed font-medium"
             >
-              Saya setuju dengan{" "}
-              <Button
+              Saya setuju dengan{" "} 
+                  <Link href="/" className="text-primary font-bold text-xs">
+              Syarat & Ketentuan
+                  </Link>
+
+              serta{" "}
+
+                  <Link href="/" className="text-primary font-bold text-xs">
+              Kebijakan Privasi
+                  </Link>
+              {/* <Button
                 variant="link"
                 className="p-0 h-auto text-primary font-bold text-xs"
                 type="button"
@@ -254,7 +263,7 @@ export function RegisterForm() {
                 type="button"
               >
                 Kebijakan Privasi
-              </Button>
+              </Button> */}
             </Label>
             
           </div>
@@ -269,20 +278,20 @@ export function RegisterForm() {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary text-white h-12 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all"
+          className="w-full bg-primary text-white h-8 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all"
         >
-          {loading ? "Mendaftar..." : "Buat Akun Sekarang"}
+          {loading ? "Mendaftar..." : "Buat Akun"}
         </Button>
       </form>
 
       <SocialLogins />
 
-      <p className="text-center text-sm text-stone-500 pt-2">
+      <p className="text-center text-xs text-stone-500 pt-2">
         Sudah punya akun?{" "}
         <Button
           variant="link"
           asChild
-          className="font-bold text-primary p-0 h-auto"
+          className="font-bold text-primary p-0 h-auto text-xs"
         >
           <Link href="/login">Masuk di sini</Link>
         </Button>
