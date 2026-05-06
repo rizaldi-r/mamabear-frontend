@@ -25,7 +25,7 @@ function calculateTimeLeft(targetDate: Date): TimeLeft {
   }
 }
 
-export default function CountdownTimer({ targetDate }: { targetDate: Date }) {
+export default function CountdownTimer({ targetDate, onFinish }: { targetDate: Date, onFinish?: () => void }) {
   const [timeLeft, setTimeLeft ] = useState<TimeLeft>(calculateTimeLeft(targetDate))
   const [ isFinished, setIsFinished ] = useState(false)
 
@@ -36,12 +36,13 @@ export default function CountdownTimer({ targetDate }: { targetDate: Date }) {
 
       if (Object.values(remaining).every(value => value === 0)) {
         setIsFinished(true)
+        onFinish?.()
         clearInterval(timer)
       }
     }, 1000)
     
     return () => clearInterval(timer) // clean up the timer on component unmount
-  }, [targetDate])
+  }, [targetDate, onFinish])
 
   if (isFinished) return <p>Waktu habis</p>
 
@@ -65,7 +66,10 @@ export default function CountdownTimer({ targetDate }: { targetDate: Date }) {
 }
 
 export function RoadToSale() {
-  const targetDate = new Date('2026-05-05T00:00:00+07:00')
+  const targetDate = new Date('2026-06-06T00:00:00+07:00')
+  const [isFinished, setIsFinished] = useState(false)
+
+if (isFinished) return null
 
   return (
     <section className="bg-[--mama-cream] py-3 md:py-6 border-y border-pink-100">
@@ -74,7 +78,7 @@ export function RoadToSale() {
           <h2 
             className="font-bold text-[var(--mama-brown)] text-font-3 md:text-font-6 stroke-1" 
           >
-            ROAD TO 5.5 SALE
+            ROAD TO 6.6 SALE
           </h2>
           <Button
             variant="link"

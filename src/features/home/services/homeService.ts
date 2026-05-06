@@ -2,7 +2,7 @@ import { ApiResponse } from "@/types/api";
 import { API_BASE_URL } from "@/lib/config";
 
 export async function getHomeData() {
-  const res = await fetch(`${API_BASE_URL}/home`, {
+  const res = await fetch(`${API_BASE_URL}/products`, {
     cache: "no-store",
   });
 
@@ -14,3 +14,5 @@ export async function getHomeData() {
 
   return response.data;
 }
+
+

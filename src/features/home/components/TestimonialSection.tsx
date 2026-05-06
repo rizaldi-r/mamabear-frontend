@@ -1,5 +1,48 @@
+'use client';
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "@/components/ui/carousel";
+
+const reviews = [
+  {
+    name: "Giselle",
+    rating: 5,
+    comment: "Sudah minum dr sejak melahirkan, skrg sudah 7 bulan. bagus dan berkualitas banget. ASI lancar dan baby masih full ASI sampai skrg. Thank u MamaBear!",
+    product: "MamaBear Asi Booster",
+    productImage: "/images/home/catalog-almondmix.webp",
+    productName: "Mama Bear Almond Mix mamabear as...",
+    productPrice: "Rp 42.000",
+    productOriginalPrice: "Rp 100.000",
+  },
+  {
+    name: "Winter",
+    rating: 5,
+    comment: "Kukisnya enak banget! Anak-anak suka, dan aku juga suka. Selain itu, rasanya juga enak dan gak bikin eneg. Terima kasih MamaBear!",
+    product: "Kukis Series MamaBear",
+    productImage: "/images/home/catalog-cookies.webp",
+    productName: "MamaBear Kukis Series",
+    productPrice: "Rp 42.000",
+    productOriginalPrice: "Rp 100.000",
+  },
+  {
+    name: "Karina",
+    rating: 5,
+    comment: "Ga cuma enak, tapi juga bikin ASI makin lancar. Thank you MamaBear!",
+    product: "Almond Mix MamaBear",
+    productImage: "/images/home/catalog-almondmix.webp",
+    productName: "MamaBear Almond Mix",
+    productPrice: "Rp 42.000",
+    productOriginalPrice: "Rp 100.000",
+  }
+];
 
 export function TestimonialSection() {
   return (
@@ -9,29 +52,78 @@ export function TestimonialSection() {
           What Mama Says About
         </h2>
         <h3 className="text-3xl font-bold text-primary mb-10">
-          MamaBear Asi Booster
+          MamaBear Products
         </h3>
 
-        <Card className="rounded-3xl shadow-lg border border-pink-100 bg-card overflow-hidden">
-          <CardContent className="p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 text-left">
-            <div className="w-full md:w-1/3 aspect-square bg-secondary rounded-2xl flex items-center justify-center shrink-0">
-              <span className="text-pink-200">Product Image</span>
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-1 mb-2">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star key={i} className="w-5 h-5 fill-primary text-primary" />
-                ))}
-              </div>
-              <h4 className="font-bold text-stone-800 text-lg mb-2">Citra</h4>
-              <p className="text-stone-600 italic leading-relaxed">
-                &quot;Alhamdulillah cocok banget di aku. ASI jadi makin lancar and
-                kental. Baby juga tidurnya jadi lebih nyenyak karena kenyang.
-                Rasanya juga enak gak bikin eneg. Thank you MamaBear!&quot;
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <Carousel
+          opts={{ align: "start", loop: true }}
+          className="w-full"
+        >
+          <CarouselContent>
+            {reviews.map((review, index) => (
+              <CarouselItem key={index}>
+                <div className="flex flex-col md:flex-row gap-6 px-2">
+
+                  {/* left col - product card (mock) */}
+                  <div className="w-full md:w-1/2 relative rounded-2xl overflow-hidden min-h-[280px] bg-secondary/50 flex items-center justify-center">
+                    <Image
+                      src={review.productImage}
+                      alt={review.product}
+                      fill
+                      className="object-contain p-4"
+                    />
+                    <div className="absolute bottom-4 left-4 right-4 bg-white rounded-xl p-3 flex items-center gap-3 shadow-sm">
+                      <div className="relative w-10 h-10 shrink-0">
+                        <Image
+                          src={review.productImage}
+                          alt={review.product}
+                          fill
+                          className="object-cover rounded-lg"
+                        />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-font-2 md:text-font-3 text-[var(--mama-brown)] font-bold line-clamp-1">{review.productName}</p>
+                        <p className="text-font-1 md:text-font-2 text-[var(--mama-hot-pink)] font-bold">Mulai Dari</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold text-primary">{review.productPrice}</span>
+                          <span className="text-font-2 text-muted-foreground line-through">{review.productOriginalPrice}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* right col — testimonial */}
+                  <div className="w-full md:w-1/2 bg-white rounded-2xl shadow-sm p-6 flex flex-col justify-center text-left">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="relative w-12 h-12 shrink-0">
+                        <Image
+                          src={review.productImage}
+                          alt={review.name}
+                          fill
+                          className="object-cover rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-stone-800">{review.name}</p>
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: review.rating }).map((_, i) => (
+                            <span key={i} className="text-[var(--mama-hot-pink)]">★</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-stone-600 text-font-1 font-medium leading-relaxed">
+                      {review.comment}
+                    </p>
+                  </div>
+
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </div>
     </section>
   );

@@ -1,26 +1,21 @@
+import Image from "next/image";
+
 export function AwardsSection() {
   return (
     <section className="py-12 bg-white border-b border-pink-100">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-xl font-bold text-stone-800 mb-2">
+        <h2 className="text-font-3 md:text-font-5 font-bold text-[var(--mama-brown)] mb-2">
           Penghargaan Kami
         </h2>
-        <p className="text-sm text-stone-500 mb-8">
+        <p className="text-font-2 md:text-font-3 font-medium text-[var(--color-light-gray)] mb-8">
           Produk kami telah memperoleh banyak penghargaan & terpercaya
         </p>
-        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-12 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
-          <div className="h-16 w-32 bg-stone-100 rounded flex items-center justify-center text-xs font-bold text-stone-400">
-            BPOM
-          </div>
-          <div className="h-16 w-32 bg-stone-100 rounded flex items-center justify-center text-xs font-bold text-stone-400">
-            HALAL
-          </div>
-          <div className="h-16 w-32 bg-stone-100 rounded flex items-center justify-center text-xs font-bold text-stone-400">
-            BRAND CHOICE 1
-          </div>
-          <div className="h-16 w-32 bg-stone-100 rounded flex items-center justify-center text-xs font-bold text-stone-400">
-            BRAND CHOICE 2
-          </div>
+        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-12 opacity-70">
+          <Image src="/images/home/rewards-halal.webp" alt="halal" width={120} height={60} className="w-[60px] md:w-[120px] h-auto" />
+          <Image src="/images/home/rewards-bpom.webp" alt="bpom" width={120} height={60} className="w-[60px] md:w-[120px] h-auto" />
+          <Image src="/images/home/rewards-brandchoice.webp" alt="brandchoice" width={120} height={60} className="w-[60px] md:w-[120px] h-auto" />
+          <Image src="/images/home/rewards-brandchoice2.webp" alt="brandchoice2" width={120} height={60} className="w-[60px] md:w-[120px] h-auto" />
+          <Image src="/images/home/rewards-brandchoice3.webp" alt="brandchoice3" width={120} height={60} className="w-[60px] md:w-[120px] h-auto" />
         </div>
       </div>
     </section>
