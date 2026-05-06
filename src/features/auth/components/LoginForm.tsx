@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import {Checkbox} from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SocialLogins } from "@/features/auth/components/SocialLogins";
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,11 +26,12 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm<LoginPayload>();
+  } = useForm<LoginPayload & { remember: boolean }>();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Error */}
       {serverError && (
         <div className="flex items-center gap-2 p-3 text-sm font-medium text-destructive bg-destructive/10 border border-destructive/20 rounded-xl">
@@ -39,10 +41,9 @@ export function LoginForm() {
       )}
 
       <form className="space-y-4" onSubmit={handleSubmit(handleLogin)}>
-        
         {/* EMAIL */}
         <div className="space-y-2">
-          <Label className="text-xs font-bold text-[var(--mama-brown)] ml-1">
+          <Label className="font-bold text-[var(--mama-brown)] ml-1">
             Email
           </Label>
 
@@ -63,7 +64,7 @@ export function LoginForm() {
               })}
               className={`pl-10 bg-white border-0 border-b border-gray-300 
               [&::placeholder]:text-[0.6rem] [&::placeholder]:text-stone-400 
-              [&::placeholder]:font-semibold ${
+              [&::placeholder]:font-semibold rounded-none ${
                 errors.email
                   ? "border-destructive focus-visible:ring-destructive/20"
                   : "border-stone-200 focus-visible:ring-primary/20"
@@ -72,16 +73,14 @@ export function LoginForm() {
           </div>
 
           {errors.email && (
-            <p className="text-xs text-destructive ml-1">
-              {errors.email.message}
-            </p>
+            <p className="text-destructive ml-1">{errors.email.message}</p>
           )}
         </div>
 
         {/* PASSWORD */}
         <div className="space-y-2">
           <div className="flex justify-between items-center px-1">
-            <Label className="text-xs font-bold text-[var(--mama-brown)]">
+            <Label className="font-bold text-[var(--mama-brown)]">
               Password
             </Label>
 
@@ -111,7 +110,7 @@ export function LoginForm() {
               })}
               className={`pl-10 pr-10 bg-white border-0 border-b border-gray-300 
               [&::placeholder]:text-[0.6rem] [&::placeholder]:text-stone-400 
-              [&::placeholder]:font-semibold ${
+              [&::placeholder]:font-semibold rounded-none ${
                 errors.password
                   ? "border-destructive focus-visible:ring-destructive/20"
                   : "border-stone-200 focus-visible:ring-primary/20"
@@ -134,17 +133,37 @@ export function LoginForm() {
           </div>
 
           {errors.password && (
-            <p className="text-xs text-destructive ml-1">
-              {errors.password.message}
-            </p>
+            <p className="text-destructive ml-1">{errors.password.message}</p>
           )}
+        </div>
+
+        {/* REMEMBER ME */}
+        <div className="flex items-center space-x-2 px-1 py-1">
+          <Controller
+            name="remember"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                id="remember"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+                className="border-stone-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary text-white"
+              />
+            )}
+          />
+          <Label
+            htmlFor="remember"
+            className="text-xs font-semibold text-stone-500 cursor-pointer select-none"
+          >
+            Ingat saya
+          </Label>
         </div>
 
         {/* BUTTON */}
         <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary text-white h-12 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all"
+          className="w-full bg-primary text-white h-12 font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all rounded-full"
         >
           {loading ? "Memproses..." : "Masuk Sekarang"}
           {!loading && <ChevronRight className="w-4 h-4" />}
@@ -153,14 +172,14 @@ export function LoginForm() {
 
       <SocialLogins />
 
-      <p className="text-center text-xs text-stone-500 pt-2">
+      <p className="text-center text-stone-500 pt-2">
         Belum punya akun?{" "}
         <Button
           variant="link"
           asChild
           className="font-bold text-primary p-0 h-auto"
         >
-          <Link href="/register" className="text-xs">Daftar di sini</Link>
+          <Link href="/register">Daftar di sini</Link>
         </Button>
       </p>
     </div>
