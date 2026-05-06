@@ -1,110 +1,85 @@
+"use client";
+
+import { BottomNav } from "@/components/layout/BottomNavbar";
+import { SidebarMenu } from "@/components/layout/SidebarMenu";
+import { UserDropdown } from "@/components/layout/UserDropdown";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Menu, Search, ShoppingCart, User } from "lucide-react";
+import { useUIStore } from "@/store/use-ui-store";
+import { Menu, Search, ShoppingCart } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export function Navbar() {
   const isLoggedIn = false;
+  const { toggleSidebar } = useUIStore();
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border-b shadow-sm">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
-        {/* Mobile Menu & Logo */}
-        <div className="flex items-center gap-4 lg:w-1/4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden text-gray-600 hover:text-primary"
-          >
-            <Menu className="w-6 h-6" />
-          </Button>
-          <div className="flex items-center gap-2 cursor-pointer">
-            <div className="w-10 h-10 bg-stone-800 rounded-full flex items-center justify-center text-white font-bold text-xs">
-              MB
-            </div>
-          </div>
-        </div>
+    <>
+      <nav className="sticky top-0 z-50 w-full bg-[var(--mama-pink)] shadow-sm py-3">
+        <div className="container mx-auto px-4 flex items-center gap-3 md:gap-4 justify-between">
+          {/* Hamburger (Desktop only) & Logo */}
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              className="hidden md:flex text-[var(--mama-brown)] hover:bg-[color-mix(in_srgb,var(--mama-brown),transparent_90%)] p-2 rounded-md transition-all"
+              aria-label="Toggle Menu"
+            >
+              <Menu className="w-8 h-8" />
+            </button>
 
-        {/* Search Bar - Using Shadcn Input */}
-        <div className="hidden md:flex flex-1 max-w-2xl relative">
-          <div className="relative w-full">
-            <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 z-10" />
+            <Link href="/" className="shrink-0">
+              <Image
+                src="/images/layout/logo.png"
+                alt="Mamabear Logo"
+                width={50}
+                height={50}
+                className="md:w-[70px] md:h-[70px]"
+                priority
+              />
+            </Link>
+          </div>
+
+          {/* Search Bar (Visible on all screens) */}
+          <div className="flex-1 max-w-2xl relative">
+            <Search
+              className="text-muted-foreground absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10 w-4 h-4 md:w-5 md:h-5"
+              strokeWidth="3"
+            />
             <Input
               type="text"
-              placeholder="Cari produk di MamaBear"
-              className="w-full bg-pink-50/50 border-pink-100 rounded-full pl-10 focus-visible:ring-primary"
+              placeholder="Cari produk..."
+              className="w-full bg-white border-pink-100 pl-9 md:pl-14 focus-visible:ring-primary rounded-lg py-3 md:py-5 text-sm md:text-base h-9 md:h-12"
             />
           </div>
-        </div>
 
-        {/* Actions - Using Shadcn Button & Badge */}
-        <div className="flex items-center justify-end gap-2 lg:w-1/4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-primary"
-              >
-                <User className="w-6 h-6" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>Akun Saya</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {isLoggedIn ? (
-                <>
-                  <DropdownMenuItem className="cursor-pointer">
-                    Profil Saya
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    Pesanan
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
-                    Keluar
-                  </DropdownMenuItem>
-                </>
-              ) : (
-                <>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/login"
-                      className="cursor-pointer font-medium text-primary focus:text-primary w-full"
-                    >
-                      Masuk
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="/register" className="cursor-pointer w-full">
-                      Daftar Akun Baru
-                    </Link>
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-gray-600 hover:text-primary relative"
-          >
-            <ShoppingCart className="w-6 h-6" />
-            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] bg-destructive hover:bg-destructive text-destructive-foreground">
-              2
-            </Badge>
-          </Button>
+          {/* Actions */}
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
+            {/* Profile - Hidden on mobile, shown on desktop */}
+            <div className="hidden md:flex items-center gap-3">
+              <UserDropdown isLoggedIn={isLoggedIn} />
+              {/* Vertical Separator */}
+              <div className="w-px h-8 bg-[var(--mama-brown)] mx-1" />
+            </div>
+
+            {/* Always visible */}
+            <button
+              type="button"
+              className="text-[var(--mama-brown)] hover:bg-[color-mix(in_srgb,var(--mama-brown),transparent_90%)] p-2 rounded-md transition-all relative"
+            >
+              <ShoppingCart className="w-5 h-5 md:w-7 md:h-7" />
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-destructive hover:bg-destructive text-destructive-foreground">
+                2
+              </Badge>
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+      </nav>
+
+      {/* MOBILE DRAWER MENU */}
+      <SidebarMenu />
+      <BottomNav />
+    </>
   );
 }
