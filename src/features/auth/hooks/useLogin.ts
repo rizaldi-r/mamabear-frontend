@@ -22,6 +22,14 @@ export function useLogin() {
       // API call to our Route Handler or Service
       const response = await loginUser(data);
 
+         const token = response?.data?.token;
+
+         if (!token) {
+            throw new Error("Token tidak ditemukan");
+         }
+         
+         localStorage.setItem("accessToken", token);
+
       // Success logic: Log the result and navigate gracefully using Next.js Router
       console.log("Login Success:", response.data);
 

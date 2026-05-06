@@ -7,6 +7,8 @@ export default function LoginPage() {
     <AuthLayout
       title="Selamat Datang Kembali"
       subtitle="Masuk ke akun MamaBear Anda"
+      backToHref="/"
+      backToLabel="Kembali ke Beranda"
     >
       <LoginForm />
     </AuthLayout>

@@ -3,7 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Mail } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { ResetPasswordPayload } from "../types/auth";
 
 export function ResetPasswordForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -13,9 +14,9 @@ export function ResetPasswordForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<ResetPasswordPayload>();
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<ResetPasswordPayload> = (data) => {
     setLoading(true);
     console.log("Reset Email:", data); // Ready to be sent to your API
     setTimeout(() => {
