@@ -48,7 +48,7 @@ export function TestimonialSection() {
   return (
     <section className="py-16 bg-gradient-to-b from-background to-secondary">
       <div className="container mx-auto px-4 max-w-5xl text-center">
-        <h2 className="text-2xl font-medium text-stone-800 mb-1">
+        <h2 className="text-2xl font-medium text-[var(--color-gray)] mb-1">
           What Mama Says About
         </h2>
         <h3 className="text-3xl font-bold text-primary mb-10">
@@ -93,36 +93,41 @@ export function TestimonialSection() {
                   </div>
 
                   {/* right col — testimonial */}
-                  <div className="w-full md:w-1/2 bg-white rounded-2xl shadow-sm p-6 flex flex-col justify-center text-left">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="relative w-12 h-12 shrink-0">
-                        <Image
-                          src={review.productImage}
-                          alt={review.name}
-                          fill
-                          className="object-cover rounded-lg"
-                        />
-                      </div>
+                  <div className="w-full md:w-1/2 bg-white rounded-2xl shadow-sm overflow-hidden flex flex-row items-stretch text-left">
+
+                    {/* LEFT: product image */}
+                    <div className="relative w-20 md:w-32 self-stretch shrink-0 ml-3">
+                      <Image
+                        src={review.productImage}
+                        alt={review.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+
+                    {/* RIGHT: name, rating, comment */}
+                    <div className="flex flex-col justify-center p-6 gap-3">
                       <div>
                         <p className="font-semibold text-stone-800">{review.name}</p>
-                        <div className="flex gap-0.5">
+                        <div className="flex gap-0.5 mt-1">
                           {Array.from({ length: review.rating }).map((_, i) => (
                             <span key={i} className="text-[var(--mama-hot-pink)]">★</span>
                           ))}
                         </div>
                       </div>
+                      <p className="text-[var(--color-gray)] text-font-1 font-medium leading-relaxed">
+                        {review.comment}
+                      </p>
                     </div>
-                    <p className="text-stone-600 text-font-1 font-medium leading-relaxed">
-                      {review.comment}
-                    </p>
                   </div>
-
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <div className="flex justify-center gap-4 mt-6">
+            <CarouselPrevious className="bg-white/30 border-none text-[var(--color-gray)] left-2 lg:-left-12" />
+            <CarouselNext className="bg-white/30 border-none text-[var(--color-gray)] right-2 lg:-right-12" />
+          </div>
         </Carousel>
       </div>
     </section>

@@ -91,14 +91,14 @@ export function FeaturedProducts({ products = mockProducts}) {
                   <Badge className="absolute top-2 left-2 z-10 bg-destructive hover:bg-destructive text-destructive-foreground rounded-sm font-bold text-[10px] px-1.5 py-0.5">
                     {product.discount}
                   </Badge>
-                  <Badge className="absolute top-2 right-2 z-10 bg-blue-500 hover:bg-blue-500 text-white rounded-sm font-semibold text-font-2 px-1.5 py-0.5">
+                  <Badge className="absolute top-2 right-2 z-10 bg-[var(--mama-pink)] rounded-sm font-semibold text-font-1 px-1.5 py-0.5">
                     {product.badge}
                   </Badge>
                   <Image
                     src={product.image}
                     alt={product.name}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
@@ -125,7 +125,7 @@ export function FeaturedProducts({ products = mockProducts}) {
                     <Button
                       size="icon"
                       variant="secondary"
-                      className="h-8 w-8 rounded-full bg-[var(--mama-hot-pink)] text-white hover:bg-[var(--mama-pink)] hover:text-white hover:bg-pink-600 hover:scale-110"
+                      className="h-8 w-8 rounded-full bg-[var(--mama-hot-pink)] text-white hover:text-white hover:bg-pink-600 hover:scale-110"
                     >
                       <ShoppingCart className="w-4 h-4" />
                     </Button>
