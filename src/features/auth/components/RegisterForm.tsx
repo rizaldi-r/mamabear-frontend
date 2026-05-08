@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -75,7 +77,7 @@ export function RegisterForm() {
         </div>
       )}
 
-      <form className="space-y-4">
+      <form className="space-y-4" noValidate>
         {/* ------------------- NAMA LENGKAP ------------------- */}
         <div className="space-y-2">
           <Label
