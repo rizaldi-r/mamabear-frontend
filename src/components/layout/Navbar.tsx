@@ -7,11 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useUIStore } from "@/store/use-ui-store";
 import { Menu, Search, ShoppingCart } from "lucide-react";
+import {useSession} from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function Navbar() {
-  const isLoggedIn = false;
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
   const { toggleSidebar } = useUIStore();
 
   return (
@@ -59,6 +61,7 @@ export function Navbar() {
             {/* Profile - Hidden on mobile, shown on desktop */}
             <div className="hidden md:flex items-center gap-3">
               <UserDropdown isLoggedIn={isLoggedIn} />
+              
               {/* Vertical Separator */}
               <div className="w-px h-8 bg-[var(--mama-brown)] mx-1" />
             </div>
