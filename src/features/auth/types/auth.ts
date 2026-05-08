@@ -22,4 +22,5 @@ export type AuthLayoutProps = {
    subtitle: string
    backToHref?: string
    backToLabel?: string
+   showImage?: boolean
  }

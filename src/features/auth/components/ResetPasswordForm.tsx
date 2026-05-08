@@ -73,7 +73,9 @@ export function ResetPasswordForm() {
                 message: "Format email tidak valid",
               },
             })}
-            className={`pl-10 bg-stone-50 rounded-2xl ${errors.email ? "border-destructive focus-visible:ring-destructive/20" : "border-stone-200 focus-visible:ring-primary/20"}`}
+            className={`pl-10 bg-white border-0 border-b border-gray-300 
+              [&::placeholder]:text-[0.6rem] [&::placeholder]:text-stone-400 
+              [&::placeholder]:font-semibold rounded-none ${errors.email ? "border-destructive focus-visible:ring-destructive/20" : "border-stone-200 focus-visible:ring-primary/20"}`}
           />
         </div>
         {errors.email && (

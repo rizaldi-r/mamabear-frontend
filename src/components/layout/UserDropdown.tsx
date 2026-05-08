@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { User, LogOut, Package, LogIn, UserPlus } from "lucide-react";
+import {signOut} from "next-auth/react";
 
 interface UserDropdownProps {
   isLoggedIn: boolean;
@@ -19,6 +20,11 @@ export function UserDropdown({
 
   const toggleDropdown = () => setIsOpen(!isOpen);
   const closeDropdown = () => setIsOpen(false);
+
+  const handleLogout = async () => {
+    closeDropdown();
+    await signOut({ callbackUrl: "/" });
+  };
 
   return (
     <div className="relative">
@@ -84,7 +90,7 @@ export function UserDropdown({
               <button
                 type="button"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 transition-colors w-full text-left font-semibold"
-                onClick={closeDropdown}
+                onClick={handleLogout}
               >
                 <LogOut className="w-4 h-4" />
                 Keluar
