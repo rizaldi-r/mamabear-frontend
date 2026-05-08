@@ -21,7 +21,7 @@ export default async function HomePage() {
       <main>
         <HeroSection />
         <RoadToSale />
-        <CategoryShowcase categories={data.categories} />
+        <CategoryShowcase />
         <FeaturedProducts products={data.products} />
         <TestimonialSection />
         <AwardsSection />
