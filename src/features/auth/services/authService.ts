@@ -1,6 +1,6 @@
 import { LoginPayload, RegisterPayload } from "@/features/auth/types/auth";
-import {API_BASE_URL} from "@/lib/config";
-import { ApiResponse, LoginResponse } from "@/types/api";
+import { API_BASE_URL } from "@/lib/config";
+import { ApiResponse, LoginResponse, RegisterResponse } from "@/types/api";
 
 export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
   const res = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -26,19 +26,38 @@ export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
  */
 export async function registerUser(
   payload: RegisterPayload,
-): Promise<ApiResponse> {
+): Promise<RegisterResponse> {
   const res = await fetch(`${API_BASE_URL}/auth/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: payload.fullname,
+      email: payload.email,
+      password: payload.password,
+      phone: payload.phone,
+    }),
   });
 
-  const response = await res.json();
+  const response: RegisterResponse = await res.json();
 
   if (!res.ok || !response.success) {
     throw new Error(response.message || "Gagal mendaftarkan akun.");
+  }
+
+  return response;
+}
+
+export async function verifyEmail(token: string): Promise<ApiResponse<null>> {
+  const res = await fetch(`${API_BASE_URL}/auth/verify-email/${token}`, {
+    method: "GET",
+  });
+
+  const response: ApiResponse<null> = await res.json();
+
+  if (!res.ok || !response.success) {
+    throw new Error(
+      response.message || "Link verifikasi tidak valid atau kadaluarsa.",
+    );
   }
 
   return response;
@@ -59,6 +78,8 @@ export async function requestPasswordReset(
   });
 
   const response = await res.json();
+  console.log("🚀 ~ response:", response)
+  
 
   if (!res.ok || !response.success) {
     throw new Error(response.message || "Gagal mengirim tautan reset.");

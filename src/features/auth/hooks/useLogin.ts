@@ -1,52 +1,37 @@
 "use client";
-
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import {LoginPayload} from "@/features/auth/types/auth";
-import {loginUser} from "@/features/auth/services/login";
+import { LoginPayload } from "@/features/auth/types/auth";
 
 /**
- * Custom hook to manage the login logic, state, and API communication.
- * This separates the "business logic" from the UI components.
+ * useLogin Hook (NextAuth)
+ * Uses next-auth/react to handle the session.
  */
 export function useLogin() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
-  const handleLogin = async (data: LoginPayload) => {
+  const handleLogin = async (payload: LoginPayload) => {
     setLoading(true);
     setServerError(null);
 
-    try {
-      // API call to our Route Handler or Service
-      const response = await loginUser(data);
+    // NextAuth automatically set the session cookies
+    const result = await signIn("credentials", {
+      redirect: false, // We handle redirection manually
+      email: payload.email,
+      password: payload.password,
+    });
 
-         const token = response?.data?.token;
-
-         if (!token) {
-            throw new Error("Token tidak ditemukan");
-         }
-         
-         localStorage.setItem("accessToken", token);
-
-      // Success logic: Log the result and navigate gracefully using Next.js Router
-      console.log("Login Success:", response.data);
-
-      // router.push('/') is faster and more "graceful" than window.location.href
-      router.push("/");
-      router.refresh(); // Optional: Refreshes server data for the new session
-    } catch (err: any) {
-      // Catch and format the error message from the service
-      setServerError(err.message || "Gagal masuk. Silakan coba lagi.");
-    } finally {
+    if (result?.error) {
+      setServerError("Email atau password salah.");
       setLoading(false);
+    } else {
+      router.push("/");
+      router.refresh();
     }
   };
 
-  return {
-    loading,
-    serverError,
-    handleLogin,
-  };
+  return { loading, serverError, handleLogin };
 }

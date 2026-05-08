@@ -3,15 +3,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SocialLogins } from "@/features/auth/components/SocialLogins";
-import { Lock, Mail, Phone, User } from "lucide-react";
+import {
+  AlertCircle,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  MailOpen,
+  Phone,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { RegisterPayload } from "../types/auth";
-import { SubmitHandler } from "react-hook-form";
+import { useRegister } from "@/features/auth/hooks/useRegister";
 
 export function RegisterForm() {
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { loading, error, isSubmitted, handleRegister } = useRegister();
 
   const {
     register,
@@ -19,21 +29,55 @@ export function RegisterForm() {
     watch,
     control,
     formState: { errors },
-  } = useForm<RegisterPayload>();
+  } = useForm<
+    RegisterPayload & { confirmPassword?: string; terms?: boolean }
+  >();
 
   const password = watch("password");
 
-  const onSubmit: SubmitHandler<RegisterPayload> = (data) => {
-    setLoading(true);
-    console.log("Register Data:", data);
-    setTimeout(() => setLoading(false), 1500);
-  };
+  /**
+   * Success View: Verification Email Sent
+   */
+  if (isSubmitted) {
+    return (
+      <div className="text-center py-8 space-y-6 animate-in zoom-in-95">
+        <div className="flex justify-center">
+          <div className="w-20 h-20 bg-pink-50 rounded-full flex items-center justify-center">
+            <MailOpen className="w-10 h-10 text-primary" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold text-[var(--mama-brown)]">
+            Cek Email Mama
+          </h3>
+          <p className="text-sm text-stone-500 max-w-[280px] mx-auto leading-relaxed">
+            Link verifikasi telah dikirim ke email Mama. Silakan klik link
+            tersebut untuk mengaktifkan akun.
+          </p>
+        </div>
+        <Button
+          asChild
+          className="w-full rounded-full h-12 font-bold shadow-lg shadow-primary/10"
+        >
+          <Link href="/login">Kembali ke Login</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <div className="space-y-6" onSubmit={handleSubmit(handleRegister)}>
+      {/* Server/API Error Alert */}
+      {error && (
+        <div className="bg-destructive/10 border border-destructive/20 p-3 rounded-xl flex items-center gap-3 text-destructive text-sm font-medium animate-in slide-in-from-top-2">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          {error}
+        </div>
+      )}
+
+      <form className="space-y-4">
+        {/* ------------------- NAMA LENGKAP ------------------- */}
         <div className="space-y-2">
-          {/* ------------------- NAMA LENGKAP ------------------- */}
           <Label
             htmlFor="fullname"
             className=" font-bold text-[var(--mama-brown)] ml-1"
@@ -103,7 +147,7 @@ export function RegisterForm() {
             />
             <Input
               id="reg-pass"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Minimal 8 karakter"
               {...register("password", {
                 required: "Kata sandi wajib diisi",
@@ -111,6 +155,19 @@ export function RegisterForm() {
               })}
               className={`pl-10 bg-white border-0 border-b border-gray-300 [&::placeholder]:text-[0.6rem] [&::placeholder]:text-stone-400 [&::placeholder]:font-semibold rounded-none ${errors.password ? "border-destructive focus-visible:ring-destructive/20" : "border-stone-200 focus-visible:ring-primary/20"}`}
             />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-1 top-1/2 -translate-y-1/2 text-stone-400 h-8 w-8 hover:bg-transparent"
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
+            </Button>
           </div>
           {errors.password && (
             <p className=" text-destructive ml-1">{errors.password.message}</p>
