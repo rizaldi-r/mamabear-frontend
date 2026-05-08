@@ -1,18 +1,37 @@
-// Use a generic <T> so you can pass in specific data shapes (like User, or Product[])
+/**
+ * Global API Response Wrapper
+ * Matches the backend contract: { success, statusCode, message, data, timestamp }
+ */
 export interface ApiResponse<T = any> {
   success: boolean;
+  statusCode: number;
   message: string;
-  error_code?: number; // Optional, because success responses won't have it
   data: T;
+  timestamp: string;
 }
 
-// Example of how you will use this later for Auth:
+/**
+ * User Profile Shape
+ */
 export interface User {
   id: string;
-  name: string;
   email: string;
-  token: string;
+  name: string;
+  role: "USER" | "ADMIN";
+  phone?: string;
 }
 
-// Type for the login response specifically:
-export type LoginResponse = ApiResponse<User>;
+/**
+ * Authentication Data
+ */
+export interface AuthData {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+
+export type LoginResponse = ApiResponse<AuthData>;
+export type RegisterResponse = ApiResponse<{
+  message: string;
+  verificationToken: string;
+}>;
