@@ -13,18 +13,17 @@ import { getHomeData } from "@/features/home/services/homeService";
 
 export default async function HomePage() {
   const data = await getHomeData();
-  
+
   return (
-    <div className="min-h-screen bg-white font-sans text-stone-800 selection:bg-pink-200">
+    <div className="min-h-screen bg-white text-[var(--mama-brown)] selection:bg-pink-200">
       <Navbar />
-      <USPBanner />
-      
 
       <main>
         <HeroSection />
         <RoadToSale />
         <CategoryShowcase />
         <FeaturedProducts products={data} />
+        <USPBanner />
         <TestimonialSection />
         <AwardsSection />
       </main>

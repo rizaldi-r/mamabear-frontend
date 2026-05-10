@@ -1,5 +1,5 @@
 import { HomeProductCard } from "@/features/home/components/HomeProductCard";
-import { Product } from "@/features/home/types/home";
+import { Product } from "@/features/home/types/home.types";
 
 const mockProducts: Product[] = [
   {
@@ -110,7 +110,7 @@ export function FeaturedProducts({ products }: { products?: Product[] }) {
   ).slice(0, 4);
 
   return (
-    <section className="py-12">
+    <section className="py-12 bg-gradient-to-b from-background to-secondary">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <h2 className="text-2xl font-bold text-[var(--mama-brown)] text-center mb-8">
@@ -118,7 +118,7 @@ export function FeaturedProducts({ products }: { products?: Product[] }) {
         </h2>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
           {displayProducts.map(function renderProduct(product) {
             return <HomeProductCard key={product.id} product={product} />;
           })}
