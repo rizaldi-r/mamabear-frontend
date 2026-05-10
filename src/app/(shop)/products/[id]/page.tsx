@@ -40,98 +40,25 @@ type Product = {
     }[]
 }
 
-const mockImage = [
-    {
-        id: 1,
-        productId: 1,
-        imageUrl: 'https://down-id.img.susercontent.com/file/id-11134207-81ztl-mf7u6ydk3ifd1c.webp',
-        sortOrder: 1,
-        altText: 'gambar1'
-    },
-    {
-        id: 2,
-        productId: 2,
-        imageUrl: 'https://down-id.img.susercontent.com/file/id-11134207-81ztj-mf7u6ydkaj9lce.webp',
-        sortOrder: 2,
-        altText: 'gambar2'
-    },
-    {
-        id: 3,
-        productId: 3,
-        imageUrl: 'https://down-id.img.susercontent.com/file/id-11134207-81ztn-mf7u6ydjzaq128.webp',
-        sortOrder: 3,
-        altText: 'gambar3'
-    },
-    {
-        id: 4,
-        productId: 4,
-        imageUrl: 'https://down-id.img.susercontent.com/file/id-11134207-81ztj-mf7u6ydk7q4p56.webp',
-        sortOrder: 4,
-        altText: 'gambar4'
-    },
-    {
-        id: 5,
-        productId: 5,
-        imageUrl: 'https://down-id.img.susercontent.com/file/id-11134207-81ztl-mf7u6ydk6bk9f5.webp',
-        sortOrder: 5,
-        altText: 'gambar5'
-    }
-]
-
-const mockVariants = [
-    {
-        id: 1,
-        productId: 1,
-        name: "Coklat",
-        price_idr: "50000",
-        stock: 1
-    },
-    {
-        id: 2,
-        productId: 2,
-        name: "Vanilla",
-        price_idr: "20000",
-        stock: 1
-    },
-    {
-        id: 3,
-        productId: 3,
-        name: "Strawberry",
-        price_idr: "30000",
-        stock: 1
-    },
-    {
-        id: 4,
-        productId: 4,
-        name: "Caramel",
-        price_idr: "55000",
-        stock: 0
-    },
-    {
-        id: 5,
-        productId: 5,
-        name: "Coffee Latte",
-        price_idr: "15000",
-        stock: 1
-    },
-]
-
 async function page(props: { params: Params }) {
     const {id} = await props.params;
     const res = await getProduct(id)
     const product : Product = res.data
+    const image = product.images
+    const variant = product.variants
+
 
   return (
-    <div className='px-28'>
+    <div className='lg:px-[200px] px-5'>
       <p className='text-font-2 text-[var(--color-light-gray)] pb-10'>Home / Products / ${product.name}</p>
 
-      <div className='flex w-full gap-5'>
-        <div className='w-[50%]'>
-            <ImageGallery images={mockImage}/>
+      <div className='flex lg:flex-row flex-col w-full gap-5'>
+        <div className='lg:w-[50%]'>
+            <ImageGallery images={image}/>
         </div>
         
-        <div className='w-[50%]'>
-            <ProductInfo name={product.name} description={product.description} price_idr={product.price_idr} stock={product.stock} variants={mockVariants}/>
+        <div className='lg:w-[50%]'>
+            <ProductInfo name={product.name} description={product.description} price_idr={product.price_idr} stock={product.stock} variants={variant}/>
         </div>
       </div>
       

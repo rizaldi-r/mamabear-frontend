@@ -19,19 +19,27 @@ function ImageGallery({ images }: Props) {
 
   return (
     <div className=' w-full'>
-            {/* image section */}
-            <section className='flex flex-col gap-5'>
+        {/* image desktop section */}
+        <section className='flex-col gap-2 lg:flex hidden'>
                 {/* live image */}
                 <img src={liveImage}/>
 
                 {/* selection image */}
-                <div className='flex gap-5'>
+                <div className='flex gap-5 max-w-[90%] overflow-x-auto'>
                     {img && img.map((i)=>(
-                        <img src={i.imageUrl} className='w-24 h-24 object-cover' />
+                        <img key={i.id} src={i.imageUrl} className='w-20 h-20 object-cover'
+                        onClick={()=>setLiveImage(i.imageUrl)}/>
                     ))}
                 </div>
-            </section>
-        </div>
+
+
+        </section>
+
+        {/* image mobile section */}
+        <section className='flex flex-col gap-5 lg:hidden block'>
+                
+        </section>
+    </div>
   )
 }
 
