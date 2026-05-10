@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import {Checkbox} from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SocialLogins } from "@/features/auth/components/SocialLogins";
@@ -40,7 +40,7 @@ export function LoginForm() {
         </div>
       )}
 
-      <form className="space-y-4" onSubmit={handleSubmit(handleLogin)}>
+      <form className="space-y-4" onSubmit={handleSubmit(handleLogin)} noValidate>
         {/* EMAIL */}
         <div className="space-y-2">
           <Label className="font-bold text-[var(--mama-brown)] ml-1">
@@ -61,6 +61,10 @@ export function LoginForm() {
               placeholder="mama@contoh.com"
               {...register("email", {
                 required: "Email wajib diisi",
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Format email tidak valid",
+                },
               })}
               className={`pl-10 bg-white border-0 border-b border-gray-300 
               [&::placeholder]:text-[0.6rem] [&::placeholder]:text-stone-400 

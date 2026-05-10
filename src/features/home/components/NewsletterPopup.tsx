@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { useNewsletterPopup } from "@/hooks/useNewsletterPopup";
+import { useNewsletterPopup } from "@/features/home/hooks/useNewsletterPopup";
 import Image from "next/image";
 
 export default function NewsletterPopup() {

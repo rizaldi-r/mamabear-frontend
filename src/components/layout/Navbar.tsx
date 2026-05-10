@@ -19,7 +19,7 @@ export function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 w-full bg-[var(--mama-pink)] shadow-sm py-3">
-        <div className="container mx-auto px-4 flex items-center gap-3 md:gap-4 justify-between">
+        <div className="container mx-auto px-4 flex items-center gap-3 md:gap-4 justify-between max-w-6xl">
           {/* Hamburger (Desktop only) & Logo */}
           <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <button
@@ -44,7 +44,7 @@ export function Navbar() {
           </div>
 
           {/* Search Bar (Visible on all screens) */}
-          <div className="flex-1 max-w-2xl relative">
+          <div className="flex-1 max-w-xl relative">
             <Search
               className="text-muted-foreground absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10 w-4 h-4 md:w-5 md:h-5"
               strokeWidth="3"
