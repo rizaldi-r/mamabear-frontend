@@ -2,7 +2,13 @@
 
 import React from "react";
 import Link from "next/link";
-import { Home, LayoutGrid, ReceiptText, User, Menu } from "lucide-react";
+import {
+  Home,
+  LayoutGrid,
+  ReceiptText,
+  User,
+  MessageCircleMore,
+} from "lucide-react";
 import { useUIStore } from "@/store/use-ui-store";
 import { UserDropdown } from "@/components/layout/UserDropdown";
 
@@ -11,17 +17,8 @@ export function BottomNav() {
   const isLoggedIn = false;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-stone-100 shadow-[0_-1px_4px_rgba(214,85,126,10)] pb-safe">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-stone-100 shadow-[0_-1px_4px_rgba(214,85,126,0.5)] pb-safe">
       <div className="flex items-center justify-around h-16">
-        {/* Sidebar Trigger */}
-        <button
-          onClick={toggleSidebar}
-          className="flex flex-col items-center justify-center w-full h-full text-[var(--mama-brown)] active:text-primary transition-colors"
-        >
-          <Menu className="w-6 h-6" strokeWidth={2.5} />
-          <span className="text-[10px] mt-1 font-semibold">Sidebar</span>
-        </button>
-
         {/* Home */}
         <Link
           href="/"
@@ -38,6 +35,15 @@ export function BottomNav() {
         >
           <LayoutGrid className="w-6 h-6" strokeWidth={2.5} />
           <span className="text-[10px] mt-1 font-semibold">Produk</span>
+        </Link>
+
+        {/* Chat */}
+        <Link
+          href="/chat"
+          className="flex flex-col items-center justify-center w-full h-full text-[var(--mama-brown)] hover:text-primary transition-colors"
+        >
+          <MessageCircleMore className="w-6 h-6" strokeWidth={2.5} />
+          <span className="text-[10px] mt-1 font-semibold">Chat</span>
         </Link>
 
         {/* Transaksi */}
