@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { AuthLayoutProps } from "../types/auth";
+import { AuthLayoutProps } from "../types/auth.type";
 import Image from "next/image";
 
 export function AuthLayout({
@@ -13,7 +13,7 @@ export function AuthLayout({
 }: AuthLayoutProps) {
   return (
     <div className="font-sans selection:bg-primary/20 py-24">
-      <div className="w-full flex justify-center items-center gap-12">
+      <div className="flex justify-center items-center gap-12">
         {/* Form */}
         <div className="flex flex-col gap-4 font-sans selection:bg-primary/20 px-12 lg:p-0 w-full lg:w-1/3">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">

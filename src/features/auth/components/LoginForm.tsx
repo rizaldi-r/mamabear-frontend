@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SocialLogins } from "@/features/auth/components/SocialLogins";
 import { useLogin } from "@/features/auth/hooks/useLogin";
-import { LoginPayload } from "@/features/auth/types/auth";
+import { LoginPayload } from "@/features/auth/types/auth.type";
 import {
   AlertCircle,
   ChevronRight,

@@ -18,7 +18,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { RegisterPayload } from "../types/auth";
+import { RegisterPayload } from "../types/auth.type";
 import { useRegister } from "@/features/auth/hooks/useRegister";
 
 export function RegisterForm() {

@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { CheckCircle2, Mail } from "lucide-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ResetPasswordPayload } from "../types/auth";
+import { ResetPasswordPayload } from "../types/auth.type";
 
 export function ResetPasswordForm() {
   const [submitted, setSubmitted] = useState(false);

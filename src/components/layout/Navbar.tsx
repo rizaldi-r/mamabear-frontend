@@ -19,7 +19,7 @@ export function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 w-full bg-[var(--mama-pink)] shadow-sm py-3">
-        <div className="container mx-auto px-4 flex items-center gap-3 md:gap-4 justify-between max-w-6xl">
+        <div className="container mx-auto flex items-center gap-3 md:gap-4 justify-between page-max-width">
           {/* Hamburger (Desktop only) & Logo */}
           <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <button
