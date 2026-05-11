@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { RegisterPayload } from "../types/auth";
+import { RegisterPayload } from "../types/auth.type";
 import { registerUser } from "@/features/auth/services/authService";
 
 /**

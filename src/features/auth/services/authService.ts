@@ -1,4 +1,4 @@
-import { LoginPayload, RegisterPayload } from "@/features/auth/types/auth";
+import { LoginPayload, RegisterPayload } from "@/features/auth/types/auth.type";
 import { API_BASE_URL } from "@/lib/config";
 import { ApiResponse, LoginResponse, RegisterResponse } from "@/types/api";
 
