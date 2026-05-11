@@ -1,9 +1,9 @@
 "use client"
 import React, { useState } from 'react'
+import Stars from './Stars'
 
 type Product ={
     name: string,
-    description: string,
     price_idr: string,
     stock: number,
     variants: Variant[]
@@ -17,16 +17,33 @@ type Variant ={
     stock: number
 }
 
-function ProductInfo({name, description, price_idr, stock, variants}:Product) {
+function ProductInfo({name, price_idr, stock, variants}:Product) {
   const [selectedVariant, setSelectedVariant] = useState<Variant>(variants[0])
-  const [qty, setQty] = useState<number>(0)
+  const [qty, setQty] = useState<number>(1)
+  const [alert, setAlert] = useState<string>('')
+
 
   console.log(variants)
   return (
     <div className='w-full'>
       <h1 className='text-[var(--mama-hot-pink)] text-4xl/8 font-bold'>{name}</h1>
+      <br/>
+
       <p className='text-red-500 text-font-5 font-bold'>Rp {parseInt(price_idr).toLocaleString("id-ID")}</p>
     
+      <br/>
+    {/* REVIEW STARS */}
+      <div className='flex gap-5'>
+        <div className='flex'>
+          <Stars rating={4.9}/>
+          <p className='text-[var(--color-light-gray)] text-font-2'>{4.9}</p>
+        </div>
+          <p className='text-[var(--color-light-gray)] text-font-2'>10RB+ Penilaian</p>
+          <p className='text-[var(--color-light-gray)] text-font-2'>10RB+  Terjual</p>
+      </div>
+
+      <br/>
+    {/* VARIANTS */}
     {variants.length > 0 &&
       <div className='flex flex-col gap-2'>
         <p className='text-[var(--color-light-gray)] font-bold'>Variant</p>  
@@ -48,10 +65,13 @@ function ProductInfo({name, description, price_idr, stock, variants}:Product) {
     }
 
       <br/>
+      {stock == 0 && <p>Maaf, Stock Habis.</p>}
 
+      {/* QUANTITY */}
+      {stock > 0 &&
       <div className='flex flex-col gap-2'>
         <p className='text-[var(--color-light-gray)] font-bold'>Jumlah</p>  
-        <div className="flex border border-gray-400 rounded-xl w-[23%]">
+        <div className="flex border border-gray-400 rounded-xl w-[25%] justify-between">
           <button
             disabled={qty >= stock || qty <= 1}
             className={` px-3
@@ -61,14 +81,14 @@ function ProductInfo({name, description, price_idr, stock, variants}:Product) {
               className="px-3 w-12 text-center border-l border-r pointer-events-none"
               value={qty}/>
           
-
           <button 
             disabled={qty >= stock || qty >= 10}
             className={`px-3 
               ${qty >= stock || qty >= 10 ? 'text-gray-400 cursor-not-allowed' : 'text-black'}`}
             onClick={()=>setQty(qty>= stock ? stock : qty>=10 ? 10 : qty+1)}>+</button>
         </div>
-      </div>
+        <p className='text-gray-400 text-font-2'>{alert}</p>
+      </div>}
 
       <br/>
 
