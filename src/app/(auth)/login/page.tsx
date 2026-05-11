@@ -5,17 +5,19 @@ import { LoginForm } from "@/features/auth/components/LoginForm";
 
 export default function LoginPage() {
   return (
-    <div className="h-svh flex flex-col justify-between">
+    <>
       <Navbar />
-      <AuthLayout
-        title="Selamat Datang Kembali"
-        subtitle="Masuk ke akun MamaBear Anda"
-        backToHref="/"
-        backToLabel="Kembali ke Beranda"
-      >
-        <LoginForm />
-      </AuthLayout>
+      <main className="page-max-width">
+        <AuthLayout
+          title="Selamat Datang Kembali"
+          subtitle="Masuk ke akun MamaBear Anda"
+          backToHref="/"
+          backToLabel="Kembali ke Beranda"
+        >
+          <LoginForm />
+        </AuthLayout>
+      </main>
       <Footer />
-    </div>
+    </>
   );
 }
