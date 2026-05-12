@@ -22,6 +22,30 @@ function ProductInfo({name, price_idr, stock, variants}:Product) {
   const [qty, setQty] = useState<number>(1)
   const [alert, setAlert] = useState<string>('')
 
+  function handleAddStock(){
+    setAlert('')
+    if(qty>= stock){
+      setQty(stock)
+    }else if(qty>=10){
+      setAlert('Dapatkan harga khusus untuk pembelian >10. Hubungi Admin MamaBear.')
+      setQty(10)
+    }else {
+      setQty(qty+1)
+    }
+  }
+
+  function handleReduceStock(){
+    setAlert('')
+    if(qty<=1){
+      setAlert('Minimum pembelian 1')
+      setQty(1)
+    }else if(qty>=stock){
+      setQty(stock)
+    }else {
+      setQty(qty-1)
+    }
+  }
+
 
   console.log(variants)
   return (
@@ -73,21 +97,19 @@ function ProductInfo({name, price_idr, stock, variants}:Product) {
         <p className='text-[var(--color-light-gray)] font-bold'>Jumlah</p>  
         <div className="flex border border-gray-400 rounded-xl w-[25%] justify-between">
           <button
-            disabled={qty >= stock || qty <= 1}
-            className={` px-3
+            className={` px-3 w-[30%]
               ${qty >= stock || qty <= 1 ? 'text-gray-400 cursor-not-allowed' : 'text-black'}`}
-            onClick={()=>setQty(qty<=0 ? 1 : qty>=stock? stock : qty-1)}>-</button>
+            onClick={()=>handleReduceStock()}>-</button>
           <input 
-              className="px-3 w-12 text-center border-l border-r pointer-events-none"
+              className="w-[40%] text-center border-l border-r pointer-events-none"
               value={qty}/>
           
           <button 
-            disabled={qty >= stock || qty >= 10}
-            className={`px-3 
+            className={`px-3 w-[30%]
               ${qty >= stock || qty >= 10 ? 'text-gray-400 cursor-not-allowed' : 'text-black'}`}
-            onClick={()=>setQty(qty>= stock ? stock : qty>=10 ? 10 : qty+1)}>+</button>
+            onClick={()=>handleAddStock()}>+</button>
         </div>
-        <p className='text-gray-400 text-font-2'>{alert}</p>
+        <p className='text-gray-400 text-font-1'>{alert}</p>
       </div>}
 
       <br/>

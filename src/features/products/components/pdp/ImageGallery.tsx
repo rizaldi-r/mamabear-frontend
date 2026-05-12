@@ -15,7 +15,7 @@ type Props = {
 
 function ImageGallery({ images }: Props) {
   const [img, setImg] = useState<Image[]>(images)
-  const [liveImage, setLiveImage] = useState<string>(img[0].imageUrl || '')
+  const [liveImage, setLiveImage] = useState<boolean>(false)
   const [imgIndex, setImgIndex] = useState<number>(0)
 
   const touchStartX = useRef(0)
@@ -66,7 +66,7 @@ function ImageGallery({ images }: Props) {
 
         <section className='flex-col gap-2 lg:flex hidden '>
             {/* live image */}
-            <img src={img[imgIndex].imageUrl}/>
+            <img src={img[imgIndex].imageUrl} onClick={()=>setLiveImage(true)} className='cursor-pointer'/>
 
             {/* selection image */}
             <div className='flex gap-5 max-w-[90%] overflow-x-auto'>
@@ -76,6 +76,12 @@ function ImageGallery({ images }: Props) {
                  ))}
             </div>
         </section>
+
+        {liveImage && <>
+              <div className='fixed inset-0 z-50 bg-black/50 flex items-center justify-center' onClick={()=>setLiveImage(false)}>
+                <img className='w-[35%] cursor-zoom-in transition-transform duration-300 hover:scale-150' src={img[imgIndex].imageUrl}/>
+              </div>
+            </>}
 
         {/* Mobile */}
         <section
