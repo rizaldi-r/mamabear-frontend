@@ -3,6 +3,7 @@ import Description from '@/features/products/components/pdp/Description';
 import ImageGallery from '@/features/products/components/pdp/ImageGallery';
 import ProductInfo from '@/features/products/components/pdp/ProductInfo';
 import Stars from '@/features/products/components/pdp/Stars';
+import Link from 'next/link';
 import React from 'react'
 
 export const dynamicParams = true;
@@ -65,14 +66,18 @@ async function page(props: { params: Params }) {
     const rev = await getReview(slug)
     const review : Review[] = rev.data.data
 
-    console.log('REV',review)
-    
+    const bestReview : Review = review.reduce((prev, current)=>{
+      return current.numUpvotes > prev.numUpvotes ? current : prev
+    })
+
+    const avgReview = review.length > 0 ? review.reduce((sum, n)=> sum + n.rating, 0)/review.length : 0
+
     const image = product.images || []
     const variant = product.variants
 
   return (
-    <div className='lg:px-[200px] px-5'>
-      <p className='text-font-2 text-[var(--color-light-gray)] pb-10'>Home / Products / {product.slug}</p>
+    <div className='lg:px-[200px] px-5 flex flex-col gap-5'>
+      <p className='text-font-2 text-[var(--color-light-gray)]'>Home / Products / {product.slug}</p>
 
       <div className='flex lg:flex-row flex-col w-full gap-5'>
         <div className='lg:w-[50%]'>
@@ -81,26 +86,46 @@ async function page(props: { params: Params }) {
         
         <div className='lg:w-[50%]'>
             <ProductInfo name={product.name} reviews={review}
-                        stock={product.stock} variants={variant} 
+                        variants={variant} 
             />
         </div>
       </div>
 
-    <br/>
+
       {/* DESCRIPTION */}
       <Description description={product.description ?? 'deskripsi'}
                   ingredients={product.ingredients  ?? 'untuk mengetahui kandungan produk hubungi admin'}
                   usageInstructions={product.usageInstructions  ?? 'untuk mengetahui cara pakai produk hubungi admin'} />
 
+      <br/>
+      
       {/* RATINGS */}
-      <div className='flex flex-col px-20 items-center justify-center'>
-        <div>
-            <p className='text-font-6 text-[var(--color-mama-brown)] font-bold'>4.9</p>
-            <Stars rating={4.9}/>
-            <p className='text-[var(--color-light-gray)] text-font-1'>10RB+ Penilaian</p>
+      <div>
+        <p className='text-font-4 text-[var(--mama-brown)] font-bold'>Review</p>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <p className='text-font-4 text-[var(--mama-hot-pink)] font-bold'>{avgReview.toFixed(1)}</p>
+            <Stars rating={avgReview}/>
+            <p className='text-[var(--color-light-gray)] text-font-1'>{review.length} Penilaian</p>
+          </div>
+
+          <Link href={`/products/${slug}/review`}>Lihat seluruh penilaian</Link>
         </div>
       </div>
 
+      {/* BEST REVIEW */}
+      <div className='flex flex-col'>
+        <p className='font-bold'>{bestReview.reviewerId}</p>
+        <Stars rating={bestReview.rating}/>
+        <p>{bestReview.title}</p>
+        <p>{bestReview.description}</p>
+      </div>
+
+      <hr className='h-1 pb-4 border-gray-500'/>
+
+      <div>
+        <p className='text-font-4 text-[var(--mama-brown)] font-bold'>Produk Lainnya</p>
+      </div>
       
     </div>
   )

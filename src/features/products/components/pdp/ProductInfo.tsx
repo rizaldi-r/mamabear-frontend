@@ -4,7 +4,6 @@ import Stars from './Stars'
 
 type Product ={
     name: string,
-    stock: number,
     variants: Variant[]
     reviews : Review[]
 }
@@ -29,8 +28,9 @@ type Review = {
   createdAt: Date
 }
 
-function ProductInfo({name, stock, reviews, variants}:Product) {
+function ProductInfo({name, reviews, variants}:Product) {
   const initialVariant = variants.find((v) => v.stock > 0) || variants[0] || null;
+  const [stock, setStock] = useState<number>(initialVariant.stock)
   const [selectedVariant, setSelectedVariant] = useState<Variant>(initialVariant)
   const [qty, setQty] = useState<number>(1)
   const [alert, setAlert] = useState<string>('')
@@ -89,10 +89,10 @@ function ProductInfo({name, stock, reviews, variants}:Product) {
 };
 
 
-  console.log(variants)
+  console.log(stock)
   return (
     <div className='w-full'>
-      <h1 className='text-[var(--mama-hot-pink)] text-4xl/8 font-bold'>{name}</h1>
+      <h1 className='text-[var(--mama-hot-pink)] text-3xl/8 font-bold'>{name}</h1>
       <br/>
 
       <p className='text-red-500 text-font-5 font-bold'>Rp {parseInt(selectedVariant.priceIdr).toLocaleString("id-ID")}</p>
@@ -104,7 +104,7 @@ function ProductInfo({name, stock, reviews, variants}:Product) {
           <Stars rating={4.9}/>
           <p className='text-[var(--color-light-gray)] text-font-2'>{4.9}</p>
         </div>
-          <p className='text-[var(--color-light-gray)] text-font-2'>10RB+ Penilaian</p>
+          <p className='text-[var(--color-light-gray)] text-font-2'>{reviews.length} Penilaian</p>
           <p className='text-[var(--color-light-gray)] text-font-2'>10RB+  Terjual</p>
       </div>
 
@@ -123,7 +123,7 @@ function ProductInfo({name, stock, reviews, variants}:Product) {
                               ? 'bg-[var(--mama-hot-pink)] text-white'
                               : 'bg-[var(--mama-pink)] text-white'}
                       `}
-                          onClick={()=>setSelectedVariant(v)}
+                          onClick={()=>{setSelectedVariant(v); setStock(v.stock)}}
           >{v.name}</p>
           ))}
         </div>
