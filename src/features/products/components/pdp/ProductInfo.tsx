@@ -1,28 +1,46 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Stars from './Stars'
-import { Button } from '@/components/ui/button'
 
 type Product ={
     name: string,
-    price_idr: string,
     stock: number,
     variants: Variant[]
+    reviews : Review[]
 }
 
 type Variant ={
     id: number,
     productId: number,
     name: string,
-    price_idr: string,
+    priceIdr: string,
     stock: number
 }
 
-function ProductInfo({name, price_idr, stock, variants}:Product) {
-  const [selectedVariant, setSelectedVariant] = useState<Variant>(variants[0])
+type Review = {
+  id: number,
+  title: string,
+  reviewerId: string,
+  productId: number,
+  rating: number,
+  numUpvotes: number,
+  description: string,
+  imageUrls: [],
+  createdAt: Date
+}
+
+function ProductInfo({name, stock, reviews, variants}:Product) {
+  const initialVariant = variants.find((v) => v.stock > 0) || variants[0] || null;
+  const [selectedVariant, setSelectedVariant] = useState<Variant>(initialVariant)
   const [qty, setQty] = useState<number>(1)
   const [alert, setAlert] = useState<string>('')
-  const productUrl = window.location.href;
+  const [productUrl, setProductUrl] = useState('');
+
+  useEffect(() => {
+    setProductUrl(window.location.href);
+  }, []);
+
+  console.log('VAR', selectedVariant)
 
   function handleAddStock(){
     setAlert('')
@@ -77,7 +95,7 @@ function ProductInfo({name, price_idr, stock, variants}:Product) {
       <h1 className='text-[var(--mama-hot-pink)] text-4xl/8 font-bold'>{name}</h1>
       <br/>
 
-      <p className='text-red-500 text-font-5 font-bold'>Rp {parseInt(price_idr).toLocaleString("id-ID")}</p>
+      <p className='text-red-500 text-font-5 font-bold'>Rp {parseInt(selectedVariant.priceIdr).toLocaleString("id-ID")}</p>
     
       <br/>
     {/* REVIEW STARS */}
