@@ -1,6 +1,7 @@
 export interface LoginPayload {
   email: string;
   password: string;
+  remember: boolean;
 }
 
 export interface RegisterPayload {
@@ -13,14 +14,14 @@ export interface RegisterPayload {
 }
 
 export interface ResetPasswordPayload {
-   email: string;
+  email: string;
 }
 
 export type AuthLayoutProps = {
-   children: React.ReactNode
-   title: string
-   subtitle: string
-   backToHref?: string
-   backToLabel?: string
-   showImage?: boolean
- }
+  children: React.ReactNode;
+  title: string;
+  subtitle: string;
+  backToHref?: string;
+  backToLabel?: string;
+  showImage?: boolean;
+};
