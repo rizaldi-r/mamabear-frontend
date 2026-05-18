@@ -20,7 +20,6 @@ import { Controller, useForm } from "react-hook-form";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-
   const { loading, serverError, handleLogin } = useLogin();
 
   const {
@@ -28,7 +27,13 @@ export function LoginForm() {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<LoginPayload & { remember: boolean }>();
+  } = useForm<LoginPayload>({
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
+  });
 
   return (
     <div className="space-y-4">
@@ -40,7 +45,11 @@ export function LoginForm() {
         </div>
       )}
 
-      <form className="space-y-4" onSubmit={handleSubmit(handleLogin)} noValidate>
+      <form
+        className="space-y-4"
+        onSubmit={handleSubmit(handleLogin)}
+        noValidate
+      >
         {/* EMAIL */}
         <div className="space-y-2">
           <Label className="font-bold text-[var(--mama-brown)] ml-1">
