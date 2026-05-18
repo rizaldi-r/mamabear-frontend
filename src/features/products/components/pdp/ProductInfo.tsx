@@ -131,7 +131,8 @@ function ProductInfo({name, reviews, variants}:Product) {
     }
 
       <br/>
-      {stock == 0 && <p>Maaf, Stock Habis.</p>}
+      <p>Stock : {stock}</p>
+      <br/>
 
       {/* QUANTITY */}
       {stock > 0 &&
@@ -153,6 +154,8 @@ function ProductInfo({name, reviews, variants}:Product) {
         </div>
         <p className='text-gray-400 text-font-1'>{alert}</p>
       </div>}
+      
+      {stock == 0 && <p>Maaf, stok habis 😔 Subscribe atau follow Instagram MamaBear untuk mendapatkan info saat stok kembali tersedia.</p>}
 
       <br/>
 

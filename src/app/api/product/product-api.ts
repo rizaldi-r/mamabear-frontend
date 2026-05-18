@@ -1,6 +1,6 @@
 import { Review } from "@/features/products/types/product.types";
 
-const BASE_URL = `https://mamabear-backend-dev.up.railway.app`
+const BASE_URL = `https://mamabear-backend-dev.up.railway.app/api`
 
 export async function getProduct(slug:string){
     try{
@@ -18,7 +18,7 @@ export async function getProduct(slug:string){
 
 export async function getReview(slug:string){
     try{
-        const response = await fetch(`${BASE_URL}/products/${slug}/reviews`)
+        const response = await fetch(`${BASE_URL}/products/${slug}/reviews?cursor=1&limit=10`)
     
         if (!response.ok) throw new Error("Gagal fetch produk");
 
@@ -47,9 +47,9 @@ export const addUpvotes = async (reviewId: number, slug: string): Promise<Review
   }
 };
 
-export async function getAllProduct(){
+export async function getRelatedProduct(slug:string){
     try{
-        const response = await fetch(`${BASE_URL}/products`)
+        const response = await fetch(`${BASE_URL}/products/${slug}/related`)
     
         if (!response.ok) throw new Error("Gagal fetch produk");
 

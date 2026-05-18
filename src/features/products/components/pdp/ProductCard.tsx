@@ -23,7 +23,7 @@ export default function ProductCard({Product}: ProductCardProps) {
 
         {/* Product Image */}
         <div className="relative">
-          <img src={Product.images[0].imageUrl} alt={Product.slug} className="object-contain"/>
+          {/* <img src={Product.images[0].imageUrl} alt={Product.slug} className="object-contain"/> */}
         </div>
       </div>
 

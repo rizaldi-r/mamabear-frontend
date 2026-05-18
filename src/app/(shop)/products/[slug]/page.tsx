@@ -19,7 +19,8 @@ async function page(props: { params: Params }) {
     const product : Product = res.data
 
     const rev = await getReview(slug)
-    const review : Review[] = rev.data.data
+    console.log('REV',rev)
+    const review : Review[] = rev.data.data || []
 
     const bestReview : Review = review.reduce((prev, current)=>{
       return current.numUpvotes > prev.numUpvotes ? current : prev
