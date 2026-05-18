@@ -44,3 +44,11 @@ export type Review = {
   imageUrls: [],
   createdAt: Date
 }
+
+export type Variant ={
+    id: number,
+    productId: number,
+    name: string,
+    priceIdr: string,
+    stock: number
+}

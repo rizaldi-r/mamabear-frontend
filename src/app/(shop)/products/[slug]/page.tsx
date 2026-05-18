@@ -28,7 +28,6 @@ async function page(props: { params: Params }) {
     const avgReview = review.length > 0 ? review.reduce((sum, n)=> sum + n.rating, 0)/review.length : 0
 
     const image = product.images || []
-    const variant = product.variants
 
   return (
     <div className='lg:px-[200px] px-5 flex flex-col gap-5'>
@@ -40,9 +39,7 @@ async function page(props: { params: Params }) {
         </div>
         
         <div className='lg:w-[50%]'>
-            <ProductInfo name={product.name} reviews={review}
-                        variants={variant} 
-            />
+            <ProductInfo product={product} avgReview={avgReview} totalReview={review.length}/>
         </div>
       </div>
 
