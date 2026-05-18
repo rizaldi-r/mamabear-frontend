@@ -71,7 +71,7 @@ export function UserDropdown({
           {isLoggedIn ? (
             <div className="flex flex-col">
               <Link
-                href="/profile"
+                href="/account"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-pink-50 hover:text-primary transition-colors"
                 onClick={closeDropdown}
               >

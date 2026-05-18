@@ -61,7 +61,7 @@ export default function VerifyEmailPage() {
           <h1 className="text-2xl font-bold text-[var(--mama-brown)]">
             Verifikasi Gagal
           </h1>
-          <p className="text-stone-500 text-sm">{errorMsg}</p>
+          <p className="text-stone-500 text-sm text-wrap break-words">{errorMsg}</p>
         </div>
         <Button
           variant="outline"
