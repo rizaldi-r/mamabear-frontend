@@ -1,29 +1,35 @@
-import { Product } from "../../types/product.types";
+import { getReview } from "@/app/api/product/product-api";
+import { Product, Review } from "../../types/product.types";
 
 
 interface ProductCardProps {
     Product : Product
 }
 
-export default function ProductCard({Product}: ProductCardProps) {
+export default async function ProductCard({Product}: ProductCardProps) {
+  const rev = await getReview(Product.slug)
+      const review : Review[] = rev.data.data || []
+  
+      const avgReview = review.length > 0 ? review.reduce((sum, n)=> sum + n.rating, 0)/review.length : 0
+  
   return (
-    <div className="w-full h-auto rounded-xl bg-white overflow-x-auto shadow-md border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300">
+    <div className="lg:w-[23%] w-[50%] h-auto rounded-xl bg-white shadow-md border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300">
       
       {/* Image Section */}
       <div className="relative">
         {/* Discount */}
-        <div className="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-md z-10">
+        <div className="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-3 py-1 z-10">
           50%
         </div>
 
         {/* Badge */}
-        <div className="absolute top-4 left-24 bg-[var(--mama-hot-pink)] text-[var(--mama-brown)] text-sm font-bold px-3 py-1 rounded-md z-10">
+        <div className="absolute top-4 left-20 bg-[var(--mama-hot-pink)] text-[var(--mama-brown)] text-sm font-bold px-3 py-1 z-10">
           NEW
         </div>
 
         {/* Product Image */}
         <div className="relative">
-          {/* <img src={Product.images[0].imageUrl} alt={Product.slug} className="object-contain"/> */}
+          <img src={Product.images[0].imageUrl} alt={Product.slug} className="object-contain"/>
         </div>
       </div>
 
@@ -43,10 +49,10 @@ export default function ProductCard({Product}: ProductCardProps) {
                     <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
                 </svg>
 
-                <span className="ml-1 text-[var(--color-light-gray)] text-sm">rating</span>
+                <span className="ml-1 text-[var(--color-light-gray)]">{avgReview.toFixed(1)}</span>
             </div>
 
-            <span className="text-[var(--color-light-gray)] text-sm">terjual</span>
+            <span className="text-[var(--color-light-gray)] text-sm">10Rb+ terjual</span>
             </div>
           </div>
 

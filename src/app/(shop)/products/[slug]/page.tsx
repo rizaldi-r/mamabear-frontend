@@ -19,7 +19,6 @@ async function page(props: { params: Params }) {
     const product : Product = res.data
 
     const rev = await getReview(slug)
-    console.log('REV',rev)
     const review : Review[] = rev.data.data || []
 
     const bestReview : Review = review.reduce((prev, current)=>{
@@ -57,7 +56,7 @@ async function page(props: { params: Params }) {
       
       {/* RATINGS */}
       <div>
-        <p className='text-font-4 text-[var(--mama-brown)] font-bold'>Review</p>
+        <p className='text-font-4 text-[var(--mama-brown)] font-bold'>Reviews</p>
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-3'>
             <p className='text-font-4 text-[var(--mama-hot-pink)] font-bold'>{avgReview.toFixed(1)}</p>
@@ -77,7 +76,7 @@ async function page(props: { params: Params }) {
         <p>{bestReview.description}</p>
       </div>
 
-      <hr className='h-1 pb-4 border-gray-500'/>
+      <hr className='border-gray-300'/>
 
       <div className='flex flex-col items-center gap-5'>
         <p className='text-font-4 text-[var(--mama-brown)] font-bold'>Produk Lainnya</p>

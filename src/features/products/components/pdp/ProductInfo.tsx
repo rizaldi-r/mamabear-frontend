@@ -91,13 +91,13 @@ function ProductInfo({name, reviews, variants}:Product) {
 
   console.log(stock)
   return (
-    <div className='w-full'>
+    <div className='w-full flex flex-col gap-4'>
       <h1 className='text-[var(--mama-hot-pink)] text-3xl/8 font-bold'>{name}</h1>
-      <br/>
+
 
       <p className='text-red-500 text-font-5 font-bold'>Rp {parseInt(selectedVariant.priceIdr).toLocaleString("id-ID")}</p>
     
-      <br/>
+
     {/* REVIEW STARS */}
       <div className='flex gap-5'>
         <div className='flex'>
@@ -108,13 +108,13 @@ function ProductInfo({name, reviews, variants}:Product) {
           <p className='text-[var(--color-light-gray)] text-font-2'>10RB+  Terjual</p>
       </div>
 
-      <br/>
+
     {/* VARIANTS */}
     {variants.length > 0 &&
       <div className='flex flex-col gap-2'>
         <p className='text-[var(--color-light-gray)] font-bold'>Variant</p>  
 
-        <div className='flex flex-wrap gap-3 w-[70%]'>
+        <div className='flex flex-wrap gap-2 w-[70%]'>
           {variants.map((v)=>(
           <p key={v.id} className={`py-1 px-5 rounded-2xl font-bold cursor-pointer
                           ${v.stock === 0
@@ -130,9 +130,9 @@ function ProductInfo({name, reviews, variants}:Product) {
       </div>
     }
 
-      <br/>
-      <p>Stock : {stock}</p>
-      <br/>
+
+      <p>Stock : {selectedVariant.stock}</p>
+
 
       {/* QUANTITY */}
       {stock > 0 &&
@@ -157,7 +157,6 @@ function ProductInfo({name, reviews, variants}:Product) {
       
       {stock == 0 && <p>Maaf, stok habis 😔 Subscribe atau follow Instagram MamaBear untuk mendapatkan info saat stok kembali tersedia.</p>}
 
-      <br/>
 
       <div className='flex gap-2'>
         <button className='w-[90%] bg-[var(--mama-hot-pink)] text-font-4 rounded-4xl font-bold text-white flex items-center justify-center'>
@@ -174,7 +173,6 @@ function ProductInfo({name, reviews, variants}:Product) {
         </button>
       </div>
 
-      <br/>
       <div className='flex justify-end items-center'>
         <p className='text-font-1'>Bagikan</p>
         <svg onClick={()=>handleShare()} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" stroke="#6C4735" className="size-7 cursor-pointer">

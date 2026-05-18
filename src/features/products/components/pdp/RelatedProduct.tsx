@@ -8,18 +8,16 @@ interface Props {
 }
 
 async function RelatedProduct({slug}:Props) {
-
   const res = await getRelatedProduct(slug)
   const product : Product[] = res.data
-  console.log('PRODD', product)
 
   return (
-    <div className='flex w-full overflow-x-auto gap-4'>
-        {/* {product.length >0 && <>
+    <div className='flex w-full overflow-x-auto gap-4 justify-center'>
+        {product.length >0 && <>
         {product.map((p)=>(
-            <ProductCard Product={p}/>
+              <ProductCard key={p.id} Product={p}/>
         ))}
-        </>} */}
+        </>}
     </div>
   )
 }
