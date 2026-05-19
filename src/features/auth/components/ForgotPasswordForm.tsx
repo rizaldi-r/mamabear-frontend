@@ -1,29 +1,23 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Mail } from "lucide-react";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { ResetPasswordPayload } from "../types/auth.type";
+import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword";
+import { AlertCircle, CheckCircle2, Mail } from "lucide-react";
 
-export function ResetPasswordForm() {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
+export function ForgotPasswordForm() {
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ResetPasswordPayload>();
-
-  const onSubmit: SubmitHandler<ResetPasswordPayload> = (data) => {
-    setLoading(true);
-    console.log("Reset Email:", data); // Ready to be sent to your API
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 1500);
-  };
+    form: {
+      register,
+      formState: { errors },
+    },
+    submitted,
+    setSubmitted,
+    loading,
+    apiError,
+    onSubmit,
+  } = useForgotPassword();
 
   if (submitted) {
     return (
@@ -50,7 +44,14 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-6" onSubmit={onSubmit} noValidate>
+      {apiError && (
+        <div className="flex items-center gap-2 p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-100">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{apiError}</span>
+        </div>
+      )}
+
       <div className="space-y-2">
         <Label
           htmlFor="reset-email"

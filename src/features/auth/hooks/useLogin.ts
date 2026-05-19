@@ -19,9 +19,10 @@ export function useLogin() {
 
     // NextAuth automatically set the session cookies
     const result = await signIn("credentials", {
-      redirect: false, // We handle redirection manually
+      redirect: false, // Handle redirection manually
       email: payload.email,
       password: payload.password,
+      remember: payload.remember,
     });
 
     if (result?.error) {

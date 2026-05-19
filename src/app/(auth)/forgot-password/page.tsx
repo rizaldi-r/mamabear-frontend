@@ -1,8 +1,7 @@
-"use client";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
-import { ResetPasswordForm } from "@/features/auth/components/ResetPasswordForm";
+import {ForgotPasswordForm} from "@/features/auth/components/ForgotPasswordForm";
 
 export default function ResetPasswordPage() {
   return (
@@ -15,7 +14,7 @@ export default function ResetPasswordPage() {
         backToLabel="Kembali ke Login"
         showImage={false}
       >
-        <ResetPasswordForm />
+        <ForgotPasswordForm />
       </AuthLayout>
       <Footer />
     </div>
