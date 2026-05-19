@@ -9,13 +9,17 @@ import {
   User,
   MessageCircleMore,
 } from "lucide-react";
-import { useUIStore } from "@/store/use-ui-store";
 import { UserDropdown } from "@/components/layout/UserDropdown";
 
-export function BottomNav() {
-  const { toggleSidebar } = useUIStore();
-  const isLoggedIn = false;
+interface BottomNavProps {
+  isLoggedIn: boolean;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+  };
+}
 
+export function BottomNav({ isLoggedIn, user }: BottomNavProps) {
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-stone-100 shadow-[0_-1px_4px_rgba(214,85,126,0.5)] pb-safe">
       <div className="flex items-center justify-around h-16">
@@ -60,6 +64,7 @@ export function BottomNav() {
           <UserDropdown
             isLoggedIn={isLoggedIn}
             className="bottom-full right-4 mb-2"
+            user={user}
           >
             <div className="flex flex-col items-center justify-center w-full h-full text-[var(--mama-brown)] active:text-primary transition-colors">
               <User className="w-6 h-6" strokeWidth={2.5} />

@@ -3,16 +3,34 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { User, LogOut, Package, LogIn, UserPlus } from "lucide-react";
-import {signOut} from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 interface UserDropdownProps {
   isLoggedIn: boolean;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+  } | null;
   children?: React.ReactNode;
   className?: string;
 }
 
+/**
+ * Helper to generate initials from a name (e.g., "John Doe" -> "JD")
+ */
+function getInitials(name?: string | null) {
+  if (!name) return "U";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
 export function UserDropdown({
   isLoggedIn,
+  user,
   children,
   className,
 }: UserDropdownProps) {
@@ -36,6 +54,13 @@ export function UserDropdown({
       >
         {children ? (
           children
+        ) : isLoggedIn ? (
+          <button
+            type="button"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-pink-100 text-[var(--mama-hot-pink)] font-bold border-2 border-white shadow-sm hover:shadow-md transition-all ring-2 ring-transparent hover:ring-pink-200"
+          >
+            {getInitials(user?.name)}
+          </button>
         ) : (
           <button
             type="button"
@@ -60,11 +85,19 @@ export function UserDropdown({
         <div
           className={`absolute z-[61] w-56 bg-white rounded-2xl shadow-xl border border-stone-100 py-2 animate-in fade-in zoom-in-95 duration-200 origin-top-right ${className || "right-0 mt-2"}`}
         >
-          <div className="px-4 py-2 mb-1">
-            <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">
-              Akun Saya
-            </span>
-          </div>
+          {isLoggedIn && user ? (
+            <div className="px-4 py-3 mb-1">
+              <p className="text-sm font-bold text-stone-800 truncate">
+                {user.name || "User"}
+              </p>
+            </div>
+          ) : (
+            <div className="px-4 py-2 mb-1">
+              <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">
+                Akun Saya
+              </span>
+            </div>
+          )}
 
           <div className="h-px bg-stone-100 mx-2 mb-1" />
 
