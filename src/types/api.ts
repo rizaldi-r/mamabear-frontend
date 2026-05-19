@@ -1,12 +1,11 @@
-// Use a generic <T> so you can pass in specific data shapes (like User, or Product[])
-export interface ApiResponse<T = any> {
+// Use a generic <T> to pass in specific data shapes (like User, or Product[])
+export interface ApiResponse<T> {
   success: boolean;
   message: string;
-  error_code?: number; // Optional, because success responses won't have it
+  error_code?: number;
   data: T;
 }
 
-// Example of how you will use this later for Auth:
 export interface User {
   id: string;
   name: string;
