@@ -102,7 +102,7 @@ export function LoginForm() {
               asChild
               className="text-[11px] font-bold text-primary p-0 h-auto"
             >
-              <Link href="/reset-password">Lupa sandi?</Link>
+              <Link href="/forgot-password">Lupa sandi?</Link>
             </Button>
           </div>
 

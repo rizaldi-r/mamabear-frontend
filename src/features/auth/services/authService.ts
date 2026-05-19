@@ -64,12 +64,12 @@ export async function verifyEmail(token: string): Promise<ApiResponse<null>> {
 }
 
 /**
- * Sends a password reset email.
+ * Sends a password reset request to trigger a recovery email from the backend.
  */
 export async function requestPasswordReset(
   email: string,
 ): Promise<ApiResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+  const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -78,11 +78,36 @@ export async function requestPasswordReset(
   });
 
   const response = await res.json();
-  console.log("🚀 ~ response:", response)
-  
 
   if (!res.ok || !response.success) {
     throw new Error(response.message || "Gagal mengirim tautan reset.");
+  }
+
+  return response;
+}
+
+/**
+ * Submits the new password using the verification token.
+ * Hits backend endpoint: POST /auth/reset-password/:token
+ */
+export async function confirmPasswordReset(
+  token: string,
+  password: string,
+): Promise<ApiResponse> {
+  const res = await fetch(`${API_BASE_URL}/auth/reset-password/${token}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password }),
+  });
+
+  const response = await res.json();
+
+  if (!res.ok || !response.success) {
+    throw new Error(
+      response.message || "Gagal mengatur ulang password. Silakan coba lagi.",
+    );
   }
 
   return response;

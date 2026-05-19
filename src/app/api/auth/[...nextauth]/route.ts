@@ -109,8 +109,6 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           remember: user.remember,
           accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFESPAN,
-          // If not remembered, we set a hard limit (e.g., 8 hours)
-          // after which we won't allow refreshing anymore
           sessionHardLimit: user.remember
           ? Date.now() + REFRESH_TOKEN_LIFESPAN
           : Date.now() + SHORT_SESSION_LIMIT,
