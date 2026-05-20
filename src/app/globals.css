@@ -9,6 +9,11 @@
     text-wrap: balance;
   }
 
+  .page-max-width{
+    max-width: 72rem;
+    margin: auto;
+  } 
+
   /* Font Guide implementation */
   .text-font-1 {
     font-size: 0.75rem;
@@ -44,6 +49,7 @@
     --color-light-gray: #a9a9a9;
 
     /* Shadcn Mapping using predefined Mamabear colors in OKLCH */
+    --radius: 0.5rem;
     --background: 1 0 0;
     --foreground: 0.3342 0.01 48.4048;
     --card: 1 0 0;
@@ -123,6 +129,5 @@
   }
   html {
     @apply font-sans;
-    /* font-family: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif !important; */
   }
 }
