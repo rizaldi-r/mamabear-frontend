@@ -20,13 +20,22 @@ export interface ProductFilterParams {
 }
 
 /**
+ * Pagination metadata structure returned by the backend.
+ */
+export interface PaginationMeta {
+  limit: number;
+  nextCursor: string | null;
+  hasNextPage: boolean;
+}
+
+/**
  * Response structure for the paginated product list.
  */
 export interface PaginatedProducts {
-  products: Product[];
-  nextCursor?: string | null;
+  success: boolean;
+  data: Product[];
+  pagination: PaginationMeta;
 }
-
 /**
  * fetchFilteredProducts
  * Fetches a list of products using the advanced filtering and cursor pagination endpoint.
