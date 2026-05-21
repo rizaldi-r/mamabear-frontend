@@ -110,9 +110,10 @@ function ProductInfo({product, avgReview, totalReview}:ProductProps) {
     <div className='w-full flex flex-col gap-4'>
       {loading && <p>LOADING.....</p>}
       <h1 title={product.name} className='text-[var(--mama-hot-pink)] text-3xl/8 font-bold'>{product.name}</h1>
-      <div className='flex gap-5 items-center'>
+      <div className='flex gap-4 items-center'>
         <p className='text-red-500 text-font-5 font-bold'>Rp {(Number(selectedVariant.priceIdr) * (100 - Number(product.discountPercent)) / 100).toLocaleString("id-ID")}</p>
-        <p className='text-gray-500 text-font-4 line-through'>Rp {parseInt(selectedVariant.priceIdr).toLocaleString("id-ID")}</p>
+        <p className='text-gray-500 text-font-3 line-through'>Rp {parseInt(selectedVariant.priceIdr).toLocaleString("id-ID")}</p>
+        <p className='text-[var(--mama-hot-pink)] text-font-3 font-bold'>{product.discountPercent}% OFF</p>
       </div>
 
     {/* REVIEW STARS */}

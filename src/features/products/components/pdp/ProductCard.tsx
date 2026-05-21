@@ -14,13 +14,19 @@ export default async function ProductCard({Product}: ProductCardProps) {
       {/* Image Section */}
       <div className="relative">
         {/* Discount */}
-        <div className="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-3 py-1 z-10">
-          50%
-        </div>
+        <div className="absolute left-4 top-4">
+          <div className="flex gap-3">
+            {Number(Product.discountPercent) > 0 && (
+          <p className="bg-red-500 text-white text-sm font-bold px-3 py-1 z-10">
+            {Product.discountPercent}%
+          </p>
+        )}
 
         {/* Badge */}
-        <div className="absolute top-4 left-20 bg-[var(--mama-hot-pink)] text-[var(--mama-brown)] text-sm font-bold px-3 py-1 z-10">
-          NEW
+        <p className="bg-[var(--mama-hot-pink)] text-[var(--mama-brown)] text-sm font-bold px-3 py-1 z-10">
+          {Product.highlight.name}
+        </p>
+          </div>
         </div>
 
         {/* Product Image */}
