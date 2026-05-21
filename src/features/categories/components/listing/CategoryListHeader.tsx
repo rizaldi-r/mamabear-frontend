@@ -2,7 +2,7 @@ import React from 'react';
 import { LayoutGrid, AlertCircle, RefreshCcw, ChevronRight } from 'lucide-react';
 import { fetchCategories } from '@/features/categories/services/categoryService';
 import { Category } from '../../types/category.type'
-​
+
 /**
 * SUB-COMPONENT: CategoryListHeader
 * Renders the top title and icon section.
@@ -17,7 +17,7 @@ function CategoryListHeader() {
    </div>
  );
 }
-​
+
 /**
 * SUB-COMPONENT: CategoryListItem
 * Horizontal layout for category information.
@@ -54,7 +54,7 @@ function CategoryListItem({ category } : { category : Category }) {
    </a>
  );
 }
-​
+
 /**
 * SUB-COMPONENT: CategoryList
 * Renders the vertical stack of categories.
@@ -68,7 +68,7 @@ function CategoryList({ categories } : { categories : Category[] }) {
    </div>
  );
 }
-​
+
 /**
 * SUB-COMPONENT: CategoryEmptyState
 * Renders when no categories are returned.
@@ -80,7 +80,7 @@ function CategoryEmptyState() {
    </div>
  );
 }
-​
+
 /**
 * SUB-COMPONENT: ErrorState
 * Visual feedback when the fetch fails.
@@ -102,14 +102,14 @@ function ErrorState({ message } : { message : string }) {
    </div>
  );
 }
-​
+
 /**
 * MAIN PAGE: Category Listing
 * Clean Server Component that orchestrates sub-components.
 */
 export default async function CategoriesPage() {
  const { data: categories, error } = await fetchCategories();
-​
+
  // If there's an error, we early return the ErrorState
  if (error) {
    return (
@@ -119,11 +119,11 @@ export default async function CategoriesPage() {
      </div>
    );
  }
-​
+
  return (
    <div className="max-w-6xl mx-auto px-4 py-12">
      <CategoryListHeader />
-​
+
      {categories && categories.length > 0 ? (
        <CategoryList categories={categories} />
      ) : (
