@@ -4,7 +4,7 @@ const BASE_URL = `https://mamabear-backend-dev.up.railway.app/api`
 
 export async function getProduct(slug:string){
     try{
-        const response = await fetch(`${BASE_URL}/products/${slug}`)
+        const response = await fetch(`${BASE_URL}/products/${slug}`,{cache: "no-store",})
     
         if (!response.ok) throw new Error("Gagal fetch produk");
 

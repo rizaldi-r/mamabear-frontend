@@ -18,14 +18,7 @@ async function page(props: { params: Params }) {
     const res = await getProduct(slug)
     const product : Product = res.data
 
-    const rev = await getReview(slug)
-    const review : Review[] = rev.data.data || []
-
-    const bestReview : Review = review.reduce((prev, current)=>{
-      return current.numUpvotes > prev.numUpvotes ? current : prev
-    })
-
-    const avgReview = review.length > 0 ? review.reduce((sum, n)=> sum + n.rating, 0)/review.length : 0
+    console.log('PROD', product)
 
     const image = product.images || []
 
@@ -39,7 +32,7 @@ async function page(props: { params: Params }) {
         </div>
         
         <div className='lg:w-[50%]'>
-            <ProductInfo product={product} avgReview={avgReview} totalReview={review.length}/>
+            <ProductInfo product={product} avgReview={product.rating} totalReview={product.reviewsCount}/>
         </div>
       </div>
 
@@ -54,23 +47,23 @@ async function page(props: { params: Params }) {
       {/* RATINGS */}
       <div>
         <p className='text-font-4 text-[var(--mama-brown)] font-bold'>Reviews</p>
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between w-full'>
           <div className='flex items-center gap-3'>
-            <p className='text-font-4 text-[var(--mama-hot-pink)] font-bold'>{avgReview.toFixed(1)}</p>
-            <Stars rating={avgReview}/>
-            <p className='text-[var(--color-light-gray)] text-font-1'>{review.length} Penilaian</p>
+            <p className='text-font-4 text-[var(--mama-hot-pink)] font-bold'>{product.rating.toFixed(1)}</p>
+            <Stars rating={product.rating}/>
+            <p className='text-[var(--color-light-gray)] text-font-1'>{product.reviewsCount} Penilaian</p>
           </div>
 
-          <Link href={`/products/${slug}/review`}>Lihat seluruh penilaian</Link>
+          <Link href={`/products/${slug}/review`} className='text-sm'>Lihat seluruh penilaian</Link>
         </div>
       </div>
 
       {/* BEST REVIEW */}
       <div className='flex flex-col'>
-        <p className='font-bold'>{bestReview.reviewerId}</p>
-        <Stars rating={bestReview.rating}/>
-        <p>{bestReview.title}</p>
-        <p>{bestReview.description}</p>
+        <p className='font-bold'>{product.topReview.id}</p>
+        <Stars rating={product.topReview.rating}/>
+        <p>{product.topReview.title}</p>
+        <p>{product.topReview.description}</p>
       </div>
 
       <hr className='border-gray-300'/>

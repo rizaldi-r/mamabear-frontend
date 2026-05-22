@@ -2,10 +2,11 @@ export type Product = {
     id: number,
     name: string,
     slug: string,
+    highlightId: number,
+    tags: [],
     description: string,
     ingredients:string,
     usageInstructions:string
-    price_idr: string,
     weight_g: number,
     sku: string,
     stock: number,
@@ -13,6 +14,19 @@ export type Product = {
     createdAt: Date,
     updatedAt: Date,
     categoryId: number | null,
+    highlight: {
+      id: number,
+      name: string,
+      slug: string,
+      description: string,
+      isActive: boolean
+    },
+    currentPrice: string,
+    originalPrice: string,
+    discountPercent: string,
+    rating: number,
+    reviewsCount: number,
+    topReview: Review,
     category: {
         id: number,
         name: string

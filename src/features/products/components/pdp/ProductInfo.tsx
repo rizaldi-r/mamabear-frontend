@@ -26,8 +26,6 @@ function ProductInfo({product, avgReview, totalReview}:ProductProps) {
     setProductUrl(window.location.href);
   }, []);
 
-  console.log('VAR', selectedVariant)
-
   function handleAddStock(){
     setAlert('')
     if(qty>= stock){
@@ -108,14 +106,15 @@ function ProductInfo({product, avgReview, totalReview}:ProductProps) {
     }
   }
 
-
-  console.log(stock)
   return (
     <div className='w-full flex flex-col gap-4'>
       {loading && <p>LOADING.....</p>}
-      <h1 className='text-[var(--mama-hot-pink)] text-3xl/8 font-bold'>{product.name}</h1>
-      <p className='text-red-500 text-font-5 font-bold'>Rp {parseInt(selectedVariant.priceIdr).toLocaleString("id-ID")}</p>
-    
+      <h1 title={product.name} className='text-[var(--mama-hot-pink)] text-3xl/8 font-bold'>{product.name}</h1>
+      <div className='flex gap-4 items-center'>
+        <p className='text-red-500 text-font-5 font-bold'>Rp {(Number(selectedVariant.priceIdr) * (100 - Number(product.discountPercent)) / 100).toLocaleString("id-ID")}</p>
+        <p className='text-gray-500 text-font-3 line-through'>Rp {parseInt(selectedVariant.priceIdr).toLocaleString("id-ID")}</p>
+        <p className='text-[var(--mama-hot-pink)] text-font-3 font-bold'>{product.discountPercent}% OFF</p>
+      </div>
 
     {/* REVIEW STARS */}
       <div className='flex gap-5'>
@@ -162,7 +161,7 @@ function ProductInfo({product, avgReview, totalReview}:ProductProps) {
             className={` px-3 w-[30%]
               ${qty >= stock || qty <= 1 ? 'text-gray-400 cursor-not-allowed' : 'text-black'}`}
             onClick={()=>handleReduceStock()}>-</button>
-          <input 
+          <input readOnly
               className="w-[40%] text-center border-l border-r pointer-events-none"
               value={qty}/>
           
