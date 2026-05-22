@@ -3,7 +3,7 @@ import {
   InstagramIcon,
   TikTokIcon,
   YoutubeIcon,
-} from "@/components/layout/SocialIcons";
+} from "@/components/icons/SocialIcons";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
