@@ -1,12 +1,12 @@
 "use client";
 
-import { BottomNav } from "@/components/layout/BottomNavbar";
-import { SidebarMenu } from "@/components/layout/SidebarMenu";
-import { UserDropdown } from "@/components/layout/UserDropdown";
+import { BottomNav } from "@/components/layout/navigation/BottomNavbar";
+import { SidebarMenu } from "@/components/layout/navigation/SidebarMenu";
+import { UserDropdown } from "@/components/layout/navigation/UserDropdown";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { SearchBar } from "@/features/products/components/shared/SearchBar";
 import { useUIStore } from "@/store/use-ui-store";
-import { Menu, Search, ShoppingCart } from "lucide-react";
+import { Menu, ShoppingCart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,18 +44,8 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Search Bar (Visible on all screens) */}
-          <div className="flex-1 max-w-xl relative">
-            <Search
-              className="text-muted-foreground absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-10 w-4 h-4 md:w-5 md:h-5"
-              strokeWidth="3"
-            />
-            <Input
-              type="text"
-              placeholder="Cari produk..."
-              className="w-full bg-white border-pink-100 pl-9 md:pl-14 focus-visible:ring-primary rounded-lg py-3 md:py-5 text-sm md:text-base h-9 md:h-12"
-            />
-          </div>
+          {/* Search Bar Component */}
+          <SearchBar />
 
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-3 shrink-0">

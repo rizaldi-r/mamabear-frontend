@@ -9,7 +9,7 @@ import {
   User,
   MessageCircleMore,
 } from "lucide-react";
-import { UserDropdown } from "@/components/layout/UserDropdown";
+import { UserDropdown } from "@/components/layout/navigation/UserDropdown";
 
 interface BottomNavProps {
   isLoggedIn: boolean;

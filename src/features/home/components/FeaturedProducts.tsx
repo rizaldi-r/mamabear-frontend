@@ -1,5 +1,5 @@
-import { HomeProductCard } from "@/features/home/components/HomeProductCard";
-import { Product } from "@/features/home/types/home.types";
+import ProductCard from "@/features/products/components/shared/ProductCard";
+import { Product } from "@/features/products/types/products.types";
 
 const mockProducts: Product[] = [
   {
@@ -105,6 +105,7 @@ const mockProducts: Product[] = [
 
 export function FeaturedProducts({ products }: { products?: Product[] }) {
   // Use API products if available, fallback to mock, and limit to 4 items
+  // TODO: limit in fetching and remove mock with error component
   const displayProducts = (
     products && products.length > 0 ? products : mockProducts
   ).slice(0, 4);
@@ -120,7 +121,7 @@ export function FeaturedProducts({ products }: { products?: Product[] }) {
         {/* Product Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
           {displayProducts.map(function renderProduct(product) {
-            return <HomeProductCard key={product.id} product={product} />;
+            return <ProductCard key={product.id} product={product} />;
           })}
         </div>
       </div>

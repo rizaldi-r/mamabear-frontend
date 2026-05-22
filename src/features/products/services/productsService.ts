@@ -43,7 +43,7 @@ export interface PaginatedProducts {
  * @returns Promise resolving to a PaginatedProducts object or null on failure
  */
 export async function fetchFilteredProducts(
-  params: ProductFilterParams,
+  params: ProductFilterParams = {},
 ): Promise<PaginatedProducts | null> {
   try {
     const searchParams = new URLSearchParams();

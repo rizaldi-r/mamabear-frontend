@@ -45,6 +45,14 @@ export interface ProductVariant {
   updatedAt: string; // ISO Date string
 }
 
+export interface Highlight {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  isActive: boolean;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -52,13 +60,23 @@ export interface Product {
   isActive: boolean;
   categoryId: number;
   highlightId: number;
-  tags: string[]; // Adjust type if tags contain objects in other payloads
+  tags: string[];
   description: string;
-  ingredients: string | null; // Null in your payload, assuming string if populated
-  usageInstructions: string | null; // Null in your payload, assuming string if populated
+  ingredients: string | null;
+  usageInstructions: string | null;
   createdAt: string; // ISO Date string
   updatedAt: string; // ISO Date string
-  category: Category;
-  images: ProductImage[];
-  variants: ProductVariant[];
+
+  // Rich relational payloads
+  category?: Category;
+  images?: ProductImage[];
+  variants?: ProductVariant[];
+  highlight?: Highlight | null;
+
+  // New Analytical and dynamic pricing fields
+  currentPrice?: string; // Computed current price (string from backend)
+  originalPrice?: string; // Base price before discount
+  discountPercent?: number; // Computed discount percent represented as a string
+  rating?: number; // Average user rating
+  reviewsCount?: number; // Total review count
 }
