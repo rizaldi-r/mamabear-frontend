@@ -9,10 +9,11 @@ import { HeroSection } from "@/features/home/components/HeroSection";
 import NewsletterPopup from "@/features/home/components/NewsletterPopup";
 import { RoadToSale } from "@/features/home/components/RoadToSale";
 import { TestimonialSection } from "@/features/home/components/TestimonialSection";
-import { getHomeData } from "@/features/home/services/homeService";
+import { productService } from "@/features/products/services/productsService";
 
 export default async function HomePage() {
-  const data = await getHomeData();
+  const data = await productService.fetchFilteredProducts({ limit: 4 });
+  const products = data?.data;
 
   return (
     <div className="min-h-screen bg-white text-[var(--mama-brown)] selection:bg-pink-200">
@@ -22,7 +23,7 @@ export default async function HomePage() {
         <HeroSection />
         <RoadToSale />
         <CategoryShowcase />
-        <FeaturedProducts products={data} />
+        <FeaturedProducts products={products} />
         <USPBanner />
         <TestimonialSection />
         <AwardsSection />
