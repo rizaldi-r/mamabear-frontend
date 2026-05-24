@@ -7,7 +7,7 @@ import { Category } from '../../types/category.type'
 * SUB-COMPONENT: CategoryListHeader
 * Renders the top title and icon section.
 */
-function CategoryListHeader() {
+export function CategoryListHeader() {
  return (
    <div className="flex items-center gap-3 mb-10">
      <div>
@@ -23,7 +23,7 @@ function CategoryListHeader() {
 * Horizontal layout for category information.
 * Replaces the previous Card design.
 */
-function CategoryListItem({ category } : { category : Category }) {
+export function CategoryListItem({ category } : { category : Category }) {
  return (
    <a
      href={`/categories/${category.slug}`}
@@ -59,7 +59,7 @@ function CategoryListItem({ category } : { category : Category }) {
 * SUB-COMPONENT: CategoryList
 * Renders the vertical stack of categories.
 */
-function CategoryList({ categories } : { categories : Category[] }) {
+export function CategoryList({ categories } : { categories : Category[] }) {
  return (
    <div className="flex flex-col gap-4 max-w-4xl mx-auto">
      {categories.map((cat) => (
@@ -73,7 +73,7 @@ function CategoryList({ categories } : { categories : Category[] }) {
 * SUB-COMPONENT: CategoryEmptyState
 * Renders when no categories are returned.
 */
-function CategoryEmptyState() {
+export function CategoryEmptyState() {
  return (
    <div className="text-center py-20 bg-stone-50 rounded-[40px] border-2 border-dashed border-stone-200">
      <p className="text-stone-400 font-bold tracking-tight">Belum ada kategori yang tersedia saat ini.</p>
@@ -85,7 +85,7 @@ function CategoryEmptyState() {
 * SUB-COMPONENT: ErrorState
 * Visual feedback when the fetch fails.
 */
-function ErrorState({ message } : { message : string }) {
+export function ErrorState({ message } : { message : string }) {
  return (
    <div className="flex flex-col items-center justify-center py-20 px-6 bg-red-50/50 border-2 border-dashed border-red-100 rounded-[40px] text-center">
      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 mb-4">
@@ -99,36 +99,6 @@ function ErrorState({ message } : { message : string }) {
      >
        <RefreshCcw size={16} /> Coba Lagi
      </a>
-   </div>
- );
-}
-
-/**
-* MAIN PAGE: Category Listing
-* Clean Server Component that orchestrates sub-components.
-*/
-export default async function CategoriesPage() {
- const { data: categories, error } = await fetchCategories();
-
- // If there's an error, we early return the ErrorState
- if (error) {
-   return (
-     <div className="max-w-6xl mx-auto px-4 py-12">
-       <CategoryListHeader />
-       <ErrorState message={error} />
-     </div>
-   );
- }
-
- return (
-   <div className="max-w-6xl mx-auto px-4 py-12">
-     <CategoryListHeader />
-
-     {categories && categories.length > 0 ? (
-       <CategoryList categories={categories} />
-     ) : (
-       <CategoryEmptyState />
-     )}
    </div>
  );
 }
