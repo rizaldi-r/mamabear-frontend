@@ -1,13 +1,10 @@
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { LoginForm } from "@/features/auth/components/LoginForm";
 
 export default function LoginPage() {
   return (
     <>
-      <Navbar />
-      <main className="page-max-width">
+      <main>
         <AuthLayout
           title="Selamat Datang Kembali"
           subtitle="Masuk ke akun MamaBear Anda"
@@ -17,7 +14,6 @@ export default function LoginPage() {
           <LoginForm />
         </AuthLayout>
       </main>
-      <Footer />
     </>
   );
 }

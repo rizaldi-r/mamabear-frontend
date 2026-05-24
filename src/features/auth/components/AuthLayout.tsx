@@ -15,7 +15,7 @@ export function AuthLayout({
     <div className="font-sans selection:bg-primary/20 py-24">
       <div className="flex justify-center items-center gap-12">
         {/* Form */}
-        <div className="flex flex-col gap-4 font-sans selection:bg-primary/20 px-12 lg:p-0 w-full lg:w-1/3">
+        <div className="flex flex-col gap-4 font-sans selection:bg-primary/20 lg:p-0 w-full lg:w-1/3">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <h2 className="text-xl font-extrabold text-[var(--mama-brown)] tracking-tight">
               {title}

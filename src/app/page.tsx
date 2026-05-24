@@ -16,23 +16,25 @@ export default async function HomePage() {
   const products = data?.data;
 
   return (
-    <div className="min-h-screen bg-white text-[var(--mama-brown)] selection:bg-pink-200">
+    <>
       <Navbar />
 
       <main>
         <HeroSection />
         <RoadToSale />
-        <CategoryShowcase />
-        <FeaturedProducts products={products} />
-        <USPBanner />
-        <TestimonialSection />
-        <AwardsSection />
+        <section className="page-max-width">
+          <CategoryShowcase />
+          <FeaturedProducts products={products} />
+          <USPBanner />
+          <TestimonialSection />
+          <AwardsSection />
+        </section>
       </main>
 
       <Footer />
 
       <ChatWidget />
       <NewsletterPopup />
-    </div>
+    </>
   );
 }

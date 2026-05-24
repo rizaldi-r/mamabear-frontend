@@ -2,8 +2,6 @@ import React from "react";
 import ProductListingBanner from "@/features/products/components/listing/ProductListingBanner";
 import ProductCatalogClient from "@/features/products/components/listing/ProductCatalogClient";
 import { fetchCategories } from "@/features/products/services/categoryService";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 
 /**
  * -------------------------------------------------------------------------
@@ -19,17 +17,15 @@ export default async function ProductListingPage() {
 
   return (
     <>
-      <Navbar />
-      <main className="min-h-screen bg-white pb-24">
+      <div className="min-h-screen bg-white pb-24">
         {/* 1. Static/Dumb Banner */}
         <ProductListingBanner />
 
         {/* 2. Interactive Client Component */}
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <section className="mx-auto page-margin">
           <ProductCatalogClient initialCategories={categories} />
-        </div>
-      </main>
-      <Footer />
+        </section>
+      </div>
     </>
   );
 }
