@@ -9,10 +9,14 @@
     text-wrap: balance;
   }
 
-  .page-max-width{
-    max-width: 72rem;
+  .page-max-width {
+    max-width: 1240px;
     margin: auto;
-  } 
+  }
+
+  .page-margin {
+    @apply mx-3 sm:mx-4 md:mx-6;
+  }
 
   /* Font Guide implementation */
   .text-font-1 {
