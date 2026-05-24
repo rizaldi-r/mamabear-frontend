@@ -1,7 +1,7 @@
 import ChatWidget from "@/components/layout/ChatWidget";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
-import { USPBanner } from "@/components/layout/USPBanner";
+import { USPBanner } from "@/features/home/components/USPBanner";
 import { AwardsSection } from "@/features/home/components/AwardSection";
 import { CategoryShowcase } from "@/features/home/components/CategoryShowcase";
 import { FeaturedProducts } from "@/features/home/components/FeaturedProducts";

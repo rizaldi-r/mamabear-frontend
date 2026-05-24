@@ -13,8 +13,12 @@ export interface RegisterPayload {
   terms: boolean;
 }
 
-export interface ResetPasswordPayload {
+export interface ForgotPasswordPayload {
   email: string;
+}
+
+export interface ResetPasswordPayload {
+  password: string
 }
 
 export type AuthLayoutProps = {

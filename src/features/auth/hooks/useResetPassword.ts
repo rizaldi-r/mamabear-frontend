@@ -1,4 +1,5 @@
 import { confirmPasswordReset } from "@/features/auth/services/authService";
+import { ResetPasswordPayload } from "@/features/auth/types/auth.type";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -20,17 +21,18 @@ export function useConfirmResetPassword({
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: ResetPasswordPayload) => {
     setLoading(true);
     setApiError(null);
 
     try {
       await confirmPasswordReset(token, data.password);
       setSubmitted(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("[Confirm Reset Error]:", error);
+      const err = error as Error;
       setApiError(
-        error.message ||
+        err.message ||
           "Tautan pemulihan mungkin sudah kedaluwarsa atau tidak valid.",
       );
     } finally {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { fetchCategories } from "@/features/categories/services/categoryService";
+import Image from "next/image";
 
 export async function CategoriesMegaMenu() {
   const { data: categories, error } = await fetchCategories();
@@ -54,10 +55,11 @@ export async function CategoriesMegaMenu() {
                     
                     {/* Image Bubble */}
                     <div className="relative w-24 h-24 rounded-full bg-white border-4 border-white shadow-lg shadow-pink-100 flex items-center justify-center shrink-0">
-                      <img
+                      <Image
                         src={category.image}
                         alt={category.name}
                         className="w-16 h-16 object-contain group-hover/item:scale-110 transition-transform duration-300"
+                        unoptimized
                       />
                     </div>
 

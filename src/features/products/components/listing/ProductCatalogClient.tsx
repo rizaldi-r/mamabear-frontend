@@ -10,12 +10,14 @@ import {
   PackageX,
   Filter,
 } from "lucide-react";
-import { Product } from "@/features/products/types/products.types";
-import { fetchFilteredProducts } from "@/features/products/services/productsService";
+import { Product, ProductFilterParams } from "@/features/products/types/products.types";
+import {
+  fetchFilteredProducts,
+} from "@/features/products/services/productsService";
 import ProductCard from "@/features/products/components/shared/ProductCard";
-import Link from "next/link";
 import ProductSkeletonCard from "@/features/products/components/shared/ProductSkeletonCard";
 import CatalogTabs from "@/features/products/components/shared/CatalogTabs";
+import { Category } from "@/features/categories/types/category.type";
 
 /**
  * -------------------------------------------------------------------------
@@ -61,7 +63,7 @@ function useProductList(
       setError(null);
 
       try {
-        const params: any =
+        const params: ProductFilterParams =
           activeCategorySlugs.length === 0 ||
           activeCategorySlugs.includes("all")
             ? {}
@@ -100,8 +102,9 @@ function useProductList(
 
             // Determine next cursor (support multiple common API response patterns)
             let newNextCursor =
-              (response as any).nextCursor ??
-              (response as any).pagination?.nextCursor;
+              ("nextCursor" in response
+                ? (response as { nextCursor?: string }).nextCursor
+                : undefined) ?? response.pagination?.nextCursor;
 
             // Fallback: If backend doesn't explicitly provide nextCursor but we received full limit,
             // we use the last item's ID as the next cursor.
@@ -123,6 +126,7 @@ function useProductList(
           }
         }
       } catch (err) {
+        console.error("Error fetching products:", err);
         if (isMounted) {
           setError("Gagal memuat produk. Silakan coba lagi.");
           if (!cursor) setProducts([]);
@@ -164,6 +168,24 @@ function useProductList(
  * SUB-COMPONENT: ProductSidebarFilter
  * -------------------------------------------------------------------------
  */
+
+interface ProductSidebarFilterProps {
+  activeCategories: string[];
+  toggleCategory: (slug: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  categories: Category[];
+  minPrice: number;
+  maxPrice: number;
+  setMinPrice: (val: number) => void;
+  setMaxPrice: (val: number) => void;
+  inStockStatus: boolean | undefined;
+  setInStockStatus: (val: boolean | undefined) => void;
+  minRating: number | undefined;
+  setMinRating: (val: number | undefined) => void;
+  clearFilters: () => void;
+}
+
 function ProductSidebarFilter({
   activeCategories,
   toggleCategory,
@@ -179,7 +201,7 @@ function ProductSidebarFilter({
   minRating,
   setMinRating,
   clearFilters,
-}: any) {
+}: ProductSidebarFilterProps) {
   return (
     <>
       {isOpen && (
@@ -212,7 +234,7 @@ function ProductSidebarFilter({
         <div className="mb-8">
           <h3 className="text-lg font-bold text-stone-800 mb-4">Kategori</h3>
           <div className="flex flex-wrap gap-2">
-            {categories.map((cat: any) => {
+            {categories.map((cat: Category) => {
               const isActive =
                 activeCategories.includes(cat.slug) ||
                 (cat.slug === "all" && activeCategories.length === 0);
@@ -353,16 +375,6 @@ function ProductSidebarFilter({
             >
               Tersedia
             </button>
-            {/* <button 
-              onClick={() => setInStockStatus(inStockStatus === false ? undefined : false)}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-                inStockStatus === false 
-                  ? "bg-[#D65D7A] text-white shadow-md shadow-pink-200" 
-                  : "bg-pink-50 text-pink-400 hover:bg-pink-100"
-              }`}
-            >
-              Pre-Order
-            </button> */}
           </div>
         </div>
       </aside>
@@ -375,17 +387,20 @@ function ProductSidebarFilter({
  * SUB-COMPONENT: ProductSortBar
  * -------------------------------------------------------------------------
  */
+
+interface ProductSortBarProps {
+  onOpenFilter: () => void;
+  count: number;
+  currentSort: string;
+  onSortChange: (val: string) => void;
+}
+
 function ProductSortBar({
   onOpenFilter,
   count,
   currentSort,
   onSortChange,
-}: {
-  onOpenFilter: () => void;
-  count: number;
-  currentSort: string;
-  onSortChange: (val: string) => void;
-}) {
+}: ProductSortBarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const sortOptions = [
@@ -470,7 +485,7 @@ function ProductSortBar({
 function ProductCatalogContent({
   initialCategories,
 }: {
-  initialCategories: any[];
+  initialCategories: Category[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -691,7 +706,7 @@ function ProductCatalogContent({
 export default function ProductCatalogClient({
   initialCategories,
 }: {
-  initialCategories: any[];
+  initialCategories: Category[];
 }) {
   return (
     <Suspense

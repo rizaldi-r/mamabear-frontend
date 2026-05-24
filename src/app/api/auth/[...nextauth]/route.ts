@@ -2,6 +2,15 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { decodeJwt } from "jose";
 import { API_BASE_URL } from "@/lib/config";
+import { JWT } from "next-auth/jwt";
+
+interface DecodedJWT {
+  sub?: string;
+  id?: string;
+  name?: string;
+  email?: string;
+  role?: string;
+}
 
 const ACCESS_TOKEN_LIFESPAN = 15 * 60 * 1000; // 15 minutes
 const REFRESH_TOKEN_LIFESPAN = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -16,7 +25,7 @@ const SHORT_SESSION_LIMIT = 8 * 60 * 60 * 1000; // 8 hours (for non-remember-me)
  * refreshAccessToken
  * Logic to use the Refresh Token to get a new Access Token from the backend.
  */
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
       method: "POST",
@@ -72,10 +81,10 @@ export const authOptions: NextAuthOptions = {
 
             if (res.ok && success && data) {
               const { accessToken, refreshToken } = data;
-              const decoded = decodeJwt(accessToken) as any;
+              const decoded = decodeJwt(accessToken) as DecodedJWT;
 
               return {
-                id: decoded.sub || decoded.id,
+                id: decoded.sub || decoded.id || "",
                 name: decoded.name || "User",
                 email: decoded.email,
                 role: decoded.role || "USER",
@@ -88,12 +97,11 @@ export const authOptions: NextAuthOptions = {
           }
 
           return null;
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error("[NextAuth Authorize Error]:", error);
+          const err = error as Error;
           // Pass the error message to the login page
-          throw new Error(
-            error.message || "Authentication service unavailable",
-          );
+          throw new Error(err.message || "Authentication service unavailable");
         }
       },
     }),
@@ -110,9 +118,9 @@ export const authOptions: NextAuthOptions = {
           remember: user.remember,
           accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFESPAN,
           sessionHardLimit: user.remember
-          ? Date.now() + REFRESH_TOKEN_LIFESPAN
-          : Date.now() + SHORT_SESSION_LIMIT,
-        };
+            ? Date.now() + REFRESH_TOKEN_LIFESPAN
+            : Date.now() + SHORT_SESSION_LIMIT,
+        } as JWT;
       }
 
       // Check if access token is still valid
@@ -126,7 +134,8 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Access token has expired, try to update it
-      return refreshAccessToken(token);
+      const refreshedToken = await refreshAccessToken(token);
+      return refreshedToken;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
@@ -145,8 +154,8 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
-    // Set the cookie maxAge to 7 days, but the logic inside 
-    maxAge: 7 * 24 * 60 * 60, 
+    // Set the cookie maxAge to 7 days, but the logic inside
+    maxAge: 7 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

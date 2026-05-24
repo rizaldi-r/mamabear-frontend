@@ -21,7 +21,8 @@ export function useRegister() {
     try {
       await registerUser(payload);
       setIsSubmitted(true);
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as Error;
       setError(err.message || "Terjadi kesalahan saat pendaftaran.");
     } finally {
       setLoading(false);

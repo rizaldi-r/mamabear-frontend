@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export function RoadToSale() {
   const targetDate = new Date("2026-06-06T00:00:00+07:00");
-  const [isFinished, setIsFinished] = useState(false);
+  const [isFinished] = useState(false);
 
   if (isFinished) return null;
 

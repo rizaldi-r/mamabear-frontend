@@ -79,4 +79,24 @@ export interface Product {
   discountPercent?: number; // Computed discount percent represented as a string
   rating?: number; // Average user rating
   reviewsCount?: number; // Total review count
+  // TODO: this isnt in the response yet
+  totalSold?: number;
+}
+
+/**
+ * Filter parameters for the /api/products/filter endpoint.
+ * Supports multiple categories, price ranges, stock status, sorting, and cursor pagination.
+ */
+export interface ProductFilterParams {
+  categories?: string[];
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  inStock?: boolean;
+  minRating?: number;
+  priceAscending?: number;
+  creationDateAscending?: number;
+  popularAscending?: number;
+  ratingAscending?: number;
+  cursor?: string;
+  limit?: number;
 }

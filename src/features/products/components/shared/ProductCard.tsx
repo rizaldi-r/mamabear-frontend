@@ -32,7 +32,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const originalPriceStr = product.originalPrice;
   const discount = product.discountPercent;
   const rating = product.rating || 0.0;
-  const rawSold = (product as any).totalSold || product.reviewsCount || 0;
+  const rawSold = product.totalSold || product.reviewsCount || 0;
   const sold = formatSold(rawSold);
 
   // Menggunakan tag pertama sebagai badge jika tersedia
