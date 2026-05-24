@@ -27,7 +27,7 @@ export function SearchResults() {
       <div className="mb-6">
         <p className="text-[var(--color-gray)] text-font-2 mt-1">
           Menampilkan hasil untuk:{" "}
-          <span className="font-semibold text-black">"{query}"</span>
+          <span className="font-semibold text-black">&quot;{query}&quot;</span>
         </p>
       </div>
 
@@ -41,7 +41,7 @@ export function SearchResults() {
 
       {/* Loading State (Skeletons) */}
       {isLoading && !error && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
           {Array.from({ length: 8 }).map((_, idx) => (
             <div key={idx} className="flex flex-col gap-3">
               <div className="w-full aspect-square bg-[var(--mama-pink)]/30 animate-pulse rounded-xl" />
@@ -61,14 +61,14 @@ export function SearchResults() {
           </h2>
           <p className="text-[var(--color-gray)] text-font-2 max-w-md">
             Maaf, kami tidak dapat menemukan produk yang cocok dengan pencarian
-            "{query}". Coba gunakan kata kunci lain.
+            &quot;{query}&quot;. Coba gunakan kata kunci lain.
           </p>
         </div>
       )}
 
       {/* Product Grid */}
       {!isLoading && !error && products.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1.5 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1.5 md:gap-6">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

@@ -604,7 +604,7 @@ function ProductCatalogContent({
   );
 
   return (
-    <div className="flex flex-col lg:flex-row gap-10">
+    <div className="flex flex-col lg:flex-row gap-6 w-full">
       <ProductSidebarFilter
         activeCategories={activeCategories}
         toggleCategory={toggleCategory}
@@ -635,7 +635,7 @@ function ProductCatalogContent({
 
         <div className="flex-1 mt-4">
           {loadingProducts ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-1.5 md:gap-2">
               {[...Array(8)].map((_, i) => (
                 <ProductSkeletonCard key={i} />
               ))}
@@ -646,7 +646,7 @@ function ProductCatalogContent({
             </div>
           ) : products.length > 0 ? (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-1.5 md:gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-1.5 md:gap-2">
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

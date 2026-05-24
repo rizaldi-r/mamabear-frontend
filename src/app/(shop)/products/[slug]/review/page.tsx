@@ -1,4 +1,4 @@
-import { getReview } from '@/app/api/product/product-api';
+import { getReview } from '@/features/products/services/productService';
 import ReviewCard from '@/features/products/components/pdp/ReviewCard';
 import { Review } from '@/features/products/types/product.types';
 import React from 'react'

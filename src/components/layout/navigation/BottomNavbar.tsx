@@ -43,8 +43,9 @@ export function BottomNav({ isLoggedIn, user }: BottomNavProps) {
 
         {/* Chat */}
         <Link
-          href="/chat"
+          href="https://api.whatsapp.com/send/?phone=628888695757&text&type=phone_number&app_absent=0"
           className="flex flex-col items-center justify-center w-full h-full text-[var(--mama-brown)] hover:text-primary transition-colors"
+          target="_blank"
         >
           <MessageCircleMore className="w-6 h-6" strokeWidth={2.5} />
           <span className="text-[10px] mt-1 font-semibold">Chat</span>

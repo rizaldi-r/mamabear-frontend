@@ -10,7 +10,7 @@ import Link from "next/link";
 export function Footer() {
   return (
     <footer
-      className="relative bg-secondary pt-16 pb-24 md:pb-12 text-[var(--mama-brown)] bg-cover bg-[left_-6rem_bottom_0rem] min-[768px]:bg-left-bottom min-[1024px]:bg-center min-[1440px]:bg-[center_bottom_-4rem] bg-no-repeat"
+      className="relative bg-secondary pt-16 text-[var(--mama-brown)] bg-cover bg-[left_-6rem_bottom_0rem] min-[768px]:bg-left-bottom min-[1024px]:bg-center min-[1440px]:bg-[center_bottom_-4rem] bg-no-repeat md:mb-0"
       style={{
         backgroundImage: "url('/images/layout/footer.webp')",
       }}

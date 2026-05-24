@@ -11,13 +11,7 @@ export const metadata: Metadata = {
 export default function SearchPage() {
   return (
     <>
-      {/* Navbar requires Suspense because its internal SearchBar now uses useSearchParams */}
-      <Suspense
-        fallback={<div className="h-[74px] bg-[var(--mama-pink)] w-full"></div>}
-      >
-        <Navbar />
-      </Suspense>
-      <main className="container py-8 page-max-width">
+      <main className="page-margin page-max-width py-8">
         {/* Suspense is strictly required by Next.js when using useSearchParams 
         to prevent the entire page from de-optimizing into client-side rendering.
       */}

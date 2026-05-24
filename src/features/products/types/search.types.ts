@@ -1,10 +1,10 @@
-import { Product } from "@/features/products/types/product.types";
+import {Product} from "@/features/products/types/products.types";
 
 /**
  * Represents the simplified product data returned by the search endpoint.
  * Omit removes the heavy nested relations that aren't included in this specific payload.
  */
-export type SearchProduct = Omit<Product, "category" | "images" | "variants">;
+export type SearchProduct = Product;
 
 export interface SearchSuggestion {
   name: string;

@@ -1,13 +1,10 @@
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
 
 export default function RegisterPage() {
   return (
     <>
-      <Navbar />
-      <main className="page-max-width">
+      <main>
         <AuthLayout
           title="Buat Akun Baru"
           subtitle="Bergabunglah dengan jutaan mama lainnya"
@@ -17,7 +14,6 @@ export default function RegisterPage() {
           <RegisterForm />
         </AuthLayout>
       </main>
-      <Footer />
     </>
   );
 }
