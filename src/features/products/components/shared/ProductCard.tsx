@@ -1,12 +1,12 @@
+"use client";
+
 import { Product } from "@/features/products/types/products.types";
 import { ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const formatSold = (value: number | string) => {
-  // Jika value sudah mengandung huruf atau tanda + (misal: "10RB+"), biarkan saja
   if (typeof value === "string" && /[a-zA-Z+]/.test(value)) return value;
-
   const num = Number(value);
   if (isNaN(num)) return value;
   if (num >= 1000) {
@@ -17,10 +17,11 @@ const formatSold = (value: number | string) => {
 
 export default function ProductCard({ product }: { product: Product }) {
   // Ambil gambar utama atau gunakan placeholder
+  // TODO: add break image placeholder
   const mainImage =
     product.images && product.images.length > 0
       ? product.images[0].imageUrl
-      : "https://raw.githubusercontent.com/regencode/mamabear-backend/main/assets/images/AsiBooster/AsiBooster-01.jpg";
+      : "mamabear-frontend/public/images/layout/logo.png";
 
   // Gunakan field analytical baru, fallback ke harga varian pertama jika tidak ada
   const currentPriceStr =
@@ -35,8 +36,9 @@ export default function ProductCard({ product }: { product: Product }) {
   const sold = formatSold(rawSold);
 
   // Menggunakan tag pertama sebagai badge jika tersedia
-  const badge =
-    product.tags && product.tags.length > 0 ? product.tags[0] : null;
+  // const badge =
+  //   product.tags && product.tags.length > 0 ? product.tags[0] : null;
+  const badge = product.highlight?.name;
 
   // Format harga ke IDR
   const formattedCurrentPrice = new Intl.NumberFormat("id-ID", {
@@ -54,20 +56,21 @@ export default function ProductCard({ product }: { product: Product }) {
     : null;
 
   return (
+    // TODO: this card is not uniform when using flex
     <Link
       href={`/products/${product.slug}`}
-      className="group flex overflow-hidden flex-col bg-white rounded-2xl hover:shadow-xl hover:shadow-pink-100/50 transition-all duration-300 border border-transparent hover:border-pink-100 cursor-pointer relative h-fit"
+      className="group flex overflow-hidden flex-col bg-white rounded-2xl hover:shadow-xl hover:shadow-pink-100/50 transition-all duration-300 border border-transparent hover:border-pink-100 cursor-pointer relative h-full min-w-[140px] max-w-[280px] w-full mx-auto"
     >
       {/* Image & Badges Container */}
       <div className="relative aspect-square bg-stone-50 overflow-hidden">
-        <div className="absolute top-4 left-4 z-10 flex gap-1 flex-col sm:flex-row">
+        <div className="absolute top-2 left-2 z-10 flex gap-1 flex-wrap">
           {!!discount && (
-            <span className="text-[14px] font-bold px-1.5 py-0.5 bg-red-500 text-white shadow-sm">
+            <span className="text-[14px] font-bold px-1.5 py-0.5 bg-red-500 text-white shadow-sm w-fit">
               {discount}%
             </span>
           )}
           {badge && (
-            <span className="text-[14px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-primary shadow-sm uppercase">
+            <span className="text-[14px] font-bold px-1.5 py-0.5 bg-pink-200 text-primary shadow-sm uppercase w-fit">
               {badge}
             </span>
           )}
@@ -78,7 +81,7 @@ export default function ProductCard({ product }: { product: Product }) {
           alt={product.name}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500"
+          className="object-cover object-center w-full h-full group-hover:scale-105 transition-transform duration-500"
           unoptimized
         />
       </div>
@@ -115,7 +118,14 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
           </div>
 
-          <button className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-md hover:bg-primary hover:scale-110 active:scale-95 transition-all shrink-0 pb-[-12rem]">
+          <button
+            className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-md hover:bg-primary hover:scale-110 active:scale-95 transition-all shrink-0 pb-[-12rem]"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              // TODO: Add to cart logic here
+            }}
+          >
             <ShoppingCart className="w-5 h-5" />
           </button>
         </div>

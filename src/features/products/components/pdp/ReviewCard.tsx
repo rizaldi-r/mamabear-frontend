@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import Stars from './Stars'
-import { addUpvotes } from '@/app/api/product/product-api'
+import { addUpvotes } from '@/features/products/services/productService'
 
 type Review = {
   id: number,
