@@ -78,6 +78,7 @@ export const authOptions: NextAuthOptions = {
             });
 
             const { data, success, message } = await res.json();
+            console.log("🚀 ~ res:", res)
 
             if (res.ok && success && data) {
               const { accessToken, refreshToken } = data;
