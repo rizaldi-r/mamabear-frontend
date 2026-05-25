@@ -2,7 +2,7 @@ import {
   SearchProduct,
   SearchSuggestion,
 } from "@/features/products/types/search.types";
-import { ApiResponse } from "@/types/api";
+import { ApiResponse } from "@/types/api.types";
 
 // Assuming you have a base URL configured in your environment variables
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api";

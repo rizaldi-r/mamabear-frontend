@@ -1,26 +1,27 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { ResetPasswordPayload } from "../types/auth.type";
 import { requestPasswordReset } from "@/features/auth/services/authService";
+import {ForgotPasswordPayload} from "@/features/auth/types/auth.types";
 
 export function useForgotPassword() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const form = useForm<ResetPasswordPayload>();
+  const form = useForm<ForgotPasswordPayload>();
 
-  const onSubmit = async (data: ResetPasswordPayload) => {
+  const onSubmit = async (data: ForgotPasswordPayload) => {
     setLoading(true);
     setApiError(null);
 
     try {
       await requestPasswordReset(data.email);
       setSubmitted(true);
-    } catch (error: any) {
+    } catch (error) {
       console.error("[Forgot Password Error]:", error);
+      const err = error as Error;
       setApiError(
-        error.message || "Koneksi ke server gagal. Silakan coba lagi nanti.",
+        err.message || "Koneksi ke server gagal. Silakan coba lagi nanti.",
       );
     } finally {
       setLoading(false);

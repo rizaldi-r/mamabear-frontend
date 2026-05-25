@@ -1,6 +1,6 @@
-import { Category } from "@/features/products/types/products.types";
+import { Category } from "@/features/categories/types/category.types";
 import { API_BASE_URL } from "@/lib/config";
-import { ApiResponse } from "@/types/api";
+import { ApiResponse } from "@/types/api.types";
 
 /**
  * Category Service
@@ -17,7 +17,7 @@ export async function fetchCategories(): Promise<Category[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/categories`, {
       // or use 'force-cache' / 'next: { revalidate }' for better performance if they are mostly static.
-      next: { revalidate: 86400 } 
+      next: { revalidate: 86400 },
     });
 
     if (!res.ok) {

@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next lint && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:api": "openapi-typescript https://mamabear-backend-dev.up.railway.app/api-json -o ./src/types/openapi/api.d.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -16,6 +17,7 @@
     "next": "14.2.35",
     "next-auth": "^4.24.14",
     "next-themes": "^0.4.6",
+    "openapi-fetch": "^0.17.0",
     "radix-ui": "^1.4.3",
     "react": "^18",
     "react-dom": "^18",
@@ -33,6 +35,7 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
+    "openapi-typescript": "^7.13.0",
     "postcss": "^8",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",

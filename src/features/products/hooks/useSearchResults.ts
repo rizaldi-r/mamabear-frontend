@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { SearchProduct } from "@/features/products/types/search.types";
 import { searchService } from "@/features/products/services/searchService";
+import { Product } from "@/features/products/types/products.types";
 
 export function useSearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
 
-  const [products, setProducts] = useState<SearchProduct[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

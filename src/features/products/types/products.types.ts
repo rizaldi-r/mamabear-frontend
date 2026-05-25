@@ -1,22 +1,6 @@
-export type ViewMode = "grid" | "list";
+import {Category} from "@/features/categories/types/category.types";
 
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  description: string;
-  isActive: boolean;
-  sortOrder: number;
-  createdAt: string; // ISO Date string
-  updatedAt: string; // ISO Date string
-  imageUrl: string | null;
-  publicId: string;
-  altText: string | null;
-  width: number | null;
-  height: number | null;
-  fileSize: number | null;
-  format: string | null;
-}
+export type ViewMode = "grid" | "list";
 
 export interface ProductImage {
   id: number;
@@ -79,4 +63,29 @@ export interface Product {
   discountPercent?: number; // Computed discount percent represented as a string
   rating?: number; // Average user rating
   reviewsCount?: number; // Total review count
+  // TODO: this isnt in the response yet
+  totalSold?: number;
+}
+
+/**
+ * Filter parameters for the /api/products/filter endpoint.
+ * Supports multiple categories, price ranges, stock status, sorting, and cursor pagination.
+ */
+export interface ProductFilterParams {
+  categories?: string[];
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  inStock?: boolean;
+  minRating?: number;
+  priceAscending?: number;
+  creationDateAscending?: number;
+  popularAscending?: number;
+  ratingAscending?: number;
+  cursor?: string;
+  limit?: number;
+}
+
+export interface CategoryItem {
+  name: string;
+  slug: string;
 }

@@ -1,6 +1,11 @@
-import { LoginPayload, RegisterPayload } from "@/features/auth/types/auth.type";
+import {
+  LoginPayload,
+  LoginResponse,
+  RegisterPayload,
+  RegisterResponse,
+} from "@/features/auth/types/auth.types";
 import { API_BASE_URL } from "@/lib/config";
-import { ApiResponse, LoginResponse, RegisterResponse } from "@/types/api";
+import { ApiResponse } from "@/types/api.types";
 
 export async function loginUser(payload: LoginPayload): Promise<LoginResponse> {
   const res = await fetch(`${API_BASE_URL}/auth/login`, {

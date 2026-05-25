@@ -10,7 +10,11 @@ export async function getProduct(slug: string) {
     if (!response.ok) throw new Error("Gagal fetch produk");
 
     return response.json();
-  } catch (Error: any) {
+  } catch (error) {
+    // Changed 'Error' to 'error' to avoid shadowing global Error
+    // and using it in a console.error for debugging purposes,
+    // though you could just use 'catch (error)' or empty 'catch {}' in newer TS
+    console.error(`Error fetching product ${slug}:`, error);
     return [];
   }
 }
@@ -21,10 +25,11 @@ export async function getReview(slug: string) {
       `${API_BASE_URL}/products/${slug}/reviews?cursor=1&limit=10`,
     );
 
-    if (!response.ok) throw new Error("Gagal fetch produk");
+    if (!response.ok) throw new Error("Gagal fetch review produk"); // Fixed typo in error message
 
     return response.json();
-  } catch (Error: any) {
+  } catch (error) {
+    console.error(`Error fetching reviews for ${slug}:`, error);
     return [];
   }
 }
@@ -34,8 +39,9 @@ export const addUpvotes = async (
   slug: string,
 ): Promise<Review> => {
   try {
+    // Fixed typo in the URL (extra closing curly brace `}}` replaced with `}`)
     const response = await fetch(
-      `${API_BASE_URL}}/products/${slug}/reviews/${reviewId}/upvote`,
+      `${API_BASE_URL}/products/${slug}/reviews/${reviewId}/upvote`,
       {
         method: "PATCH",
       },
@@ -56,10 +62,11 @@ export async function getRelatedProduct(slug: string) {
   try {
     const response = await fetch(`${API_BASE_URL}/products/${slug}/related`);
 
-    if (!response.ok) throw new Error("Gagal fetch produk");
+    if (!response.ok) throw new Error("Gagal fetch produk terkait"); // Fixed error message to be specific
 
     return response.json();
-  } catch (Error: any) {
+  } catch (error) {
+    console.error(`Error fetching related products for ${slug}:`, error);
     return [];
   }
 }

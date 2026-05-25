@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "@/lib/config";
-import { ApiResponse, Category } from "../types/category.type";
+import { Category } from "../types/category.types";
+import { ApiResponse } from "@/types/api.types";
 
 /**
  * Category Service

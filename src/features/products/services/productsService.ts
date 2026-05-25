@@ -1,23 +1,6 @@
-import { Product } from "@/features/products/types/products.types";
+import { Product, ProductFilterParams } from "@/features/products/types/products.types";
 import { API_BASE_URL } from "@/lib/config";
-import { ApiResponse } from "@/types/api";
-
-/**
- * Filter parameters for the /api/products/filter endpoint.
- * Supports multiple categories, price ranges, stock status, sorting, and cursor pagination.
- */
-export interface ProductFilterParams {
-  categories?: string[];
-  minPrice?: number | string;
-  maxPrice?: number | string;
-  inStock?: boolean;
-  priceAscending?: boolean;
-  creationDateAscending?: boolean;
-  popularAscending?: boolean;
-  ratingAscending?: boolean;
-  cursor?: string;
-  limit?: number;
-}
+import { ApiResponse } from "@/types/api.types";
 
 /**
  * Pagination metadata structure returned by the backend.

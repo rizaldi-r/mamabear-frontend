@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { SearchResults } from "@/features/products/components/search/SearchResults";
-import { Navbar } from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
   title: "Cari Produk | MamaBear",

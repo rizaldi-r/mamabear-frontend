@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { LoginPayload } from "@/features/auth/types/auth.type";
+import { LoginPayload } from "@/features/auth/types/auth.types";
 
 /**
  * useLogin Hook (NextAuth)

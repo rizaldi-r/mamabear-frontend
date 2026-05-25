@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/types/api";
+import { ApiResponse } from "@/types/api.types";
 import { API_BASE_URL } from "@/lib/config";
 
 export async function getHomeData() {

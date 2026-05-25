@@ -20,7 +20,7 @@ export function useProductSearch() {
     if (stored) {
       try {
         setRecentSearches(JSON.parse(stored));
-      } catch (e) {}
+      } catch {}
     }
   }, []);
 
