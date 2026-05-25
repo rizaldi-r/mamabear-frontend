@@ -1,5 +1,5 @@
 import { confirmPasswordReset } from "@/features/auth/services/authService";
-import { ResetPasswordPayload } from "@/features/auth/types/auth.type";
+import { ResetPasswordPayload } from "@/features/auth/types/auth.types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 

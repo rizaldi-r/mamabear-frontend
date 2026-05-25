@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { AuthLayoutProps } from "../types/auth.type";
+import { AuthLayoutProps } from "../types/auth.types";
 import Image from "next/image";
 
 export function AuthLayout({

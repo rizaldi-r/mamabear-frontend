@@ -10,14 +10,15 @@ import {
   PackageX,
   Filter,
 } from "lucide-react";
-import { Product, ProductFilterParams } from "@/features/products/types/products.types";
 import {
-  fetchFilteredProducts,
-} from "@/features/products/services/productsService";
+  CategoryItem,
+  Product,
+  ProductFilterParams,
+} from "@/features/products/types/products.types";
+import { fetchFilteredProducts } from "@/features/products/services/productsService";
 import ProductCard from "@/features/products/components/shared/ProductCard";
 import ProductSkeletonCard from "@/features/products/components/shared/ProductSkeletonCard";
 import CatalogTabs from "@/features/products/components/shared/CatalogTabs";
-import { Category } from "@/features/categories/types/category.type";
 
 /**
  * -------------------------------------------------------------------------
@@ -174,7 +175,7 @@ interface ProductSidebarFilterProps {
   toggleCategory: (slug: string) => void;
   isOpen: boolean;
   onClose: () => void;
-  categories: Category[];
+  categories: CategoryItem[];
   minPrice: number;
   maxPrice: number;
   setMinPrice: (val: number) => void;
@@ -234,7 +235,7 @@ function ProductSidebarFilter({
         <div className="mb-8">
           <h3 className="text-lg font-bold text-stone-800 mb-4">Kategori</h3>
           <div className="flex flex-wrap gap-2">
-            {categories.map((cat: Category) => {
+            {categories.map((cat: CategoryItem) => {
               const isActive =
                 activeCategories.includes(cat.slug) ||
                 (cat.slug === "all" && activeCategories.length === 0);
@@ -485,7 +486,7 @@ function ProductSortBar({
 function ProductCatalogContent({
   initialCategories,
 }: {
-  initialCategories: Category[];
+  initialCategories: CategoryItem[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -706,7 +707,7 @@ function ProductCatalogContent({
 export default function ProductCatalogClient({
   initialCategories,
 }: {
-  initialCategories: Category[];
+  initialCategories: CategoryItem[];
 }) {
   return (
     <Suspense

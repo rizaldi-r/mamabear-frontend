@@ -2,6 +2,7 @@ import React from "react";
 import ProductListingBanner from "@/features/products/components/listing/ProductListingBanner";
 import ProductCatalogClient from "@/features/products/components/listing/ProductCatalogClient";
 import { fetchCategories } from "@/features/products/services/categoryService";
+import { CategoryItem } from "@/features/products/types/products.types";
 
 /**
  * -------------------------------------------------------------------------
@@ -11,7 +12,7 @@ import { fetchCategories } from "@/features/products/services/categoryService";
  * -------------------------------------------------------------------------
  */
 export default async function ProductListingPage() {
-  let categories = [];
+  let categories: CategoryItem[] | null = [];
   const response = await fetchCategories();
   categories = [{ name: "Semua Produk", slug: "all" }, ...(response || [])];
 

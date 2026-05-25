@@ -1,7 +1,7 @@
 import React from "react";
-import { Product } from "../../types/product.types";
 import { getRelatedProduct } from "@/features/products/services/productService";
 import ProductCard from "@/features/products/components/shared/ProductCard";
+import { Product } from "@/features/products/types/products.types";
 
 interface Props {
   slug: string;

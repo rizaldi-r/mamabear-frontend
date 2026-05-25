@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCategoryBySlug } from "../services/categoryService";
-import { Category } from "../types/category.type";
+import { Category } from "../types/category.types";
 
 /**
  * useCategory Hook

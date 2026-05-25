@@ -1,22 +1,6 @@
-export type ViewMode = "grid" | "list";
+import {Category} from "@/features/categories/types/category.types";
 
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  description: string;
-  isActive: boolean;
-  sortOrder: number;
-  createdAt: string; // ISO Date string
-  updatedAt: string; // ISO Date string
-  imageUrl: string | null;
-  publicId: string;
-  altText: string | null;
-  width: number | null;
-  height: number | null;
-  fileSize: number | null;
-  format: string | null;
-}
+export type ViewMode = "grid" | "list";
 
 export interface ProductImage {
   id: number;
@@ -99,4 +83,9 @@ export interface ProductFilterParams {
   ratingAscending?: number;
   cursor?: string;
   limit?: number;
+}
+
+export interface CategoryItem {
+  name: string;
+  slug: string;
 }

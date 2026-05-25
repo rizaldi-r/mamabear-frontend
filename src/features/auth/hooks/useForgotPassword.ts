@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { requestPasswordReset } from "@/features/auth/services/authService";
-import {ForgotPasswordPayload} from "@/features/auth/types/auth.type";
+import {ForgotPasswordPayload} from "@/features/auth/types/auth.types";
 
 export function useForgotPassword() {
   const [submitted, setSubmitted] = useState(false);

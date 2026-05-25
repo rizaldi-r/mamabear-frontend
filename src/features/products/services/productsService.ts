@@ -1,6 +1,6 @@
 import { Product, ProductFilterParams } from "@/features/products/types/products.types";
 import { API_BASE_URL } from "@/lib/config";
-import { ApiResponse } from "@/types/api";
+import { ApiResponse } from "@/types/api.types";
 
 /**
  * Pagination metadata structure returned by the backend.
