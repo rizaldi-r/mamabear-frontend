@@ -2,6 +2,7 @@ import {
   Product,
   ProductFilterParams,
 } from "@/features/products/types/products.types";
+import { apiClient } from "@/lib/api";
 import { API_BASE_URL } from "@/lib/config";
 import { ApiResponse } from "@/types/api.types";
 
@@ -98,22 +99,18 @@ export async function fetchFilteredProducts(
 }
 
 /**
- * getProductBySlug
- * Fetches a single product's detailed information by its unique slug.
- * Essential for the Product Detail Page (PDP).
- * @param slug - The string slug of the product
- * @returns Promise resolving to a Product object or null if not found
+ * updateProduct
+ * Updates an existing product using the admin endpoint.
  */
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export async function updateProduct(
+  productId: number,
+  data: Partial<Product>,
+): Promise<Product> {
   try {
-    const res = await fetch(`${API_BASE_URL}/products/${slug}`, {
-      cache: "no-store",
-    });
+    const res = await apiClient.put(`/admin/products/${productId}`, data);
 
     if (!res.ok) {
-      throw new Error(
-        `HTTP Error: ${res.status} - Failed to fetch product details`,
-      );
+      throw new Error(`HTTP Error: ${res.status} - Failed to update product`);
     }
 
     const response: ApiResponse<Product> = await res.json();
@@ -126,7 +123,34 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
     return response.data;
   } catch (error) {
-    console.error("[productService] getProductBySlug failed:", error);
+    throw error instanceof Error
+      ? error
+      : new Error("An unknown error occurred");
+  }
+}
+
+/**
+ * deleteProduct
+ * Deletes a product using the admin endpoint.
+ */
+export async function deleteProduct(productId: number): Promise<boolean> {
+  try {
+    const res = await apiClient.delete(`/admin/products/${productId}`);
+
+    if (!res.ok) {
+      throw new Error(`HTTP Error: ${res.status} - Failed to delete product`);
+    }
+
+    const response: ApiResponse<null> = await res.json();
+
+    if (!response.success) {
+      throw new Error(
+        response.message || "API returned an error while deleting the product",
+      );
+    }
+
+    return response.success;
+  } catch (error) {
     throw error instanceof Error
       ? error
       : new Error("An unknown error occurred");
@@ -137,7 +161,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
  * Exporting as an object pattern to allow 'productService.fetchFilteredProducts'
  * usage if preferred elsewhere in the app.
  */
-export const productService = {
+export const adminProductService = {
   fetchFilteredProducts,
-  getProductBySlug,
+  updateProduct,
+  deleteProduct,
 };

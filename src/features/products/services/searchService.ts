@@ -1,7 +1,5 @@
-import {
-  SearchProduct,
-  SearchSuggestion,
-} from "@/features/products/types/search.types";
+import { Product } from "@/features/products/types/products.types";
+import { SearchSuggestion } from "@/features/products/types/search.types";
 import { ApiResponse } from "@/types/api.types";
 
 // Assuming you have a base URL configured in your environment variables
@@ -11,9 +9,9 @@ export const searchService = {
   /**
    * Fetches product search results based on a query string.
    * @param query The search term
-   * @returns Promise containing the API response with an array of SearchProduct
+   * @returns Promise containing the API response with an array of Product
    */
-  async getProducts(query: string): Promise<ApiResponse<SearchProduct[]>> {
+  async getProducts(query: string): Promise<ApiResponse<Product[]>> {
     if (!query.trim()) {
       return { success: true, data: [] };
     }

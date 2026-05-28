@@ -1,7 +1,7 @@
 import React from "react";
 import ProductListingBanner from "@/features/products/components/listing/ProductListingBanner";
 import ProductCatalogClient from "@/features/products/components/listing/ProductCatalogClient";
-import { fetchCategories } from "@/features/products/services/categoryService";
+import { fetchCategories } from "@/features/categories/services/categoryService";
 import { CategoryItem } from "@/features/products/types/products.types";
 
 /**
@@ -23,7 +23,7 @@ export default async function ProductListingPage() {
         <ProductListingBanner />
 
         {/* 2. Interactive Client Component */}
-        <section className="mx-auto page-margin">
+        <section className="mx-auto page-spacing">
           <ProductCatalogClient initialCategories={categories} />
         </section>
       </div>

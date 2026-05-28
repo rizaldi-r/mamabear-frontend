@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LoginPayload } from "@/features/auth/types/auth.types";
 
@@ -29,7 +29,14 @@ export function useLogin() {
       setServerError("Email atau password salah.");
       setLoading(false);
     } else {
-      router.push("/");
+      const session = await getSession();
+
+      if (session?.user?.role === "ADMIN") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
+
       router.refresh();
     }
   };

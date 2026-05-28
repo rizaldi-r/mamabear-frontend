@@ -139,7 +139,7 @@ export async function deleteCategory(id: number): Promise<boolean> {
   }
 }
 
-export const categoryService = {
+export const adminCategoryService = {
   fetchCategories,
   getCategoryBySlug,
   createCategory,
