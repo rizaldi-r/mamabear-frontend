@@ -12,7 +12,7 @@ interface DecodedJWT {
   role?: string;
 }
 
-const ACCESS_TOKEN_LIFESPAN = 15 * 60 * 1000; // 15 minutes
+const ACCESS_TOKEN_LIFESPAN = 14 * 60 * 1000; // 14 minutes
 const REFRESH_TOKEN_LIFESPAN = 7 * 24 * 60 * 60 * 1000; // 7 days
 const SHORT_SESSION_LIMIT = 8 * 60 * 60 * 1000; // 8 hours (for non-remember-me)
 
@@ -78,7 +78,6 @@ export const authOptions: NextAuthOptions = {
             });
 
             const { data, success, message } = await res.json();
-            console.log("🚀 ~ res:", res)
 
             if (res.ok && success && data) {
               const { accessToken, refreshToken } = data;
@@ -115,6 +114,7 @@ export const authOptions: NextAuthOptions = {
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           id: user.id,
+          name: user.name,
           role: user.role,
           remember: user.remember,
           accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFESPAN,
@@ -143,6 +143,7 @@ export const authOptions: NextAuthOptions = {
       session.error = token.error as string;
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name;
         session.user.role = token.role as string;
         session.user.remember = token.remember as boolean;
       }
