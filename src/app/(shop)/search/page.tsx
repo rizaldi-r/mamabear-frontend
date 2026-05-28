@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function SearchPage() {
   return (
     <>
-      <main className="page-margin page-max-width py-8">
+      <main className="page-spacing page-max-width py-8">
         {/* Suspense is strictly required by Next.js when using useSearchParams 
         to prevent the entire page from de-optimizing into client-side rendering.
       */}

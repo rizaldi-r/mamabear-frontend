@@ -1,4 +1,7 @@
-import { Product, ProductFilterParams } from "@/features/products/types/products.types";
+import {
+  Product,
+  ProductFilterParams,
+} from "@/features/products/types/products.types";
 import { API_BASE_URL } from "@/lib/config";
 import { ApiResponse } from "@/types/api.types";
 
@@ -80,13 +83,17 @@ export async function fetchFilteredProducts(
 
     if (!response.success) {
       console.error(`[productService] API Error: ${response.message}`);
-      return null;
+      throw new Error(
+        response.message || "API returned an error while fetching products",
+      );
     }
 
     return response.data;
   } catch (error) {
     console.error("[productService] fetchFilteredProducts failed:", error);
-    return null; // Return null to gracefully handle UI fallbacks
+    throw error instanceof Error
+      ? error
+      : new Error("An unknown error occurred");
   }
 }
 
@@ -104,15 +111,25 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     });
 
     if (!res.ok) {
-      return null;
+      throw new Error(
+        `HTTP Error: ${res.status} - Failed to fetch product details`,
+      );
     }
 
     const response: ApiResponse<Product> = await res.json();
 
-    return response.success ? response.data : null;
+    if (!response.success || !response.data) {
+      throw new Error(
+        response.message || "API returned an error while updating the product",
+      );
+    }
+
+    return response.data;
   } catch (error) {
     console.error("[productService] getProductBySlug failed:", error);
-    return null;
+    throw error instanceof Error
+      ? error
+      : new Error("An unknown error occurred");
   }
 }
 

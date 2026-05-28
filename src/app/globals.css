@@ -11,11 +11,11 @@
 
   .page-max-width {
     max-width: 1240px;
-    margin: auto;
+    @apply mx-auto;
   }
 
-  .page-margin {
-    @apply mx-3 sm:mx-4 md:mx-6;
+  .page-spacing {
+    @apply px-4 sm:px-4 md:px-6;
   }
 
   /* Font Guide implementation */
@@ -51,6 +51,9 @@
     --mama-cream: #ffe8dc;
     --color-gray: #545454;
     --color-light-gray: #a9a9a9;
+
+    /* Global Size */
+    --admin-sidebar-width: 16rem;
 
     /* Shadcn Mapping using predefined Mamabear colors in OKLCH */
     --radius: 0.5rem;

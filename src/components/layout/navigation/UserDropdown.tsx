@@ -41,7 +41,7 @@ export function UserDropdown({
 
   const handleLogout = async () => {
     closeDropdown();
-    await signOut({ callbackUrl: "/" });
+    await signOut({ callbackUrl: "/login" });
   };
 
   return (
