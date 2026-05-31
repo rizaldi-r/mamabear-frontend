@@ -1,72 +1,123 @@
-import { Review } from "@/features/products/types/product.types";
-import { API_BASE_URL } from "@/lib/config";
+import { ApiResponse } from "@/types/api.types";
+import { ProductDetail, ProductVariant } from "../types/product.types";
+import {API_BASE_URL} from "@/lib/config";
 
-export async function getProduct(slug: string) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/products/${slug}`, {
-      cache: "no-store",
-    });
+/**
+ * Service layer for interacting with Product endpoints.
+ * Utilizes native fetch and casts responses to manually defined types.
+ */
+export const productService = {
+  /**
+   * Fetches detailed information for a specific product by its slug.
+   * * @param slug - The unique slug of the product.
+   * @param options - Additional Next.js fetch options (e.g., { next: { revalidate: 60 } }).
+   */
+  async getProductBySlug(
+    slug: string,
+    options?: RequestInit,
+  ): Promise<ProductDetail> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/products/${slug}`, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options?.headers,
+        },
+      });
 
-    if (!response.ok) throw new Error("Gagal fetch produk");
+      if (!res.ok) {
+        throw new Error(`Gagal mengambil detail produk: HTTP ${res.status}`);
+      }
 
-    return response.json();
-  } catch (error) {
-    // Changed 'Error' to 'error' to avoid shadowing global Error
-    // and using it in a console.error for debugging purposes,
-    // though you could just use 'catch (error)' or empty 'catch {}' in newer TS
-    console.error(`Error fetching product ${slug}:`, error);
-    return [];
-  }
-}
+      const response: ApiResponse<ProductDetail> = await res.json();
 
-export async function getReview(slug: string) {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/products/${slug}/reviews?cursor=1&limit=10`,
-    );
+      if (!response.success) {
+        throw new Error(response.message || "Gagal mengambil detail produk");
+      }
 
-    if (!response.ok) throw new Error("Gagal fetch review produk"); // Fixed typo in error message
-
-    return response.json();
-  } catch (error) {
-    console.error(`Error fetching reviews for ${slug}:`, error);
-    return [];
-  }
-}
-
-export const addUpvotes = async (
-  reviewId: number,
-  slug: string,
-): Promise<Review> => {
-  try {
-    // Fixed typo in the URL (extra closing curly brace `}}` replaced with `}`)
-    const response = await fetch(
-      `${API_BASE_URL}/products/${slug}/reviews/${reviewId}/upvote`,
-      {
-        method: "PATCH",
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to add upvotes");
+      return response.data;
+    } catch (error) {
+      console.error(
+        `[productService] getProductBySlug failed for ${slug}:`,
+        error,
+      );
+      throw error;
     }
+  },
 
-    return response.json();
-  } catch (error) {
-    console.error("Error adding upvotes:", error);
-    throw new Error("Failed to add upvotes");
-  }
+  /**
+   * Fetches related products based on a product slug.
+   * * @param slug - The unique slug of the target product.
+   * @param options - Additional Next.js fetch options.
+   */
+  async getRelatedProducts(
+    slug: string,
+    options?: RequestInit,
+  ): Promise<ProductDetail[]> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/products/${slug}/related`, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options?.headers,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Gagal mengambil produk terkait: HTTP ${res.status}`);
+      }
+
+      const response: ApiResponse<ProductDetail[]> = await res.json();
+
+      if (!response.success) {
+        throw new Error(response.message || "Gagal mengambil produk terkait");
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error(
+        `[productService] getRelatedProducts failed for ${slug}:`,
+        error,
+      );
+      throw error;
+    }
+  },
+
+  /**
+   * Fetches all variants for a specific product.
+   * * @param slug - The unique slug of the product.
+   * @param options - Additional Next.js fetch options.
+   */
+  async getProductVariants(
+    slug: string,
+    options?: RequestInit,
+  ): Promise<ProductVariant[]> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/products/${slug}/variants`, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options?.headers,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Gagal mengambil varian produk: HTTP ${res.status}`);
+      }
+
+      const response: ApiResponse<ProductVariant[]> = await res.json();
+
+      if (!response.success) {
+        throw new Error(response.message || "Gagal mengambil varian produk");
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error(
+        `[productService] getProductVariants failed for ${slug}:`,
+        error,
+      );
+      throw error;
+    }
+  },
 };
-
-export async function getRelatedProduct(slug: string) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/products/${slug}/related`);
-
-    if (!response.ok) throw new Error("Gagal fetch produk terkait"); // Fixed error message to be specific
-
-    return response.json();
-  } catch (error) {
-    console.error(`Error fetching related products for ${slug}:`, error);
-    return [];
-  }
-}

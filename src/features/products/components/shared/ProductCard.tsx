@@ -15,7 +15,11 @@ const formatSold = (value: number | string) => {
   return num.toString();
 };
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+  product,
+}: {
+  product: Omit<Product, "category">;
+}) {
   // Ambil gambar utama atau gunakan placeholder
   // TODO: add break image placeholder
   const mainImage =
