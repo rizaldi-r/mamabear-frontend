@@ -26,9 +26,9 @@ export const DeleteConfirmModal = ({
             Hapus Kategori
           </h3>
           <p className="text-font-2 text-[var(--color-gray)] leading-relaxed">
-            Apakah Anda yakin ingin menghapus kategori{" "}
+            Apakah Anda yakin ingin menghapus kategori {" "}
             <span className="font-semibold text-[var(--mama-brown)]">
-              "{categoryName}"
+              {categoryName}
             </span>
             ? Tindakan ini tidak dapat dibatalkan.
           </p>

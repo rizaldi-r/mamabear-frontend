@@ -2,7 +2,6 @@ import React from "react";
 import { categoryService } from "@/features/categories/services/categoryService";
 import { CategoryListingClient } from "@/components/layout/admin/categories/CategoryListingClient";
 import {Plus} from "lucide-react";
-import { useRouter } from "next/router";
 import Link from "next/link";
 /**
  * Admin Categories Page (Server Component)

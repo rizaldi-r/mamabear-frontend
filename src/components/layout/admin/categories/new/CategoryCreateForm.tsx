@@ -101,10 +101,7 @@ const useCategoryForm = () => {
   };
 };
 
-const FormFooter = ({
-  isSubmitting,
-  onCancel,
-}: {
+const FormFooter = ({isSubmitting, onCancel}: {
   isSubmitting: boolean;
   onCancel: () => void;
 }) => (
@@ -135,21 +132,11 @@ const FormFooter = ({
 );
 
 
-/**
- * Main Orchestrator Component
- */
 export const CategoryCreateForm = () => {
-  const { formMethods, error, nextSortOrder, isActiveValue, onSubmit, router } =
-    useCategoryForm();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = formMethods;
-
-
+  const { formMethods, error, nextSortOrder, isActiveValue, onSubmit, router } = useCategoryForm();
+  const {register, handleSubmit, formState: { errors, isSubmitting }} = formMethods;
+  
   const handleCancel = () => router.push("/admin/categories");
-
 
   return (
     <div className="w-full flex flex-col gap-6">

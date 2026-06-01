@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { categoryService } from "@/features/categories/services/categoryService";
-import { CategoryEditForm } from "@/features/admin/categories/components/edit/CategoryEditForm";
+import { CategoryEditForm } from "@/components/layout/admin/categories/edit/CategoryEditForm";
 
 interface EditCategoryPageProps {
   params: {

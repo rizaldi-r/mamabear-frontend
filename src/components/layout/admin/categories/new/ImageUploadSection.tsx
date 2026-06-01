@@ -58,7 +58,7 @@ function ImageUploadSection() {
             {errors.img && <p className='text-xs text-red-500'>{errors.img.message}</p>}
 
             {preview && (
-                <img src={preview} className='h-40'/>    )}
+                <img alt='previewimage' src={preview} className='h-40'/>    )}
         </div>
 
   </div>
