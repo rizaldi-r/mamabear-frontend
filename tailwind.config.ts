@@ -15,10 +15,14 @@ const config = {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1500px",
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-quicksand)", "ui-sans-serif", "system-ui"],
+        heading: ["var(--font-quicksand)", "sans-serif"],
+      },
       colors: {
         border: "oklch(var(--border) / <alpha-value>)",
         input: "oklch(var(--input) / <alpha-value>)",

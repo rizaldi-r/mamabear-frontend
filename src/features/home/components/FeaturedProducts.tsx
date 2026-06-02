@@ -1,87 +1,128 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart, Star } from "lucide-react";
+import ProductCard from "@/features/products/components/shared/ProductCard";
+import { Product } from "@/features/products/types/products.types";
 
-export function FeaturedProducts({ products }) {
+const mockProducts: Product[] = [
+  {
+    id: 1,
+    name: "MamaBear AlmonMix Isi 6 Sachet - Minuman Serbuk dengan Almond - Kaya Nutrisi Untuk Ibu Menyusui BPOM HALAL",
+    slug: "mamabear-almonmix-isi-6-sachet",
+    description: "Minuman Almond Kaya Nutrisi dengan Daun Katuk & Daun Kelor.",
+    price_idr: "80000",
+    weight_g: 180,
+    sku: "AL.MMBR",
+    stock: 100,
+    isActive: true,
+    images: [
+      {
+        id: 1,
+        productId: 1,
+        imageUrl:
+          "https://raw.githubusercontent.com/regencode/mamabear-backend/main/assets/images/AlmonMix/AlmonMix-01.jpg",
+        sortOrder: 1,
+        altText: "MamaBear AlmonMix 01",
+      },
+    ],
+    variants: [],
+    discount: "-20%",
+    badge: "BEST SELLER",
+    rating: 5.0,
+    sold: "1.5RB",
+  },
+  {
+    id: 2,
+    name: "MamaBear ASI Booster Kapsul",
+    slug: "asi-booster-kapsul",
+    description: "Herbal alami untuk membantu meningkatkan produksi ASI Mama.",
+    price_idr: "65073",
+    weight_g: 500,
+    sku: "MB-ASI-CAPS",
+    stock: 100,
+    isActive: true,
+    images: [
+      {
+        id: 10,
+        productId: 2,
+        imageUrl: "/images/home/catalog-asibooster.webp",
+        sortOrder: 1,
+        altText: "ASI Booster Kapsul",
+      },
+    ],
+    variants: [],
+    discount: "-50%",
+    badge: "NEW",
+    rating: 5.0,
+    sold: "10RB+",
+  },
+  {
+    id: 3,
+    name: "MamaBear AlmondMix Cokelat",
+    slug: "almondmix-cokelat",
+    description: "Minuman pelancar ASI lezat dengan rasa cokelat.",
+    price_idr: "42000",
+    weight_g: 200,
+    sku: "MB-ALMOND-CHOC",
+    stock: 80,
+    isActive: true,
+    images: [
+      {
+        id: 20,
+        productId: 3,
+        imageUrl: "/images/home/catalog-almondmix.webp",
+        sortOrder: 1,
+        altText: "AlmondMix Cokelat",
+      },
+    ],
+    variants: [],
+    badge: "HOT",
+    rating: 4.9,
+    sold: "8RB+",
+  },
+  {
+    id: 4,
+    name: "MamaBear Kookie Bites",
+    slug: "kookie-bites",
+    description: "Camilan sehat pelancar ASI.",
+    price_idr: "55000",
+    weight_g: 150,
+    sku: "MB-KOOKIE",
+    stock: 200,
+    isActive: true,
+    images: [
+      {
+        id: 30,
+        productId: 4,
+        imageUrl: "/images/home/catalog-cookies.webp",
+        sortOrder: 1,
+        altText: "Kookie Bites",
+      },
+    ],
+    variants: [],
+    discount: "-15%",
+    rating: 5.0,
+    sold: "5RB+",
+  },
+];
+
+export function FeaturedProducts({ products }: { products?: Product[] }) {
+  // Use API products if available, fallback to mock, and limit to 4 items
+  // TODO: limit in fetching and remove mock with error component
+  const displayProducts = (
+    products && products.length > 0 ? products : mockProducts
+  ).slice(0, 4);
+
   return (
-    <section className="py-12 bg-secondary/30">
+    <section className="py-12 bg-gradient-to-b from-background to-secondary">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-stone-800 mb-4">
-            MamaBear High Light
-          </h2>
-          <div className="flex justify-center gap-2">
-            <Button
-              variant="default"
-              className="bg-primary hover:bg-primary/90 rounded-full h-8 px-4 text-xs"
-            >
-              Best Seller
-            </Button>
-            <Button
-              variant="outline"
-              className="text-primary border-primary rounded-full h-8 px-4 text-xs hover:bg-primary hover:text-white"
-            >
-              Mama's Pick
-            </Button>
-            <Button
-              variant="outline"
-              className="text-primary border-primary rounded-full h-8 px-4 text-xs hover:bg-primary hover:text-white"
-            >
-              Exclusive
-            </Button>
-          </div>
-        </div>
+        {/* Header */}
+        <h2 className="text-2xl font-bold text-[var(--mama-brown)] text-center mb-8">
+          MamaBear Highlight
+        </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {products.map((product) => (
-            <Card
-              key={product.id}
-              className="rounded-2xl overflow-hidden border border-pink-100 bg-card group transition-all hover:shadow-md"
-            >
-              <CardContent className="p-3 flex flex-col h-full">
-                <div className="relative aspect-square bg-muted rounded-xl mb-3 flex items-center justify-center">
-                  <Badge className="absolute top-2 left-2 bg-destructive hover:bg-destructive text-destructive-foreground rounded-sm font-bold">
-                    {product.discount}
-                  </Badge>
-                  <span className="text-muted-foreground/30 font-medium">
-                    Image
-                  </span>
-                </div>
-                <div className="flex-1 flex flex-col">
-                  <h3 className="text-sm font-semibold text-stone-800 line-clamp-2 mb-1 group-hover:text-primary transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center gap-1 mb-2">
-                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs text-stone-500 font-medium">
-                      5.0
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      ({product.sold})
-                    </span>
-                  </div>
-                  <div className="mt-auto flex items-end justify-between">
-                    <div>
-                      <span className="text-[10px] text-muted-foreground line-through block leading-none">
-                        {product.originalPrice}
-                      </span>
-                      <span className="text-destructive font-bold text-sm md:text-base">
-                        {product.price}
-                      </span>
-                    </div>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="h-8 w-8 rounded-full bg-secondary hover:bg-primary hover:text-white transition-colors"
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Product Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          {displayProducts.map(function renderProduct(product) {
+            return <ProductCard key={product.id} product={product} />;
+          })}
         </div>
       </div>
     </section>
