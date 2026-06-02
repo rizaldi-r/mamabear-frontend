@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import {useForm} from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { adminCategoryService } from "@/features/admin/categories/services/adminCategoryService";
+import { adminCategoryService, uploadCategoryImage } from "@/features/admin/categories/services/adminCategoryService";
 import { Category } from "@/features/categories/types/category.types";
 import { CategoryFormValues } from "./type";
 import { SettingsSection } from "./SetingsSection";
@@ -28,6 +28,7 @@ const useCategoryForm = () => {
       isActive: true,
       metaTitle: "",
       metaDescription: "",
+      img : undefined
     },
   });
 
@@ -68,6 +69,8 @@ const useCategoryForm = () => {
   const onSubmit = async (data: CategoryFormValues) => {
     setError(null);
     try {
+      const image = await uploadCategoryImage(data.img);
+
       const categoryPayload: any = {
         name: data.name,
         slug: data.slug,
@@ -76,12 +79,26 @@ const useCategoryForm = () => {
         metaDescription: data.metaDescription,
         isActive: data.isActive,
         sortOrder: nextSortOrder !== null ? nextSortOrder : 0,
+        images: [
+          {
+            publicId : image.publicId,
+            imageUrl: image.imageUrl,
+            sortOrder: image.sortOrder,
+            altText: image.altText,
+            width : image.width,
+            height : image.height,
+            fileSize : image.fileSize,
+            format : image.format
+          }
+        ]
       };
 
-
+      console.log('PAYLOAD', categoryPayload)
+      
       await adminCategoryService.createCategory(
-        categoryPayload as Partial<Category>,
+      categoryPayload as Partial<Category>,
       );
+
       router.push("/admin/categories");
       router.refresh();
     } catch (err: any) {
@@ -134,7 +151,7 @@ const FormFooter = ({isSubmitting, onCancel}: {
 
 export const CategoryCreateForm = () => {
   const { formMethods, error, nextSortOrder, isActiveValue, onSubmit, router } = useCategoryForm();
-  const {register, handleSubmit, formState: { errors, isSubmitting }} = formMethods;
+  const {register, handleSubmit, control, formState: { errors, isSubmitting }} = formMethods;
   
   const handleCancel = () => router.push("/admin/categories");
 
@@ -160,21 +177,28 @@ export const CategoryCreateForm = () => {
 
         <div className="p-6 flex flex-col gap-6">
           <BasicInfoSection
+            control={control}
             register={register}
             errors={errors}
             isSubmitting={isSubmitting}
           />
 
           <SettingsSection
+          control={control}
             register={register}
             isSubmitting={isSubmitting}
             isActiveValue={isActiveValue}
             nextSortOrder={nextSortOrder}
           />
 
-          <ImageUploadSection />
+          <ImageUploadSection
+            control={control}
+            register={register}
+            errors={errors}
+            isSubmitting={isSubmitting}
+          />
 
-          <SeoSection register={register} isSubmitting={isSubmitting} />
+          <SeoSection control={control} register={register} isSubmitting={isSubmitting} />
         </div>
 
 

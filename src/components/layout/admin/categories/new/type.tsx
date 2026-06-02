@@ -1,4 +1,4 @@
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 
 export interface CategoryFormValues {
   name: string;
@@ -7,11 +7,12 @@ export interface CategoryFormValues {
   isActive: boolean;
   metaTitle: string;
   metaDescription: string;
-  imageUrl?: string;
+  img: File;
 }
 
 export interface FormSectionProps {
   register: UseFormRegister<CategoryFormValues>;
   isSubmitting: boolean;
   errors?: FieldErrors<CategoryFormValues>;
+  control : Control<CategoryFormValues>
 }

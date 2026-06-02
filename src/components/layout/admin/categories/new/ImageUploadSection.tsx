@@ -1,14 +1,11 @@
 import { ImagePlus } from 'lucide-react'
 import React, { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
+import {FormSectionProps } from './type';
 
-type InputForm = {
-    img : File,
-}
 
-function ImageUploadSection() {
+function ImageUploadSection({ control, errors}: FormSectionProps) {
   const [preview, setPreview] = useState<string | null>(null);
-  const { control, formState: {errors}} = useForm<InputForm>();
 
   function handlePreview(e : any){
     const file = e.target.files[0]
@@ -55,11 +52,11 @@ function ImageUploadSection() {
                     </label>
                 )}
             />
-            {errors.img && <p className='text-xs text-red-500'>{errors.img.message}</p>}
 
             {preview && (
                 <img alt='previewimage' src={preview} className='h-40'/>    )}
         </div>
+        {errors?.img && <p className='text-red-500'>{errors.img.message}*</p>}
 
   </div>
   )
