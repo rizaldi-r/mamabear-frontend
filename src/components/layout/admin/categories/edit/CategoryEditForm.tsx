@@ -2,15 +2,15 @@
 
 
 import React, { useState } from "react";
-import { useForm, UseFormRegister, FieldErrors } from "react-hook-form";
+import { useForm, UseFormRegister, FieldErrors, Controller, Control } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Loader2, ImagePlus } from "lucide-react";
 import {Category,CategoryImage} from "@/features/categories/types/category.types";
-import {adminCategoryService} from "@/features/admin/categories/services/adminCategoryService";
+import {adminCategoryService, uploadCategoryImage} from "@/features/admin/categories/services/adminCategoryService";
 
 
 // --- Types ---
-interface CategoryFormValues {
+interface CategoryEditFormValues {
   name: string;
   slug: string;
   description: string;
@@ -18,6 +18,7 @@ interface CategoryFormValues {
   metaTitle?: string;
   metaDescription?: string;
   imageUrl?: string;
+  img : File
 }
 
 
@@ -35,9 +36,9 @@ const useCategoryEditForm = (initialData: Category) => {
   const {
     register,
     handleSubmit,
-    watch,
+    watch, control,
     formState: { errors, isSubmitting },
-  } = useForm<CategoryFormValues>({
+  } = useForm<CategoryEditFormValues>({
     defaultValues: {
       name: initialData.name,
       slug: initialData.slug,
@@ -47,6 +48,7 @@ const useCategoryEditForm = (initialData: Category) => {
       metaTitle: initialData.metaTitle || "",
       // @ts-ignore
       metaDescription: initialData.metaDescription || "",
+      imageUrl : initialData.images[0].imageUrl
     },
   });
 
@@ -54,16 +56,36 @@ const useCategoryEditForm = (initialData: Category) => {
   const isActiveWatch = watch("isActive");
 
 
-  const onSubmit = async (data: CategoryFormValues) => {
+  const onSubmit = async (data: CategoryEditFormValues) => {
     setError(null);
+    let image
+    if(data.img){
+      image = await uploadCategoryImage(data.img);
+    }else {
+      image = initialData.images
+    }
+
     try {
       const categoryPayload: any = {
         name: data.name,
         slug: data.slug,
         description: data.description,
-        isActive: data.isActive,
         metaTitle: data.metaTitle,
         metaDescription: data.metaDescription,
+        isActive: data.isActive,
+        sortOrder: initialData.sortOrder,
+        images: [
+          {
+            publicId : image.publicId,
+            imageUrl: image.imageUrl,
+            sortOrder: image.sortOrder || 0,
+            altText: image.altText,
+            width : image.width,
+            height : image.height,
+            fileSize : image.fileSize,
+            format : image.format
+          }
+        ]
       };
 
 
@@ -91,7 +113,7 @@ const useCategoryEditForm = (initialData: Category) => {
     errors,
     isSubmitting,
     isActiveWatch,
-    error,
+    error, control,
     handleCancel,
   };
 };
@@ -104,8 +126,8 @@ const BasicInfoSection = ({
   isSubmitting,
   isActiveWatch,
 }: {
-  register: UseFormRegister<CategoryFormValues>;
-  errors: FieldErrors<CategoryFormValues>;
+  register: UseFormRegister<CategoryEditFormValues>;
+  errors: FieldErrors<CategoryEditFormValues>;
   isSubmitting: boolean;
   isActiveWatch: boolean;
 }) => (
@@ -199,44 +221,61 @@ const BasicInfoSection = ({
 );
 
 
-const ImageUploadSection = ({ images }: { images: CategoryImage[] }) => {
+const ImageUploadSection = ({ images, control, errors }: { images: CategoryImage[]; control : Control<CategoryEditFormValues>; errors : FieldErrors<CategoryEditFormValues>;}) => {
   const existingImage = images && images.length > 0 ? images[0] : null;
-
+  const [preview, setPreview] = useState<string | null>(null);
+  
+    function handlePreview(e : any){
+      const file = e.target.files[0]
+      if (!file) return
+  
+      setPreview(URL.createObjectURL(file))
+    }
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-font-2 font-bold text-[var(--mama-brown)]">
-        Gambar Kategori
-      </label>
-      {existingImage ? (
-        <div className="relative w-full max-w-[240px] rounded-lg overflow-hidden border border-gray-200 shadow-sm group">
-          <img
-            src={existingImage.imageUrl}
-            alt={existingImage.altText || "Gambar kategori"}
-            className="w-full h-48 object-cover bg-gray-50"
-          />
-          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-            <button
-              type="button"
-              className="bg-white text-[var(--color-gray)] px-4 py-2 rounded-md font-semibold text-font-2 hover:text-[var(--mama-hot-pink)] transition-colors shadow-sm"
-            >
-              Ganti Gambar
-            </button>
-          </div>
+        <p className="text-font-2 font-bold text-[var(--mama-brown)]">
+            Gambar Kategori
+        </p>
+        <div className='relative flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg p-4 hover:bg-[var(--mama-pink)] hover:bg-opacity-10 hover:border-[var(--mama-hot-pink)] transition-all cursor-pointer'>
+        <Controller
+            name="img"
+            control={control}
+            rules={{ required: "Image required" }}
+            render={({ field: { onChange, ref, name } }) => (
+                <label className={`w-full h-40 flex flex-col items-center justify-center gap-3 group ${
+                    preview ? "absolute top-0 left-0 opacity-0" : "block"}`}>
+                    <div className="p-3 bg-gray-50 rounded-full group-hover:bg-[var(--mama-pink)] transition-colors">
+                        <ImagePlus className="w-6 h-6 text-gray-400 group-hover:text-[var(--mama-hot-pink)]" />
+                    </div>
+                    <span className="text-font-2 text-[var(--color-gray)] font-medium">
+                        Klik untuk mengunggah gambar
+                    </span>
+                    <span className="text-font-1 text-gray-400">
+                        Format yang didukung: JPG, PNG, WEBP (Max 2MB)
+                    </span>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            name={name}
+                            ref={ref}
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                onChange(file);       // simpan ke RHF
+                                handlePreview(e); // preview
+                            }}
+                        />
+                    </label>
+                )}
+            />
+
+            {preview && (
+                <img alt='previewimage' src={preview} className='h-40'/>    )}
         </div>
-      ) : (
-        <div className="w-full border-2 border-dashed border-gray-200 rounded-lg p-8 flex flex-col items-center justify-center gap-3 hover:bg-[var(--mama-pink)] hover:bg-opacity-10 hover:border-[var(--mama-hot-pink)] transition-all cursor-pointer group">
-          <div className="p-3 bg-gray-50 rounded-full group-hover:bg-[var(--mama-pink)] transition-colors">
-            <ImagePlus className="w-6 h-6 text-gray-400 group-hover:text-[var(--mama-hot-pink)]" />
-          </div>
-          <span className="text-font-2 text-[var(--color-gray)] font-medium">
-            Klik untuk mengunggah gambar baru
-          </span>
-          <span className="text-font-1 text-gray-400">
-            Format yang didukung: JPG, PNG, WEBP (Max 2MB)
-          </span>
-        </div>
-      )}
+        {errors?.img && <p className='text-red-500'>{errors.img.message}*</p>}
+
     </div>
   );
 };
@@ -246,7 +285,7 @@ const SeoSection = ({
   register,
   isSubmitting,
 }: {
-  register: UseFormRegister<CategoryFormValues>;
+  register: UseFormRegister<CategoryEditFormValues>;
   isSubmitting: boolean;
 }) => (
   <div className="flex flex-col gap-6">
@@ -294,6 +333,7 @@ export const CategoryEditForm = ({ initialData }: CategoryEditFormProps) => {
   const {
     register,
     handleSubmit,
+    control,
     errors,
     isSubmitting,
     isActiveWatch,
@@ -348,7 +388,7 @@ export const CategoryEditForm = ({ initialData }: CategoryEditFormProps) => {
             isActiveWatch={isActiveWatch}
           />
           <hr className="border-gray-100" />
-          <ImageUploadSection images={initialData.images || []} />
+          <ImageUploadSection images={initialData.images || []} errors={errors} control={control}/>
           <hr className="border-gray-100" />
           <SeoSection register={register} isSubmitting={isSubmitting} />
         </div>

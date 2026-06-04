@@ -83,7 +83,7 @@ const useCategoryForm = () => {
           {
             publicId : image.publicId,
             imageUrl: image.imageUrl,
-            sortOrder: image.sortOrder,
+            sortOrder: image.sortOrder || 0,
             altText: image.altText,
             width : image.width,
             height : image.height,
