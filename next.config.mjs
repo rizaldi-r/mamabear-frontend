@@ -22,6 +22,15 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        // Whenever the frontend calls /api/backend/..., Next.js forwards it to Railway
+        source: '/api/backend/:path*',
+        destination: 'https://mamabear-backend-dev.up.railway.app/api/:path*',
+      },
+    ]
+  }
 };
 
 export default nextConfig;

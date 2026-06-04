@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Quicksand } from "next/font/google";
 import AuthProvider from "@/providers/AuthProvider";
+import {CartInitializer} from "@/features/cart/components/CartInitializer.ts";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,7 +43,10 @@ export default function RootLayout({
       )}
     >
       <body className={`${quicksand.variable} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <CartInitializer />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
