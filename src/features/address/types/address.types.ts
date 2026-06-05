@@ -14,3 +14,27 @@ export interface AddressFormData {
   details: string;
   label: string; // e.g., "Kantor", "Rumah"
 }
+
+export interface Address {
+  id: number;
+  userId: string;
+  name: string;
+  phone: string;
+
+  // Information and validation coming from Raja Ongkir API
+  provinceId: number;
+  provinceName: string;
+  cityId: number;
+  cityName: string;
+  districtId: number;
+  districtName: string;
+  subdistrictId: number; // Used for shipping cost calculation
+  subdistrictName: string;
+  postalCode: string; // Included in subdistrict validation response
+
+  // Other information, no validation, user's responsibility
+  road: string; // Jalan, no rumah etc.
+  completeAddress: string; // Append all address information
+  detail?: string; // Sebelah rumah pak RT (Optional)
+  usedFor: string; // Kantor, Rumah (Label)
+}

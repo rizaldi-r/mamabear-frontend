@@ -6,7 +6,6 @@ import {
   ShippingOption,
   CalculateShippingCostRequest,
 } from "../types/shipping.types";
-import {API_BASE_URL} from "@/lib/config";
 
 /**
  * Fetches all available provinces.
@@ -14,7 +13,7 @@ import {API_BASE_URL} from "@/lib/config";
  */
 export async function getProvinces(): Promise<Region[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/shipping/province`, {
+    const res = await apiClient.get(`/shipping/province`, {
       cache: "force-cache",
     });
 
@@ -44,7 +43,7 @@ export async function getProvinces(): Promise<Region[]> {
  */
 export async function getCities(provinceId: number): Promise<Region[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/shipping/city/${provinceId}`, {
+    const res = await apiClient.get(`/shipping/city/${provinceId}`, {
       cache: "force-cache",
     });
 
@@ -73,7 +72,7 @@ export async function getCities(provinceId: number): Promise<Region[]> {
  */
 export async function getDistricts(cityId: number): Promise<Region[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/shipping/district/${cityId}`, {
+    const res = await apiClient.get(`/shipping/district/${cityId}`, {
       cache: "force-cache",
     });
 
@@ -102,7 +101,7 @@ export async function getDistricts(cityId: number): Promise<Region[]> {
  */
 export async function getSubdistricts(districtId: number): Promise<Subdistrict[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/shipping/subdistrict/${districtId}`, {
+    const res = await apiClient.get(`/shipping/subdistrict/${districtId}`, {
       cache: "force-cache",
     });
 
