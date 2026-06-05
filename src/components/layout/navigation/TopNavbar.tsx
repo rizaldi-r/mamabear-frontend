@@ -7,8 +7,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { SearchBar } from "@/features/products/components/shared/SearchBar";
 import { UserDropdown } from "./UserDropdown";
+import { MiniCartDropdown } from "@/features/cart/components/MiniCartDropdown";
 import { useEffect, useState, useRef } from "react";
-import {useCartStore} from "@/features/cart/store/useCartStore";
+import {useCartStore} from "@/features/cart/store/use-cart-store";
 
 interface TopNavbarProps {
   isLoggedIn: boolean;
@@ -19,19 +20,23 @@ interface TopNavbarProps {
 }
 
 export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
-  const { toggleSidebar } = useUIStore();
-  
-  // Zustand Connections
+  // UI Store Connections
+  const {
+    toggleSidebar,
+    setCartIconRect,
+    isFlying: isCartFlying,
+  } = useUIStore();
+
+  // Cart Store Connections
   const cartItems = useCartStore((state) => state.items);
-  const setCartIconRect = useCartStore((state) => state.setCartIconRect);
-  const isCartFlying = useCartStore((state) => state.isFlying);
-  
+
   const [mounted, setMounted] = useState(false);
   const cartIconRef = useRef<HTMLAnchorElement>(null);
+  const [isMiniCartOpen, setIsMiniCartOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Function to update coordinates of the cart icon
     const updateCartCoords = () => {
       if (cartIconRef.current) {
@@ -56,7 +61,8 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
     };
   }, [setCartIconRect]);
 
-  const totalCartItems = cartItems?.reduce((total, item) => total + item.quantity, 0) || 0;
+  const totalCartItems =
+    cartItems?.reduce((total, item) => total + item.quantity, 0) || 0;
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--mama-pink)] shadow-sm py-3 transition-colors">
@@ -71,8 +77,8 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
           >
             <Menu className="w-6 h-6 md:w-8 md:h-8" />
           </button>
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mama-hot-pink)] rounded-md"
             aria-label="Beranda MamaBear"
           >
@@ -92,8 +98,8 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
           <SearchBar />
         </div>
         <div className="flex-1 block sm:hidden">
-            {/* Mobile search could go here, or handled inside SearchBar component */}
-            <SearchBar />
+          {/* Mobile search could go here, or handled inside SearchBar component */}
+          <SearchBar />
         </div>
 
         {/* Actions */}
@@ -103,22 +109,35 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
             <UserDropdown isLoggedIn={isLoggedIn} user={user} />
           </div>
 
-          {/* Cart - Always visible */}
-          <Link
-            href="/cart"
-            ref={cartIconRef}
-            className={`text-[var(--mama-brown)] hover:bg-white/40 p-2 rounded-md transition-all relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mama-hot-pink)] group ${isCartFlying ? 'animate-bounce' : ''}`}
-            aria-label="Keranjang Belanja"
+          {/* Cart - Always visible (Wrapped for Desktop Hover) */}
+          <div
+            className="relative flex items-center"
+            onMouseEnter={() => setIsMiniCartOpen(true)}
+            onMouseLeave={() => setIsMiniCartOpen(false)}
           >
-            <ShoppingCart className="w-6 h-6 md:w-7 md:h-7 group-hover:scale-110 transition-transform" />
-            {mounted && totalCartItems > 0 && (
-              <Badge 
-                className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-destructive hover:bg-destructive text-destructive-foreground border-2 border-[var(--mama-pink)] transition-transform duration-300 rounded-md ${isCartFlying ? 'scale-125 bg-green-500' : 'scale-100'}`}
-              >
-                {totalCartItems > 99 ? '99+' : totalCartItems}
-              </Badge>
+            <Link
+              href="/cart"
+              ref={cartIconRef}
+              className={`text-[var(--mama-brown)] hover:bg-white/40 p-2 rounded-md transition-all relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mama-hot-pink)] group ${isCartFlying ? "animate-bounce" : ""}`}
+              aria-label="Keranjang Belanja"
+            >
+              <ShoppingCart className="w-7 h-7 md:w-7 md:h-7 group-hover:scale-110 transition-transform" />
+              {mounted && totalCartItems > 0 && (
+                <Badge
+                  className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-destructive hover:bg-destructive text-destructive-foreground border-2 border-[var(--mama-pink)] transition-transform duration-300 ${isCartFlying ? "scale-125" : "scale-100"}`}
+                >
+                  {totalCartItems > 99 ? "99+" : totalCartItems}
+                </Badge>
+              )}
+            </Link>
+
+            {/* Desktop Mini Cart Dropdown */}
+            {mounted && isMiniCartOpen && (
+              <div className="hidden md:block absolute top-full right-0 pt-2 z-[100]">
+                <MiniCartDropdown isLoggedIn={isLoggedIn} />
+              </div>
             )}
-          </Link>
+          </div>
         </div>
       </div>
     </header>

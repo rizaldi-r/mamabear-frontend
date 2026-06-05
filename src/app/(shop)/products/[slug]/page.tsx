@@ -11,7 +11,7 @@ interface ProductDetailPageProps {
 }
 
 // Ensure the page takes advantage of Next.js ISR (Incremental Static Regeneration)
-// export const revalidate = 60;
+export const revalidate = 0;
 
 export default async function ProductDetailPage({
   params,
@@ -26,7 +26,7 @@ export default async function ProductDetailPage({
     if (!product) {
       notFound();
     }
-
+    
     return (
       <main className="page-max-width py-8 px-4 md:px-8">
         {/* Suspense is mandatory here because the Client Component uses useSearchParams */}

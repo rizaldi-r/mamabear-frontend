@@ -1,122 +1,140 @@
-import { useState, useEffect, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useCartStore } from "@/features/cart/store/useCartStore";
+import { toast } from "sonner";
+import { useCartStore } from "@/features/cart/store/use-cart-store";
+import { cartService } from "@/features/cart/services/cartService";
 
-const FREE_SHIPPING_THRESHOLD = 150000;
-const DUMMY_PROMO_CODE = "MAMABEAR";
-const DUMMY_PROMO_DISCOUNT = 30146;
+const DUMMY_PROMO_CODE = "MAMABEAR10";
 
-export function useCartLogic() {
-  const { data: session } = useSession();
-  const isLoggedIn = !!session;
+export const useCartLogic = () => {
   const router = useRouter();
-  
-  // Intercept the raw items and guarantee it falls back to an empty array without breaking references
-  const { items: rawItems, updateQuantity, removeItem, clearCart, isLoading } = useCartStore();
-  const items = useMemo(() => rawItems || [], [rawItems]);
-  
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const { data: session, status } = useSession();
+  const isLoggedIn =
+    status === "authenticated" && session?.error !== "RefreshAccessTokenError";
+
+  const items = useCartStore((state) => state.items);
+  const isLoading = useCartStore((state) => state.isLoading);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  const selectedIds = useMemo(
+    () => new Set((items || []).map((i) => i.id)),
+    [items],
+  );
+
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   console.log("[Cart Page] Current Cart Data:", items);
-  // }, [items]);
-
-  useEffect(() => {
-    if (items.length > 0 && selectedIds.size === 0) {
-      const allIds = new Set(items.map((item) => item.id));
-      setSelectedIds(allIds);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items]);
-
-  const toggleSelection = (id: string) => {
-    const newSelected = new Set(selectedIds);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
-    setSelectedIds(newSelected);
-  };
-
-  const toggleAll = () => {
-    if (selectedIds.size === items.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(items.map((item) => item.id)));
-    }
-  };
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleApplyPromo = () => {
     if (promoCode.toUpperCase() === DUMMY_PROMO_CODE) {
       setAppliedPromo(promoCode.toUpperCase());
+      toast.success("Berhasil", {
+        description: "Kode promo berhasil digunakan!",
+      });
     } else {
-      alert("Kode promo tidak valid");
+      toast.error("Gagal", {
+        description: "Kode promo tidak valid",
+      });
       setAppliedPromo(null);
     }
   };
 
-  const handleRemoveSelected = async () => {
-    if (selectedIds.size === items.length) {
-      await clearCart(isLoggedIn);
-      setSelectedIds(new Set());
-      return;
+  const handleRemoveItem = async (itemId: string) => {
+    try {
+      await removeItem(itemId);
+      toast.success("Produk dihapus dari keranjang");
+    } catch {
+      toast.error("Gagal menghapus produk");
     }
-
-    for (const id of Array.from(selectedIds)) {
-      await removeItem(id, isLoggedIn);
-    }
-    setSelectedIds(new Set());
   };
 
-  const handleCheckout = () => {
-    if (selectedIds.size === 0) return;
+  const handleUpdateQuantity = async (itemId: string, quantity: number) => {
+    const item = items.find((i) => i.id === itemId);
+    if (item && quantity > item.variant.stock) {
+      toast.error(`Stok maksimum tercapai (Sisa: ${item.variant.stock})`);
+      return;
+    }
+    try {
+      await updateQuantity(itemId, quantity);
+    } catch {
+      toast.error("Gagal memperbarui jumlah produk");
+    }
+  };
 
-    // Convert the Set of selected IDs to a comma-separated string for the URL
-    const itemsQuery = Array.from(selectedIds).join(",");
-    const targetUrl = `/checkout?items=${itemsQuery}`;
+  const handleRemoveSelected = async () => {
+    if (!items || items.length === 0) return;
 
-    router.push(targetUrl);
-    // if (!isLoggedIn) {
-    //   // Not logged in: Send to login page, but remember where they wanted to go
-    //   router.push(`/login?callbackUrl=${encodeURIComponent(targetUrl)}`);
-    // } else {
-    //   // Logged in: Go straight to checkout
-    //   router.push(targetUrl);
-    // }
+    try {
+      await clearCart();
+      toast.success("Keranjang berhasil dikosongkan");
+    } catch {
+      toast.error("Gagal mengosongkan keranjang");
+    }
+  };
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const validation = await cartService.validateCart();
+
+      if (!validation.valid) {
+        toast.error("Perhatian", {
+          description:
+            "Ada perubahan stok pada produk. Memuat ulang keranjang...",
+        });
+        await useCartStore.getState().initializeCart();
+        setIsCheckingOut(false);
+        return;
+      }
+
+      const itemsQuery = items.map((i) => i.id).join(",");
+      const targetUrl = `/checkout?items=${itemsQuery}`;
+
+      if (!isLoggedIn) {
+        router.push(`/login?callbackUrl=${encodeURIComponent(targetUrl)}`);
+      } else {
+        router.push(targetUrl);
+      }
+    } catch (error) {
+      console.error("Validation error:", error);
+      toast.error("Error", {
+        description:
+          "Terjadi kesalahan saat memvalidasi keranjang. Silakan coba lagi.",
+      });
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   const { subtotal, totalQuantity } = useMemo(() => {
-    let sub = 0;
-    let qty = 0;
-    // Extra defensive fallback inside the loop
-    (items || []).forEach((item) => {
-      if (selectedIds.has(item.id)) {
-        sub += Number(item.price) * item.quantity;
-        qty += item.quantity;
-      }
+    let subtotal = 0;
+    let totalQuantity = 0;
+    const safeItems = items || [];
+
+    safeItems.forEach((item) => {
+      subtotal += Number(item.price) * item.quantity;
+      totalQuantity += item.quantity;
     });
-    return { subtotal: sub, totalQuantity: qty };
-  }, [items, selectedIds]);
 
-  const discountAmount = appliedPromo ? DUMMY_PROMO_DISCOUNT : 0;
-  const grandTotal = Math.max(0, subtotal - discountAmount);
+    return { subtotal, totalQuantity };
+  }, [items]);
 
-  const missingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  const freeShippingProgress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+  const discountAmount = appliedPromo ? subtotal * 0.1 : 0;
+  const grandTotal = subtotal - discountAmount;
+
+  const missingForFreeShipping = Math.max(0, 500000 - subtotal);
+  const freeShippingProgress = Math.min(100, (subtotal / 500000) * 100);
 
   return {
-    items,
+    items: items || [],
     isLoading,
     isLoggedIn,
     selectedIds,
-    toggleSelection,
-    toggleAll,
-    updateQuantity,
-    removeItem,
+    updateQuantity: handleUpdateQuantity,
+    removeItem: handleRemoveItem,
     handleRemoveSelected,
     handleCheckout,
     subtotal,
@@ -128,6 +146,7 @@ export function useCartLogic() {
     promoCode,
     setPromoCode,
     appliedPromo,
-    handleApplyPromo
+    handleApplyPromo,
+    isCheckingOut,
   };
-}
+};

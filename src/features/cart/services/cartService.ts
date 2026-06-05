@@ -1,14 +1,5 @@
-import { Cart, CartItem } from "../types/cart.types";
+import { Cart, CartItem } from "@/features/cart/types/cart.types";
 import { apiClient } from "@/lib/api";
-
-/**
- * Standard API response structure as defined in the guidelines.
- */
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
 
 export interface AddToCartPayload {
   productId: number;
@@ -16,89 +7,100 @@ export interface AddToCartPayload {
   quantity: number;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+/**
+ * Shared options to ensure cookies are included for the NestJS backend.
+ * This works in tandem with apiClient to send both the JWT and the Cookie.
+ */
+const defaultOptions: RequestInit = {
+  credentials: "include",
+};
+
+/**
+ * Helper to parse the response safely.
+ * Handles both raw returns and { data: ... } wrapped returns from NestJS interceptors.
+ */
+async function parseResponse<T>(response: Response): Promise<T> {
+  const json = await response.json();
+
+  if (!response.ok) {
+    throw new Error(json.message || `HTTP Error ${response.status}`);
+  }
+
+  // If backend wrapped it in a "data" object, extract it. Otherwise, return raw json.
+  return json.data !== undefined ? json.data : json;
+}
 
 export async function fetchCart(): Promise<Cart | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/cart`, {
-      cache: "no-store",
-      credentials: "include", // ADD THIS to accept cookies!
+    const res = await apiClient.get(`/cart`, {
+      ...defaultOptions,
+      cache: "no-store", // Cart is highly dynamic, never cache statically
     });
 
-
-    if (!res.ok) {
-      if (res.status === 404) return null;
-      throw new Error(`Gagal mengambil keranjang: HTTP ${res.status}`);
-    }
-
-    const response: ApiResponse<Cart> = await res.json();
-    console.log("🚀 ~ response fetch cart:", response)
-
-    if (!response.success) {
-      throw new Error(response.message || "Gagal mengambil data keranjang");
-    }
-
-    return response.data || null;
+    if (res.status === 404) return null;
+    return await parseResponse<Cart>(res);
   } catch (error) {
     console.error("[cartService] fetchCart failed:", error);
+    return null;
+  }
+}
+
+export async function mergeCart(): Promise<Cart> {
+  try {
+    // Pass undefined for body since /cart/merge doesn't require a payload
+    const res = await apiClient.post(`/cart/merge`, undefined, defaultOptions);
+    return await parseResponse<Cart>(res);
+  } catch (error) {
+    console.error(`[cartService] mergeCart failed:`, error);
     throw error;
   }
 }
 
-/**
- * Adds a new item to the cart. 
- * Returns the created/updated CartItem.
- */
+export interface CartValidationResult {
+  valid: boolean;
+}
+
+export async function validateCart(): Promise<CartValidationResult> {
+  try {
+    const res = await apiClient.post(`/cart/validate`, undefined, defaultOptions);
+    return await parseResponse<CartValidationResult>(res);
+  } catch (error) {
+    console.error(`[cartService] validateCart failed:`, error);
+    throw error;
+  }
+}
+
 export async function addToCart(payload: AddToCartPayload): Promise<CartItem> {
   try {
-    const response = await apiClient.post(`/cart/items`, payload);
-    const result: ApiResponse<CartItem> = await response.json();
-
-    if (!result.success || !result.data) {
-      throw new Error(result.message || "Gagal menambahkan produk ke keranjang");
-    }
-
-    return result.data;
+    const res = await apiClient.post(`/cart/items`, payload, defaultOptions);
+    return await parseResponse<CartItem>(res);
   } catch (error) {
     console.error(`[cartService] addToCart failed:`, error);
     throw error;
   }
 }
 
-/**
- * Updates the quantity of a specific cart item.
- * Returns the updated CartItem.
- */
 export async function updateCartItemQuantity(
   itemId: string,
-  quantity: number
+  quantity: number,
 ): Promise<CartItem> {
   try {
-    const response = await apiClient.patch(`/cart/items/${itemId}`, { quantity });
-    const result: ApiResponse<CartItem> = await response.json();
-
-    if (!result.success || !result.data) {
-      throw new Error(result.message || "Gagal memperbarui jumlah produk");
-    }
-
-    return result.data;
+    const res = await apiClient.patch(
+      `/cart/items/${itemId}`,
+      { quantity },
+      defaultOptions,
+    );
+    return await parseResponse<CartItem>(res);
   } catch (error) {
     console.error(`[cartService] updateCartItemQuantity failed:`, error);
     throw error;
   }
 }
 
-/**
- * Removes a specific item from the cart.
- */
 export async function removeCartItem(itemId: string): Promise<void> {
   try {
-    const response = await apiClient.delete(`/cart/items/${itemId}`);
-    const result: ApiResponse<void> = await response.json();
-
-    if (!result.success) {
-      throw new Error(result.message || "Gagal menghapus produk dari keranjang");
-    }
+    const res = await apiClient.delete(`/cart/items/${itemId}`, defaultOptions);
+    await parseResponse(res);
   } catch (error) {
     console.error(`[cartService] removeCartItem failed:`, error);
     throw error;
@@ -107,30 +109,10 @@ export async function removeCartItem(itemId: string): Promise<void> {
 
 export async function clearCart(): Promise<void> {
   try {
-    const response = await apiClient.delete(`/cart`);
-    const result: ApiResponse<void> = await response.json();
-
-    if (!result.success) {
-      throw new Error(result.message || "Gagal mengosongkan keranjang");
-    }
+    const res = await apiClient.delete(`/cart`, defaultOptions);
+    await parseResponse(res);
   } catch (error) {
     console.error(`[cartService] clearCart failed:`, error);
-    throw error;
-  }
-}
-
-export async function mergeCart(): Promise<Cart> {
-  try {
-    const response = await apiClient.post(`/cart/merge`);
-    const result: ApiResponse<Cart> = await response.json();
-
-    if (!result.success || !result.data) {
-      throw new Error(result.message || "Gagal menggabungkan keranjang");
-    }
-
-    return result.data;
-  } catch (error) {
-    console.error(`[cartService] mergeCart failed:`, error);
     throw error;
   }
 }
@@ -142,4 +124,5 @@ export const cartService = {
   removeCartItem,
   clearCart,
   mergeCart,
+  validateCart,
 };

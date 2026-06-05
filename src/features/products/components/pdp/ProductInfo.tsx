@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import {
   Heart,
-  MessageCircle,
   Minus,
   Plus,
   ShoppingCart,
@@ -190,9 +189,6 @@ export const ProductInfo = ({
         <button className="p-3 bg-[var(--mama-pink)] text-[var(--mama-hot-pink)] rounded-full hover:opacity-80 transition-opacity">
           <Heart size={24} />
         </button>
-        <button className="p-3 bg-[var(--mama-hot-pink)] text-white rounded-full hover:opacity-90 transition-opacity shadow-lg">
-          <MessageCircle size={24} />
-        </button>
       </div>
 
       <AddToCartModal
@@ -205,10 +201,6 @@ export const ProductInfo = ({
         quantity={quantity}
         onVariantSelect={onVariantSelect}
         onQuantityChange={onQuantityChange}
-        onConfirm={() => {
-          // Trigger global store action here later
-          setIsModalOpen(false);
-        }}
       />
     </div>
   );

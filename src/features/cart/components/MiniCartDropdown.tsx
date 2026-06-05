@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Trash2, ShoppingBag } from "lucide-react";
-import { useCartStore } from "@/features/cart/store/useCartStore";
+import { useCartStore } from "@/features/cart/store/use-cart-store";
 
 interface MiniCartDropdownProps {
   isLoggedIn: boolean;
@@ -63,10 +63,11 @@ export const MiniCartDropdown = ({ isLoggedIn }: MiniCartDropdownProps) => {
                   {/* Item Image Fallback (since image might not be deeply nested in lightweight cart item) */}
                   <div className="relative w-14 h-14 bg-stone-100 rounded-lg overflow-hidden shrink-0 border border-stone-200">
                     <Image
-                      src="/images/placeholder.jpg" // Using placeholder as fallback if item.product.images isn't stored in basic cart state
+                      src="/images/placeholder.jpg"
                       alt={item.product?.name || "Product Image"}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                   </div>
 

@@ -2,48 +2,46 @@
 
 import { useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { useCartStore } from "@/features/cart/store/useCartStore";
+import { useCartStore } from "@/features/cart/store/use-cart-store";
 
 export function CartInitializer() {
-  const { status } = useSession();
-  const items = useCartStore((state) => state.items);
+  const { status, data: session } = useSession();
+  const isLoggedIn =
+    status === "authenticated" && session?.error !== "RefreshAccessTokenError";
+
   const mergeGuestCart = useCartStore((state) => state.mergeGuestCart);
   const initializeCart = useCartStore((state) => state.initializeCart);
-  const clearCart = useCartStore((state) => state.clearCart);
-  
-  // Use a ref to ensure we only run the merge/initialize logic ONCE per session lifecycle
+
   const hasInitialized = useRef(false);
+  const hasMerged = useRef(false);
 
   useEffect(() => {
-    // Only run this logic once the session has finished loading and is authenticated
-    if (status === "authenticated" && !hasInitialized.current) {
+    // 1. Unconditionally fetch cart on initial load (Guest or User)
+    if (!hasInitialized.current) {
       hasInitialized.current = true;
-
-      // Guest items created locally have the dummy ID "guest-cart".
-      const hasGuestItems = items.some((item) => item.cartId === "guest-cart");
-
-      if (hasGuestItems) {
-        // If they have guest items, push them to the DB and sync
-        mergeGuestCart();
-      } else {
-        // If their local cart is empty, just fetch their existing DB cart
-        initializeCart(true);
-      }
+      initializeCart();
     }
-    
-    // Reset the ref if they log out, so it can run again if they log back in
-    if (status === "unauthenticated") {
-      hasInitialized.current = false;
+
+    // 2. If they transition to authenticated, trigger the backend merge
+    if (isLoggedIn && !hasMerged.current) {
+      hasMerged.current = true;
       
-      // SECURITY: If the user logs out, their DB cart might still be cached in localStorage.
-      // We check if any items belong to the database (cartId !== "guest-cart").
-      // If so, we wipe the local storage so the next guest gets a fresh empty cart.
-      const hasDbItems = items.some((item) => item.cartId !== "guest-cart");
-      if (hasDbItems) {
-        clearCart(false); // 'false' ensures we only clear the local state, not the DB
-      }
+      // Wrap in an async function so we can await the merge before fetching
+      const performMergeAndFetch = async () => {
+        await mergeGuestCart(); // Wait for backend to finish merging and clearing cookie
+        await initializeCart(); // THEN fetch the shiny new complete cart
+      };
+      
+      performMergeAndFetch();
     }
-  }, [status, items, mergeGuestCart, initializeCart, clearCart]);
+
+    // 3. Reset logic on logout
+    if (!isLoggedIn) {
+      hasMerged.current = false;
+      // Re-initialize to fetch the new empty/guest cart state
+      initializeCart();
+    }
+  }, [isLoggedIn, mergeGuestCart, initializeCart]);
 
   return null;
 }

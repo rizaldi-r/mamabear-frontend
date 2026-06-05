@@ -25,7 +25,7 @@ export default function ProductCard({
   const mainImage =
     product.images && product.images.length > 0
       ? product.images[0].imageUrl
-      : "mamabear-frontend/public/images/layout/logo.png";
+      : "/images/layout/logo.png";
 
   // Gunakan field analytical baru, fallback ke harga varian pertama jika tidak ada
   const currentPriceStr =

@@ -1,10 +1,30 @@
 /**
+ * Represents the image data returned within a cart product or variant.
+ */
+export interface CartImage {
+  id: number;
+  publicId: string;
+  productId: number | null;
+  variantId: number | null;
+  reviewId: number | null;
+  categoryId: number | null;
+  imageUrl: string;
+  sortOrder: number;
+  altText: string;
+  width: number;
+  height: number;
+  fileSize: number;
+  format: string;
+}
+
+/**
  * Represents the simplified product data returned within a cart item.
  */
 export interface CartProduct {
   id: number;
   name: string;
   isActive: boolean;
+  images?: CartImage[];
 }
 
 /**
@@ -12,9 +32,12 @@ export interface CartProduct {
  */
 export interface CartVariant {
   id: number;
+  name: string;
   priceIdr: string;
   stock: number;
   productId: number;
+  weightG: number;
+  images?: CartImage[];
 }
 
 /**
@@ -43,4 +66,5 @@ export interface Cart {
   updatedAt: string;
   expiresAt: string;
   items: CartItem[];
+  totalWeight: number;
 }
