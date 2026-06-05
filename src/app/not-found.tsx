@@ -16,10 +16,10 @@ export default function NotFound() {
 
         {/* Typography */}
         <h1 className="text-font-6 font-bold text-[var(--mama-brown)] mb-4">
-          Oops, produk yang Mama cari belum ketemu :(
+          Oops, Halaman yang Mama cari belum ketemu :(
         </h1>
-        <p className="text-font-2 text-[var(--color-gray)] max-w-lg mb-8 leading-relaxed">
-          Maaf ya Ma, produk atau halaman yang Mama cari sepertinya tidak ada,
+        <p className="text-font-2 text-[var(--color-gray)] max-w-xl mb-8 leading-relaxed">
+          Maaf Ma, halaman yang Mama cari sepertinya tidak ada,
           atau link-nya mungkin salah.
         </p>
 

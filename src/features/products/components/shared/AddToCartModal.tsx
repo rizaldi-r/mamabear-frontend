@@ -1,14 +1,13 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Minus, Plus, X, Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import {
   ProductDetail,
   ProductVariant,
 } from "@/features/products/types/product.types";
-// import { useCartStore } from "@/features/cart/store/useCartStore";
+import { useCartStore } from "@/features/cart/store/use-cart-store";
+import { FlyToCartGhost } from "@/features/cart/components/FlyToCartGhost";
+import {Coordinates, useUIStore} from "@/store/use-ui-store";
 
 interface AddToCartModalProps {
   isOpen: boolean;
@@ -41,11 +40,27 @@ export const AddToCartModal = ({
   onVariantSelect,
   onQuantityChange,
 }: AddToCartModalProps) => {
-  const { data: session } = useSession();
-  // const addItem = useCartStore((state) => state.addItem);
+  // const { data: session, status } = useSession();
+  // const isLoggedIn =
+  //   status === "authenticated" && session?.error !== "RefreshAccessTokenError";
+
+  // Zustand Connections
+  const addItem = useCartStore((state) => state.addItem);
+  const cartIconRect = useUIStore((state) => state.cartIconRect);
+  const triggerCartBounce = useUIStore((state) => state.triggerCartBounce);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [flyAnimation, setFlyAnimation] = useState<{
+    imageUrl: string;
+    startRect: Coordinates;
+  } | null>(null);
+
+  const imageRef = useRef<HTMLImageElement>(null);
 
   if (!isOpen) return null;
+
+  // Check if variant has specific images, otherwise fallback to product images
+  const activeImage = currentVariant?.images?.[0] || product.images?.[0];
 
   const hasDiscount = Number(product.discountPercent) > 0;
   let activeCurrentPrice = product.currentPrice;
@@ -58,22 +73,45 @@ export const AddToCartModal = ({
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      // Create a unique ID based on product and variant
-      const cartItemId = currentVariant 
-        ? `${product.id}_${currentVariant.id}` 
-        : `${product.id}`;
-
       await addItem({
-        id: cartItemId,
         product,
         variant: currentVariant,
-        quantity
-      }, !!session); // Pass true if logged in
-      
-      onClose();
+        quantity,
+      });
+
+      // Trigger the fly animation if coordinates and image exist
+      if (imageRef.current && cartIconRect && activeImage) {
+        const rect = imageRef.current.getBoundingClientRect();
+        setFlyAnimation({
+          imageUrl: activeImage.imageUrl,
+          startRect: {
+            x: rect.left,
+            y: rect.top,
+            width: rect.width,
+            height: rect.height,
+          },
+        });
+
+        // Delay closing the modal so the ghost component doesn't unmount before arriving
+        setTimeout(() => {
+          onClose();
+          setFlyAnimation(null);
+        }, 850);
+      } else {
+        onClose();
+      }
+    } catch (error) {
+      console.error("Gagal menambahkan ke keranjang:", error);
+      // TODO: Add a toast notification here in the future
+      // toast.error("Maaf, gagal menambahkan produk ke keranjang");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleFlyComplete = () => {
+    setFlyAnimation(null);
+    triggerCartBounce();
   };
 
   return (
@@ -96,9 +134,10 @@ export const AddToCartModal = ({
         {}
         <div className="flex gap-4 border-b border-gray-100 pb-5 mb-5 mt-2">
           <div className="w-24 h-24 relative rounded-xl border border-[var(--mama-pink)] bg-[var(--mama-cream)] overflow-hidden flex-shrink-0 shadow-sm">
-            {product.images?.[0] && (
+            {activeImage && (
               <Image
-                src={product.images[0].imageUrl}
+                ref={imageRef}
+                src={activeImage.imageUrl}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -178,9 +217,22 @@ export const AddToCartModal = ({
           disabled={isLoading || (variants.length > 0 && !currentVariant)}
           className="w-full flex justify-center items-center gap-2 bg-[var(--mama-hot-pink)] text-white py-3.5 rounded-full font-bold text-font-3 hover:opacity-90 transition-opacity shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? <Loader2 className="animate-spin" size={20} /> : "Konfirmasi"}
+          {isLoading ? (
+            <Loader2 className="animate-spin" size={20} />
+          ) : (
+            "Konfirmasi"
+          )}
         </button>
       </div>
+
+      {flyAnimation && cartIconRect && (
+        <FlyToCartGhost
+          imageUrl={flyAnimation.imageUrl}
+          startRect={flyAnimation.startRect}
+          endRect={cartIconRect}
+          onComplete={handleFlyComplete}
+        />
+      )}
     </div>
   );
 };
