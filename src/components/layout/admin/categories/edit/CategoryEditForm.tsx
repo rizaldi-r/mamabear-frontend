@@ -1,7 +1,7 @@
 "use client";
 
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, UseFormRegister, FieldErrors, Controller, Control } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Loader2, ImagePlus } from "lucide-react";
@@ -36,7 +36,7 @@ const useCategoryEditForm = (initialData: Category) => {
   const {
     register,
     handleSubmit,
-    watch, control,
+    watch, control, setValue,
     formState: { errors, isSubmitting },
   } = useForm<CategoryEditFormValues>({
     defaultValues: {
@@ -48,7 +48,7 @@ const useCategoryEditForm = (initialData: Category) => {
       metaTitle: initialData.metaTitle || "",
       // @ts-ignore
       metaDescription: initialData.metaDescription || "",
-      imageUrl : initialData.images[0].imageUrl
+      imageUrl : initialData.images?.[0]?.imageUrl || ''
     },
   });
 
@@ -74,23 +74,13 @@ const useCategoryEditForm = (initialData: Category) => {
         metaDescription: data.metaDescription,
         isActive: data.isActive,
         sortOrder: initialData.sortOrder,
-        images: [
-          {
-            publicId : image.publicId,
-            imageUrl: image.imageUrl,
-            sortOrder: image.sortOrder || 0,
-            altText: image.altText,
-            width : image.width,
-            height : image.height,
-            fileSize : image.fileSize,
-            format : image.format
-          }
-        ]
+        images: image ?? null
       };
 
+      console.log('EDITPAY', categoryPayload)
 
       // Call the update service instead of create
-      await adminCategoryService.updateCategory(initialData.id, categoryPayload);
+      await adminCategoryService.updateCategory(initialData.id, categoryPayload as Partial<Category>,);
 
 
       router.push("/admin/categories");
@@ -106,6 +96,22 @@ const useCategoryEditForm = (initialData: Category) => {
     router.push("/admin/categories");
   };
 
+  const nameValue = watch("name");
+  const isActiveValue = watch("isActive");
+
+  // Auto-generate slug from name
+  useEffect(() => {
+    if (nameValue) {
+      const generatedSlug = nameValue
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)+/g, "");
+      setValue("slug", generatedSlug, { shouldValidate: true });
+    } else {
+      setValue("slug", "");
+    }
+  }, [nameValue, setValue]);
+
 
   return {
     register,
@@ -117,7 +123,6 @@ const useCategoryEditForm = (initialData: Category) => {
     handleCancel,
   };
 };
-
 
 // --- Sub-components ---
 const BasicInfoSection = ({
@@ -165,8 +170,8 @@ const BasicInfoSection = ({
         <input
           id="slug"
           type="text"
-          disabled={isSubmitting}
-          className="w-full px-4 py-2.5 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[var(--mama-pink)] focus:border-[var(--mama-hot-pink)] transition-all text-font-2 text-gray-800 disabled:bg-gray-50"
+          disabled={true}
+          className="w-full px-4 py-2.5 rounded-md border border-gray-200  cursor-none transition-all text-font-2 text-gray-800 disabled:bg-gray-50"
           {...register("slug", { required: "Slug wajib diisi" })}
         />
         {errors.slug && (
@@ -223,7 +228,7 @@ const BasicInfoSection = ({
 
 const ImageUploadSection = ({ images, control, errors }: { images: CategoryImage[]; control : Control<CategoryEditFormValues>; errors : FieldErrors<CategoryEditFormValues>;}) => {
   const existingImage = images && images.length > 0 ? images[0] : null;
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(existingImage?.imageUrl || null);
   
     function handlePreview(e : any){
       const file = e.target.files[0]
@@ -241,7 +246,6 @@ const ImageUploadSection = ({ images, control, errors }: { images: CategoryImage
         <Controller
             name="img"
             control={control}
-            rules={{ required: "Image required" }}
             render={({ field: { onChange, ref, name } }) => (
                 <label className={`w-full h-40 flex flex-col items-center justify-center gap-3 group ${
                     preview ? "absolute top-0 left-0 opacity-0" : "block"}`}>
@@ -341,7 +345,7 @@ export const CategoryEditForm = ({ initialData }: CategoryEditFormProps) => {
     handleCancel,
   } = useCategoryEditForm(initialData);
 
-
+  console.log(initialData)
   return (
     <div className="w-full flex flex-col gap-6">
       {/* Page Header */}

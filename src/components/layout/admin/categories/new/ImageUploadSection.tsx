@@ -23,7 +23,6 @@ function ImageUploadSection({ control, errors}: FormSectionProps) {
         <Controller
             name="img"
             control={control}
-            rules={{ required: "Image required" }}
             render={({ field: { onChange, ref, name } }) => (
                 <label className={`w-full h-40 flex flex-col items-center justify-center gap-3 group ${
                     preview ? "absolute top-0 left-0 opacity-0" : "block"}`}>

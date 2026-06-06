@@ -69,7 +69,10 @@ const useCategoryForm = () => {
   const onSubmit = async (data: CategoryFormValues) => {
     setError(null);
     try {
-      const image = await uploadCategoryImage(data.img);
+      let image
+      if (data.img){
+        image = await uploadCategoryImage(data.img);
+      }
 
       const categoryPayload: any = {
         name: data.name,
@@ -79,18 +82,7 @@ const useCategoryForm = () => {
         metaDescription: data.metaDescription,
         isActive: data.isActive,
         sortOrder: nextSortOrder !== null ? nextSortOrder : 0,
-        images: [
-          {
-            publicId : image.publicId,
-            imageUrl: image.imageUrl,
-            sortOrder: image.sortOrder || 0,
-            altText: image.altText,
-            width : image.width,
-            height : image.height,
-            fileSize : image.fileSize,
-            format : image.format
-          }
-        ]
+        images: image ?? null
       };
 
       console.log('PAYLOAD', categoryPayload)
