@@ -1,11 +1,16 @@
 import { ImagePlus } from 'lucide-react'
 import React, { useState } from 'react'
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import {FormSectionProps } from './type';
 
 
-function ImageUploadSection({ control, errors}: FormSectionProps) {
-  const [preview, setPreview] = useState<string | null>(null);
+function ImageUploadSection({ control, errors}: FormSectionProps, initialimg:string) {
+  const imgValue = useWatch({
+    control,
+    name: "imageUrl",
+    });
+
+  const [preview, setPreview] = useState<string | null>(imgValue ?? null);
 
   function handlePreview(e : any){
     const file = e.target.files[0]

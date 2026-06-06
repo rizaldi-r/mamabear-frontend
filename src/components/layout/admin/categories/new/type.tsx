@@ -7,7 +7,8 @@ export interface CategoryFormValues {
   isActive: boolean;
   metaTitle: string;
   metaDescription: string;
-  img: File;
+  imageUrl?: string;
+  img : File
 }
 
 export interface FormSectionProps {

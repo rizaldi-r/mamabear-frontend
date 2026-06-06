@@ -71,7 +71,11 @@ const useCategoryForm = () => {
     try {
       let image
       if (data.img){
-        image = await uploadCategoryImage(data.img);
+        const img = await uploadCategoryImage(data.img);
+        image = [{
+          ...img,
+          sortOrder: 0,
+        }]
       }
 
       const categoryPayload: any = {
