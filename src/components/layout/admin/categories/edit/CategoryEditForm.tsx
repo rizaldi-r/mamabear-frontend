@@ -45,16 +45,19 @@ const useCategoryEditForm = (initialData: Category) => {
 
   const onSubmit = async (data: CategoryFormValues) => {
     setError(null);
-    let image
-    if(data.img){
+    let image = [];
+
+    if (data.img) {
       const img = await uploadCategoryImage(data.img);
-        image = [{
+
+      image = [
+        {
           ...img,
           sortOrder: 0,
-        }]
-
-    }else {
-      image = initialData.images
+        },
+      ];
+    } else {
+      image = initialData.images;
     }
 
     try {
@@ -66,13 +69,13 @@ const useCategoryEditForm = (initialData: Category) => {
         metaDescription: data.metaDescription,
         isActive: data.isActive,
         sortOrder: initialData.sortOrder,
-        images: image ?? null
+        images: image
       };
 
       console.log('EDITPAY', categoryPayload)
 
       // Call the update service instead of create
-      await adminCategoryService.updateCategory(initialData.id, categoryPayload as Partial<Category>,);
+      await adminCategoryService.updateCategory(initialData.id, categoryPayload);
 
 
       router.push("/admin/categories");
@@ -129,7 +132,7 @@ export const CategoryEditForm = ({ initialData }: CategoryEditFormProps) => {
     handleCancel,
   } = useCategoryEditForm(initialData);
 
-  console.log(initialData)
+  console.log('INIT',initialData)
   return (
     <div className="w-full flex flex-col gap-6">
       {/* Page Header */}
