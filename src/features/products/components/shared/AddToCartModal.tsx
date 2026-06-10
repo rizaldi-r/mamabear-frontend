@@ -40,10 +40,6 @@ export const AddToCartModal = ({
   onVariantSelect,
   onQuantityChange,
 }: AddToCartModalProps) => {
-  // const { data: session, status } = useSession();
-  // const isLoggedIn =
-  //   status === "authenticated" && session?.error !== "RefreshAccessTokenError";
-
   // Zustand Connections
   const addItem = useCartStore((state) => state.addItem);
   const cartIconRect = useUIStore((state) => state.cartIconRect);
