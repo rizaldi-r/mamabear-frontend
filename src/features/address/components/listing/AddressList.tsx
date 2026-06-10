@@ -44,9 +44,12 @@ export function AddressList({ initialAddresses }: AddressListProps) {
                       {address.usedFor} {address.name}
                     </h3>
                   </div>
-                  <button className="text-gray-400 hover:text-[var(--mama-brown)] text-sm font-medium transition-colors">
+                  <Link
+                    href={`/account/addresses/${address.id}/edit`}
+                    className="text-gray-400 hover:text-orange-900 text-sm font-medium transition-colors"
+                  >
                     Ubah
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="pl-7 space-y-2">

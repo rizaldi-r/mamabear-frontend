@@ -34,7 +34,7 @@ export default function ProductCard({
       ? product.variants[0].priceIdr
       : "0");
   const originalPriceStr = product.originalPrice;
-  const discount = product.discountPercent;
+  const discount = Math.round(Number(product.discountPercent));
   const rating = product.rating || 0.0;
   const rawSold = product.totalSold || product.reviewsCount || 0;
   const sold = formatSold(rawSold);

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { X, ChevronDown, Minus, Plus } from "lucide-react";
+import { X, ChevronDown, Minus, Plus, Trash2 } from "lucide-react";
 import { formatIDR } from "@/utils/formatters";
 import { CartItem } from "@/features/cart/types/cart.types";
 
@@ -15,6 +15,24 @@ export const CartItemCard = ({
   onUpdateQty,
   onRemove,
 }: CartItemCardProps) => {
+  const [localQty, setLocalQty] = useState(item.quantity);
+
+  // Sync local state if the global item.quantity changes (e.g., on cart fetch)
+  useEffect(() => {
+    setLocalQty(item.quantity);
+  }, [item.quantity]);
+
+  // The Debouncer: Only trigger the API call 500ms AFTER the user stops clicking
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (localQty !== item.quantity) {
+        onUpdateQty(item.id, localQty);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [localQty, item.quantity, item.id, onUpdateQty]);
+
   const currentPrice = Number(item.price);
   const originalPrice = Math.round(currentPrice * 1.35);
 
@@ -26,14 +44,14 @@ export const CartItemCard = ({
 
   return (
     <div className="flex gap-4 py-6 border-b border-gray-200 relative group">
-      <div className="flex items-start pt-8">
+      {/* <div className="flex items-start pt-8">
         <input
           type="checkbox"
           checked
           disabled
           className="w-5 h-5 accent-[var(--mama-hot-pink)] cursor-not-allowed opacity-60 rounded border-gray-300"
         />
-      </div>
+      </div> */}
 
       <div className="w-24 h-24 sm:w-28 sm:h-28 relative rounded-xl border border-[var(--mama-pink)] bg-[var(--mama-cream)] overflow-hidden flex-shrink-0">
         <Image
@@ -83,22 +101,28 @@ export const CartItemCard = ({
           <div className="flex flex-col items-end">
             <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
               <button
-                onClick={() =>
-                  onUpdateQty(item.id, item.quantity - 1)
-                }
-                disabled={item.quantity <= 1}
-                className="p-1.5 hover:bg-gray-100 text-[var(--color-gray)] disabled:opacity-50 transition-colors"
+                onClick={() => {
+                  if (localQty <= 1) {
+                    onRemove(item.id);
+                  } else {
+                    setLocalQty((prev) => prev - 1);
+                  }
+                }}
+                disabled={localQty < 1}
+                className={`p-1.5 transition-colors ${
+                  localQty <= 1 
+                    ? "text-[var(--mama-hot-pink)] hover:bg-pink-50" 
+                    : "text-[var(--color-gray)] hover:bg-gray-100"
+                }`}
               >
-                <Minus size={16} />
+                {localQty <= 1 ? <Trash2 size={16} /> : <Minus size={16} />}
               </button>
               <span className="px-4 text-font-2 font-medium text-[var(--mama-brown)] min-w-[3rem] text-center border-x border-gray-200">
-                {item.quantity}
+                {localQty}
               </span>
               <button
-                onClick={() =>
-                  onUpdateQty(item.id, item.quantity + 1)
-                }
-                disabled={item.quantity >= item.variant.stock}
+                onClick={() => setLocalQty((prev) => prev + 1)}
+                disabled={localQty >= item.variant.stock}
                 className="p-1.5 hover:bg-gray-100 text-[var(--color-gray)] disabled:opacity-50 transition-colors"
               >
                 <Plus size={16} />
@@ -109,7 +133,7 @@ export const CartItemCard = ({
               <span className="text-font-1 text-[var(--color-gray)]">
                 Sisa {item.variant.stock}
               </span>
-              {item.quantity >= item.variant.stock && (
+              {localQty >= item.variant.stock && (
                 <span className="text-[10px] sm:text-font-1 font-semibold text-[var(--mama-hot-pink)] mt-0.5 animate-in fade-in zoom-in duration-300">
                   Maksimum stok tercapai
                 </span>

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
-  Heart,
+  AlertCircle,
+  Share2,
   Minus,
   Plus,
   ShoppingCart,
@@ -13,7 +14,6 @@ import {
   ProductDetail,
   ProductVariant,
 } from "@/features/products/types/product.types";
-import {AddToCartModal} from "@/features/products/components/shared/AddToCartModal";
 
 interface ProductInfoProps {
   product: ProductDetail;
@@ -23,6 +23,8 @@ interface ProductInfoProps {
   quantity: number;
   onVariantSelect: (id: number) => void;
   onQuantityChange: (type: "increase" | "decrease") => void;
+  onOpenCartModal: () => void; // New callback from parent
+  onOpenShareModal: () => void; // Added share trigger
 }
 
 const formatIDR = (amount: string | number) => {
@@ -48,11 +50,14 @@ export const ProductInfo = ({
   quantity,
   onVariantSelect,
   onQuantityChange,
+  onOpenCartModal,
+  onOpenShareModal,
 }: ProductInfoProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   // Check if a discount exists and is greater than 0
   const hasDiscount = Number(product.discountPercent) > 0;
+
+  // Round the discount percentage to a whole number
+  const discountPercentRounded = Math.round(Number(product.discountPercent));
 
   // Determine the base original price to cross out
   const baseOriginalPrice = currentVariant
@@ -89,7 +94,7 @@ export const ProductInfo = ({
     <div className="flex flex-col gap-6">
       {/* Title & Rating */}
       <div>
-        <h1 className="text-font-5 font-bold text-[var(--mama-brown)] mb-2">
+        <h1 className="text-font-3 md:text-font-5 font-bold text-[var(--mama-brown)] mb-2">
           {product.name}
         </h1>
         <div className="flex items-center gap-2 text-font-1 text-[var(--color-gray)]">
@@ -105,19 +110,19 @@ export const ProductInfo = ({
       </div>
 
       {/* Pricing */}
-      <div className="flex items-end gap-3">
-        <span className="text-font-6 font-bold text-[var(--mama-hot-pink)]">
+      <div className="flex items-end gap-3 flex-wrap">
+        <span className="text-font-4 md:text-font-6 font-bold text-[var(--mama-hot-pink)] leading-none">
           {hasDiscount
             ? formatIDR(activeCurrentPrice)
             : formatIDR(baseOriginalPrice)}
         </span>
         {hasDiscount && (
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-font-4 line-through text-[var(--color-light-gray)]">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-font-2 md:text-font-4 line-through text-[var(--color-light-gray)]">
               {formatIDR(baseOriginalPrice)}
             </span>
-            <span className="bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded">
-              -{product.discountPercent}%
+            <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm">
+              -{discountPercentRounded}%
             </span>
           </div>
         )}
@@ -153,7 +158,7 @@ export const ProductInfo = ({
         <span className="text-font-2 text-[var(--mama-brown)]">
           Stok : {currentVariant?.stock || 0}
         </span>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <span className="text-font-2 text-[var(--mama-brown)]">Jumlah</span>
           <div className="flex items-center border border-[var(--color-light-gray)] rounded-lg overflow-hidden bg-white">
             <button
@@ -174,34 +179,36 @@ export const ProductInfo = ({
               <Plus size={16} />
             </button>
           </div>
+
+          {/* Stock Warning Indicator */}
+          {currentVariant && quantity >= currentVariant.stock && (
+            <div className="flex items-center gap-1.5 text-red-500 animate-in fade-in zoom-in duration-200">
+              <AlertCircle size={16} strokeWidth={2.5} />
+              <span className="text-font-1 font-bold">
+                Maksimal stok tercapai
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Actions */}
       <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={onOpenCartModal}
           className="flex-1 flex items-center justify-center gap-2 bg-[var(--mama-hot-pink)] text-white py-3 rounded-full font-bold hover:opacity-90 transition-opacity"
         >
           <ShoppingCart size={20} />
           Masukkan Keranjang
         </button>
-        <button className="p-3 bg-[var(--mama-pink)] text-[var(--mama-hot-pink)] rounded-full hover:opacity-80 transition-opacity">
-          <Heart size={24} />
+        <button
+          onClick={onOpenShareModal}
+          className="p-3 bg-[var(--mama-pink)] text-[var(--mama-hot-pink)] rounded-full hover:opacity-80 transition-opacity"
+          aria-label="Bagikan Produk"
+        >
+          <Share2 size={24} />
         </button>
       </div>
-
-      <AddToCartModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        product={product}
-        variants={variants}
-        currentVariant={currentVariant}
-        selectedVariantId={selectedVariantId}
-        quantity={quantity}
-        onVariantSelect={onVariantSelect}
-        onQuantityChange={onQuantityChange}
-      />
     </div>
   );
 };

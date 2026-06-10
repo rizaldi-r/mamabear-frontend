@@ -29,9 +29,9 @@ async function refreshAccessToken(token: JWT) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
       method: "POST",
-      headers: {
+      headers: { 
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token.refreshToken}`,
+        Authorization: `Bearer ${token.refreshToken}`
       },
     });
     const refreshedTokens = await response.json();
@@ -117,6 +117,7 @@ export const authOptions: NextAuthOptions = {
           refreshToken: user.refreshToken,
           id: user.id,
           name: user.name,
+          email: user.email,
           role: user.role,
           remember: user.remember,
           accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFESPAN,
@@ -146,6 +147,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name;
+        session.user.email = token.email as string | undefined;
         session.user.role = token.role as string;
         session.user.remember = token.remember as boolean;
       }

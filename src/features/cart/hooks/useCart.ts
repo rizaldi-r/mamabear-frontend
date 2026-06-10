@@ -1,17 +1,15 @@
 import { useMemo, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCartStore } from "@/features/cart/store/use-cart-store";
 import { cartService } from "@/features/cart/services/cartService";
+import {useAuth} from "@/features/auth/hooks/useAuth";
 
 const DUMMY_PROMO_CODE = "MAMABEAR10";
 
 export const useCartLogic = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const isLoggedIn =
-    status === "authenticated" && session?.error !== "RefreshAccessTokenError";
+  const { isLoggedIn } = useAuth();
 
   const items = useCartStore((state) => state.items);
   const isLoading = useCartStore((state) => state.isLoading);

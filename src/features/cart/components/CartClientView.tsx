@@ -29,7 +29,7 @@ export function CartClientView() {
     isCheckingOut,
   } = useCartLogic();
 
-  const isAllSelected = items.length > 0 && selectedIds.size === items.length;
+  // const isAllSelected = items.length > 0 && selectedIds.size === items.length;
 
   return (
     <div className="min-h-screen bg-white pb-24 relative">
@@ -94,8 +94,8 @@ export function CartClientView() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {}
             <div className="lg:col-span-7 xl:col-span-8">
-              <div className="flex justify-between items-center py-4 mb-2">
-                <div className="flex items-center gap-4">
+              <div className="flex justify-end items-center py-4 mb-2">
+                {/* <div className="flex items-center gap-4">
                   <input
                     type="checkbox"
                     checked={isAllSelected}
@@ -105,7 +105,7 @@ export function CartClientView() {
                   <span className="text-font-2 font-medium text-[var(--color-gray)]">
                     Pilih Semua
                   </span>
-                </div>
+                </div> */}
                 <div className="flex items-center gap-4">
                   <span className="text-font-2 font-medium text-[var(--mama-brown)]">
                     {totalQuantity} items

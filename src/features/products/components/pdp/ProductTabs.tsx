@@ -68,13 +68,13 @@ export const ProductTabs = ({
 
       {/* Tab Content */}
       <div className="text-font-2 text-[var(--color-gray)] whitespace-pre-wrap leading-relaxed relative">
-        {activeTab === "description" && (
+      {activeTab === "description" && (
           <div>
             <div
-              className={`overflow-hidden transition-all duration-300 ${
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${
                 !isDescriptionExpanded && shouldTruncateDescription
                   ? "max-h-40 relative"
-                  : "max-h-[1000px]" // Arbitrary large max-height for smooth expansion
+                  : "max-h-[9999px]" // Raised threshold to 9999px to prevent text cuts on narrow mobile screens
               }`}
             >
               {product.description}
@@ -88,7 +88,7 @@ export const ProductTabs = ({
             {shouldTruncateDescription && (
               <button
                 onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                className="mt-2 text-font-2 font-bold text-[var(--mama-hot-pink)] hover:underline focus:outline-none"
+                className="mt-4 text-font-2 font-bold text-[var(--mama-hot-pink)] hover:underline focus:outline-none"
               >
                 {isDescriptionExpanded ? "Sembunyikan" : "Lihat Selengkapnya"}
               </button>
