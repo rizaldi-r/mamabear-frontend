@@ -78,7 +78,7 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
             <Menu className="w-6 h-6 md:w-8 md:h-8" />
           </button>
           <Link
-            href="/"
+            href="/products"
             className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mama-hot-pink)] rounded-md"
             aria-label="Beranda MamaBear"
           >
