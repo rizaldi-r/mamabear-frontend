@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAddressForm } from "../../hooks/useAddressForm";
+import { useAddressForm } from "../../hooks/useCreateAddressForm";
 
 /**
  * Address Creation Form matching the provided MamaBear UI specifications.
@@ -240,13 +240,6 @@ export function AddressForm() {
             className="w-full bg-[var(--mama-hot-pink)] hover:bg-[#c24467] text-white font-bold py-3 px-4 rounded-full transition-colors disabled:opacity-70"
           >
             {isSubmitting ? "Menyimpan..." : "Simpan"}
-          </button>
-
-          <button
-            type="button"
-            className="w-full bg-[var(--mama-pink)] hover:bg-[#f5b8c9] text-[var(--mama-brown)] font-bold py-3 px-4 rounded-full transition-colors"
-          >
-            Hapus
           </button>
         </div>
       </form>

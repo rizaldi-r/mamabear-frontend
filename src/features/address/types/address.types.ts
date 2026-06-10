@@ -16,7 +16,7 @@ export interface AddressFormData {
 }
 
 export interface Address {
-  id: number;
+  id: number; // Kept as number because BE returns address ID as number
   userId: string;
   name: string;
   phone: string;

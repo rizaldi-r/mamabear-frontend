@@ -1,4 +1,4 @@
-import { AddressForm } from "@/features/address/components/new/addressForm";
+import { AddressForm } from "@/features/address/components/new/CreateAddressForm";
 import React from "react";
 
 /**

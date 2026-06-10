@@ -205,9 +205,9 @@ export function useAddressForm() {
 
       setSuccessMessage("Alamat berhasil disimpan!");
 
-      // Redirect back to the address list after a brief delay so user sees the success state
+      // Redirect back to the account address list after a brief delay so user sees the success state
       setTimeout(() => {
-        router.push("/addresses");
+        router.push("/account/addresses");
         router.refresh(); // Tell Next.js to re-fetch Server Components for the new data
       }, 1500);
     } catch (error) {

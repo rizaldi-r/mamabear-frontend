@@ -1,6 +1,6 @@
 /**
  * Represents a basic administrative region (e.g., Province or City).
- * Based on the generic address response.
+ * Based on the generic shipping API response.
  */
 export interface Region {
   id: number;
@@ -34,9 +34,6 @@ export interface ShippingOption {
  * Represents the request payload required to calculate shipping costs.
  */
 export interface CalculateShippingCostRequest {
-  origin: number;
   destination: number;
-  weight: number; // Weight of the package, typically in grams
-  courier: string; // e.g., "jne", "sicepat", "jnt"
-  price: string; // Sorting or filtering preference, e.g., "lowest"
+  priceSortDirection?: "highest" | "lowest" | string; // Sorting preference, e.g., "highest" or "lowest"
 }
