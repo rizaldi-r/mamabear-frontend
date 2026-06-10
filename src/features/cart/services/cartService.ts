@@ -7,6 +7,13 @@ export interface AddToCartPayload {
   quantity: number;
 }
 
+export interface UpdateCourierPayload {
+  shippingCostIdr: number;
+  courierName: string;
+  courierCode: string;
+  shippingMethod: string;
+}
+
 /**
  * Shared options to ensure cookies are included for the NestJS backend.
  * This works in tandem with apiClient to send both the JWT and the Cookie.
@@ -97,6 +104,23 @@ export async function updateCartItemQuantity(
   }
 }
 
+export async function updateCartItemCourier(
+  cartId: string,
+  payload: UpdateCourierPayload,
+): Promise<Cart> {
+  try {
+    const res = await apiClient.patch(
+      `/cart/${cartId}/courier`,
+      payload,
+      defaultOptions,
+    );
+    return await parseResponse<Cart>(res);
+  } catch (error) {
+    console.error(`[cartService] updateCartItemCourier failed:`, error);
+    throw error;
+  }
+}
+
 export async function removeCartItem(itemId: string): Promise<void> {
   try {
     const res = await apiClient.delete(`/cart/items/${itemId}`, defaultOptions);
@@ -121,6 +145,7 @@ export const cartService = {
   fetchCart,
   addToCart,
   updateCartItemQuantity,
+  updateCartItemCourier,
   removeCartItem,
   clearCart,
   mergeCart,
