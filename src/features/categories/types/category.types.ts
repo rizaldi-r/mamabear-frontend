@@ -28,5 +28,7 @@ export interface Category {
   sortOrder: number;
   createdAt: string; // ISO Date string
   updatedAt: string; // ISO Date string
+  metaTitle : string;
+  metaDescription : string;
   images: CategoryImage[];
 }

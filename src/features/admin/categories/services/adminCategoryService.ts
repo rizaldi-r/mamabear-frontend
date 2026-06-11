@@ -93,6 +93,25 @@ export async function createCategory(
   }
 }
 
+export async function uploadCategoryImage(img:File){
+  try {
+    const formData = new FormData()
+    formData.append("image", img)
+
+    const response = await apiClient.postImage(`/admin/upload/image`, formData);
+    const result = await response.json();
+
+    if (!result.success || !result.data) {
+      throw new Error(result.message || "Gagal membuat kategori");
+    }
+
+    return result.data;
+  } catch (error) {
+    console.error(`[categoryService] createCategory failed:`, error);
+    throw error;
+  }
+}
+
 /**
  * updateCategory
  * Updates an existing category by its ID.
