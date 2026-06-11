@@ -1,4 +1,4 @@
-import { FormSectionProps } from "./type";
+import { FormSectionProps } from "../../types/adminCategory.types";
 
 export const SeoSection = ({ register, isSubmitting }: FormSectionProps) => (
   <div className="pt-6 border-t border-gray-100 flex flex-col gap-6">

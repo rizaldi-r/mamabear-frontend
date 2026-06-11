@@ -1,7 +1,7 @@
 import React from "react";
 import { categoryService } from "@/features/categories/services/categoryService";
-import { CategoryListingClient } from "@/components/layout/admin/categories/CategoryListingClient";
-import {Plus} from "lucide-react";
+import { CategoryListingClient } from "@/features/admin/categories/components/listing/CategoryListingClient";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 /**
  * Admin Categories Page (Server Component)
@@ -11,10 +11,9 @@ export default async function AdminCategoriesPage() {
   // Fetch data on the server using our predefined service
   const categories = await categoryService.fetchCategories();
 
-
   return (
-  <>
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-font-5 font-bold text-[var(--mama-brown)]">
             Kategori
@@ -31,6 +30,7 @@ export default async function AdminCategoriesPage() {
         </Link>
       </div>
 
-      <CategoryListingClient initialCategories={categories} />;
-  </>)
+      <CategoryListingClient initialCategories={categories} />
+    </>
+  );
 }

@@ -1,7 +1,10 @@
-import { FormSectionProps } from "./type";
+import { FormSectionProps } from "../../types/adminCategory.types";
 
-
-export const BasicInfoSection = ({register,errors,isSubmitting,}: FormSectionProps) => (
+export const BasicInfoSection = ({
+  register,
+  errors,
+  isSubmitting,
+}: FormSectionProps) => (
   <>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="flex flex-col gap-2">
@@ -26,7 +29,6 @@ export const BasicInfoSection = ({register,errors,isSubmitting,}: FormSectionPro
         )}
       </div>
 
-
       <div className="flex flex-col gap-2">
         <label
           htmlFor="slug"
@@ -49,7 +51,6 @@ export const BasicInfoSection = ({register,errors,isSubmitting,}: FormSectionPro
         )}
       </div>
     </div>
-
 
     <div className="flex flex-col gap-2">
       <label

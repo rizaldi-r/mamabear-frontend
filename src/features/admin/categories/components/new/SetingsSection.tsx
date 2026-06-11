@@ -1,10 +1,9 @@
-import { FormSectionProps } from "./type";
+import { FormSectionProps } from "../../types/adminCategory.types";
 
 export const SettingsSection = ({
   register,
   isSubmitting,
   isActiveValue,
-  nextSortOrder,
 }: FormSectionProps & {
   isActiveValue: boolean;
   nextSortOrder: number | null;

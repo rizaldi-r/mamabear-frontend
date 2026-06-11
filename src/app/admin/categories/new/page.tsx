@@ -1,4 +1,4 @@
-import { CategoryCreateForm } from "@/components/layout/admin/categories/new/CategoryCreateForm";
+import { CategoryCreateForm } from "@/features/admin/categories/components/new/CategoryCreateForm";
 import React from "react";
 
 /**
