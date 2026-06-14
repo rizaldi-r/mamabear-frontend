@@ -28,7 +28,7 @@ export default async function AddressesPage() {
   }
 
   return (
-    <main className="page-max-width py-12 px-4 md:px-8 min-h-screen">
+    <div className="page-max-width py-12 px-4 md:px-8 min-h-screen">
       <div className="mb-8 max-w-3xl mx-auto">
         <h1 className="text-font-5 font-bold text-[var(--mama-brown)]">
           Daftar Alamat
@@ -40,6 +40,6 @@ export default async function AddressesPage() {
 
       {/* Pass the server-fetched data to the Client Component */}
       <AddressList initialAddresses={addresses} />
-    </main>
+    </div>
   );
 }

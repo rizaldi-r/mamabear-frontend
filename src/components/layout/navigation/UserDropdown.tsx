@@ -46,7 +46,6 @@ export function UserDropdown({
 
   return (
     <div className="relative">
-      {/* THE TRIGGER */}
       <div
         onClick={toggleDropdown}
         className="relative z-[61] cursor-pointer"
@@ -71,7 +70,6 @@ export function UserDropdown({
         )}
       </div>
 
-      {/* THE INVISIBLE OVERLAY */}
       {isOpen && (
         <div
           className="fixed inset-0 z-60 cursor-default bg-transparent"
@@ -80,7 +78,6 @@ export function UserDropdown({
         />
       )}
 
-      {/* THE DROPDOWN MENU */}
       {isOpen && (
         <div
           className={`absolute z-[61] w-56 bg-white rounded-2xl shadow-xl border border-stone-100 py-2 animate-in fade-in zoom-in-95 duration-200 origin-top-right ${className || "right-0 mt-2"}`}
@@ -104,7 +101,7 @@ export function UserDropdown({
           {isLoggedIn ? (
             <div className="flex flex-col">
               <Link
-                href="/account"
+                href="/account/info"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-pink-50 hover:text-primary transition-colors"
                 onClick={closeDropdown}
               >
@@ -112,7 +109,7 @@ export function UserDropdown({
                 Profil Saya
               </Link>
               <Link
-                href="/orders"
+                href="/account/orders"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-pink-50 hover:text-primary transition-colors"
                 onClick={closeDropdown}
               >

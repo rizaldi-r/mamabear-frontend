@@ -1,47 +1,39 @@
 import React from "react";
-import { redirect } from "next/navigation";
-import { getOrderById } from '@/lib/order';
-import OrderDetailHeader from "@/features/orders/components/odp/OrderDetailHeader";
-import OrderStatusBar from "@/features/orders/components/odp/OrderStatusBar";
-import OrderItemList from "@/features/orders/components/odp/OrderItemList";
-import ShippingInfo from "@/features/orders/components/odp/ShippingInfo";
-import PaymentInfo from "@/features/orders/components/odp/PaymentInfo";
-import OrderTimeline from "@/features/orders/components/odp/OrderTimeline";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import OrderDetail from "@/features/orders/components/odp/OrderDetail";
 
-export default async function OrderDetailsPage({ params }: { params: { id: string } }) {
-    const { id } = params;
-    
-    // Fetch order data from the API
-    const order = await getOrderById(id);
+export const metadata = {
+  title: "Detail Pesanan | MamaBear",
+  description: "Rincian status dan produk dari pesanan MamaBear Anda.",
+};
 
-    // If order is not found, redirect Mama back to the order list
-    if (!order) {
-        redirect('/account/orders');
-    }
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
 
-    return (
-        <div className="max-w-6xl mx-auto px-4 py-8 space-y-8 pb-20">
-            <OrderDetailHeader orderId={order.id} />
+export default function OrderDetailPage({ params }: PageProps) {
+  return (
+    <main className="page-max-width py-8 px-4 sm:px-6 lg:px-8">
+      {/* Back Navigation */}
+      <Link
+        href="/account/orders"
+        className="inline-flex items-center gap-2 text-font-2 text-[var(--color-gray)] hover:text-[var(--mama-brown)] transition-colors mb-6 font-medium"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        Kembali ke Daftar Pesanan
+      </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Main Info */}
-                <div className="lg:col-span-8 space-y-8">
-                    <OrderStatusBar status={order.status} estimate={order.shipping?.estimate} />
-                    
-                    <OrderItemList items={order.items} />
+      <div className="mb-6">
+        <h1 className="text-font-5 font-bold text-[var(--mama-brown)]">
+          Detail Pesanan
+        </h1>
+      </div>
 
-                    {/* Shipping and Payment Info Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <ShippingInfo shipping={order.shipping} />
-                    <PaymentInfo method={order.paymentMethod} />
-                </div>
-            </div>
-
-            {/* Sidebar */}
-                <div className="lg:col-span-4 space-y-6">
-                    <OrderTimeline timeline={order.timeline} />
-                </div>
-            </div>
-        </div>
-    );
+      {/* Server Component safely passes params.id to Client Orchestrator */}
+      <OrderDetail orderId={params.id} />
+    </main>
+  );
 }

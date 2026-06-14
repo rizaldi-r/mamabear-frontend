@@ -1,6 +1,11 @@
 import { apiClient } from "@/lib/api";
 import { ApiResponse } from "@/types/api.types";
-import { CreateOrderPayload, Order } from "../types/orderTypes";
+import {
+  CreateOrderPayload,
+  Order,
+  InvoiceData,
+  PaginatedOrders,
+} from "../types/order.types";
 
 export interface GetOrdersParams {
   cursor?: string;
@@ -66,7 +71,9 @@ export async function getOrderById(orderId: string): Promise<Order> {
 
     if (!response.success || !response.data) {
       throw new Error(
-        Array.isArray(response.message) ? response.message[0] : "Pesanan tidak ditemukan"
+        Array.isArray(response.message)
+          ? response.message[0]
+          : "Pesanan tidak ditemukan",
       );
     }
 
@@ -81,9 +88,9 @@ export async function getOrderById(orderId: string): Promise<Order> {
  * Fetches a list of orders based on the provided query parameters.
  *
  * @param params - Filter, search, and pagination parameters
- * @returns Promise<Order[]>
+ * @returns Promise<PaginatedOrders>
  */
-export async function getOrders(params?: GetOrdersParams): Promise<Order[]> {
+export async function getOrders(params?: GetOrdersParams): Promise<PaginatedOrders> {
   try {
     const query = new URLSearchParams();
 
@@ -115,9 +122,10 @@ export async function getOrders(params?: GetOrdersParams): Promise<Order[]> {
       throw new Error(`Gagal mengambil daftar pesanan: HTTP ${res.status}`);
     }
 
-    const response = (await res.json()) as ApiResponse<Order[]>;
+    // Menggunakan PaginatedOrders sebagai tipe data pada ApiResponse
+    const response = (await res.json()) as ApiResponse<PaginatedOrders>;
 
-    if (!response.success) {
+    if (!response.success || !response.data) {
       throw new Error(
         Array.isArray(response.message)
           ? response.message[0]
@@ -125,9 +133,8 @@ export async function getOrders(params?: GetOrdersParams): Promise<Order[]> {
       );
     }
 
-    // Jika Anda membutuhkan akses ke pagination metadata (misal response.pagination), 
-    // Anda bisa mengubah return type dari function ini nanti.
-    return response.data || [];
+    // Mengembalikan objek PaginatedOrders seutuhnya
+    return response.data;
   } catch (error) {
     console.error("[orderService] getOrders failed:", error);
     throw error;
@@ -138,9 +145,9 @@ export async function getOrders(params?: GetOrdersParams): Promise<Order[]> {
  * Fetches the invoice details or URL for a specific order.
  *
  * @param orderId - The ID of the order
- * @returns Promise<unknown> - Adjust type based on actual invoice data structure
+ * @returns Promise<InvoiceData>
  */
-export async function getInvoice(orderId: string): Promise<unknown> {
+export async function getInvoice(orderId: string): Promise<InvoiceData> {
   try {
     const res = await apiClient.get(`/order/${orderId}/invoice`);
 
@@ -148,11 +155,13 @@ export async function getInvoice(orderId: string): Promise<unknown> {
       throw new Error(`Gagal mengambil invoice: HTTP ${res.status}`);
     }
 
-    const response = (await res.json()) as ApiResponse<unknown>;
+    const response = (await res.json()) as ApiResponse<InvoiceData>;
 
     if (!response.success || !response.data) {
       throw new Error(
-        Array.isArray(response.message) ? response.message[0] : "Invoice tidak ditemukan"
+        Array.isArray(response.message)
+          ? response.message[0]
+          : "Invoice tidak ditemukan",
       );
     }
 
