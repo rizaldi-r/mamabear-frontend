@@ -10,7 +10,6 @@ import {
   User,
   MessageCircleMore,
 } from "lucide-react";
-import { UserDropdown } from "./UserDropdown";
 
 interface BottomNavProps {
   isLoggedIn: boolean;
@@ -20,9 +19,9 @@ interface BottomNavProps {
   };
 }
 
-export function BottomNav({ isLoggedIn, user }: BottomNavProps) {
+export function BottomNav({ isLoggedIn }: BottomNavProps) {
   const pathname = usePathname() || "";
-  
+
   // Check if the current route is exactly /products/[something]
   const isProductDetailPage = /^\/products\/[^\/]+$/.test(pathname);
 
@@ -60,25 +59,20 @@ export function BottomNav({ isLoggedIn, user }: BottomNavProps) {
         </Link>
 
         <Link
-          href="/orders"
+          href="/account/orders"
           className="flex flex-col items-center justify-center w-full h-full text-[var(--mama-brown)] hover:text-primary transition-colors"
         >
           <ReceiptText className="w-6 h-6" strokeWidth={2.5} />
           <span className="text-[10px] mt-1 font-semibold">Transaksi</span>
         </Link>
 
-        <div className="w-full">
-          <UserDropdown
-            isLoggedIn={isLoggedIn}
-            className="bottom-full right-4 mb-2"
-            user={user}
-          >
-            <div className="flex flex-col items-center justify-center w-full h-full text-[var(--mama-brown)] active:text-primary transition-colors">
-              <User className="w-6 h-6" strokeWidth={2.5} />
-              <span className="text-[10px] mt-1 font-semibold">Profile</span>
-            </div>
-          </UserDropdown>
-        </div>
+        <Link
+          href={isLoggedIn ? "/account" : "/login"}
+          className="flex flex-col items-center justify-center w-full h-full text-[var(--mama-brown)] hover:text-primary transition-colors"
+        >
+          <User className="w-6 h-6" strokeWidth={2.5} />
+          <span className="text-[10px] mt-1 font-semibold">Profil</span>
+        </Link>
       </div>
     </div>
   );
