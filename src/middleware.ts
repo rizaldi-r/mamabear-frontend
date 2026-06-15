@@ -17,18 +17,22 @@ export default withAuth(
     if (token?.error === "RefreshAccessTokenError") {
       const loginUrl = new URL("/login", req.url);
       const response = NextResponse.redirect(loginUrl);
-      
+
       // MANUALLY WIPE THE COOKIES
       // Target both standard HTTP and secure HTTPS cookie names
       response.cookies.delete("__Secure-next-auth.session-token");
       response.cookies.delete("next-auth.csrf-token");
       response.cookies.delete("next-auth.session-token");
-      
+
       return response;
     }
-    
-    if (path.startsWith("/admin") && token?.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", req.url));
+
+    // --- Role-Based Protection for Admin Routes ---
+    if (path.startsWith("/admin")) {
+      // Allow both ADMIN and SUPERADMIN roles to access
+      if (token?.role !== "ADMIN" && token?.role !== "SUPERADMIN") {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
     }
   },
   {
@@ -54,7 +58,7 @@ export default withAuth(
 export const config = {
   matcher: [
     "/dashboard/:path*", // Protects /dashboard, /dashboard/settings, etc.
-    "/admin/:path*", // Protects /admin, /admin/users, etc.
-    "/account"
+    "/admin/:path*",     // Protects /admin, /admin/users, etc.
+    "/account/:path*"    // Protects /account and all nested account routes
   ],
 };

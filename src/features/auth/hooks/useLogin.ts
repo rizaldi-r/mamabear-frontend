@@ -31,7 +31,10 @@ export function useLogin() {
     } else {
       const session = await getSession();
 
-      if (session?.user?.role === "ADMIN") {
+      if (
+        session?.user?.role === "ADMIN" ||
+        session?.user?.role === "SUPERADMIN"
+      ) {
         router.push("/admin/dashboard");
       } else {
         router.push("/");
