@@ -17,13 +17,17 @@ export function AdminOrderListing() {
     currentPage,
     handlePageChange,
     updateStatus,
+    handleFilterDate,
+    handleErase,
+    handleExportCSV,
+    isExporting
   } = useAdminOrders();
 
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-font-5 md:text-font-6 font-bold text-[var(--mama-brown)]">
-          Pesanan
+          Pesanan 
         </h1>
         <p className="text-font-2 md:text-font-3 text-[var(--color-gray)]">
           Kelola dan lacak pesanan pelanggan
@@ -35,6 +39,12 @@ export function AdminOrderListing() {
         setSearchInput={setSearchInput}
         currentStatus={currentStatus}
         onStatusChange={handleStatusFilterChange}
+        orders={orders}
+        setDateInput={handleFilterDate}
+        handleErase={handleErase}
+        onExport={handleExportCSV}
+        isExporting={isExporting}
+
       />
 
       {error ? (

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Order, OrderStatus } from "../types/adminOrder.types";
-import { fetchAdminOrders,   updateAdminOrderStatus } from "../service/adminOrderService";
+import { exportAdminOrdersCSV, fetchAdminOrders,   updateAdminOrderStatus } from "../service/adminOrderService";
 
 export function useAdminOrders() {
   const searchParams = useSearchParams();
@@ -12,6 +12,7 @@ export function useAdminOrders() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
 
   // Local state for debouncing the search input
   const [searchInput, setSearchInput] = useState<string>(
@@ -99,6 +100,24 @@ export function useAdminOrders() {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  const handleFilterDate = (startDate:string, endDate:string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("startDate", startDate);
+    params.set("endDate", endDate);
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }
+
+  const handleErase = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("startDate")
+    params.delete("endDate")
+    params.delete("startDate")
+    params.delete("page")
+    params.delete("status");
+    router.push(pathname)
+  }
+
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", newPage.toString());
@@ -121,6 +140,31 @@ export function useAdminOrders() {
     }
   };
 
+  const handleExportCSV = async () => {
+    setIsExporting(true);
+    try {
+      const blob = await exportAdminOrdersCSV(searchParams);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Data-Pesanan-MamaBear-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("[useAdminOrders] Failed to export CSV:", err);
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Gagal mengekspor data CSV.";
+      alert(errorMessage);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+
   return {
     orders,
     isLoading,
@@ -133,5 +177,9 @@ export function useAdminOrders() {
     currentStatus: searchParams.get("status") || "ALL",
     currentPage: parseInt(searchParams.get("page") || "1", 10),
     totalPages,
+    handleFilterDate,
+    handleErase,
+    handleExportCSV,
+    isExporting
   };
 }

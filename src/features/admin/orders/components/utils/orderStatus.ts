@@ -17,6 +17,13 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   RETURNED: "Dikembalikan (Barang)",
 };
 
+export const PERIOD_FILTER = [
+  {id : 'daily', name : 'Hari ini'},
+  {id : 'weekly', name : 'Minggu ini'},
+  {id : 'monthly', name : 'Bulan ini'}
+]
+
+
 /**
  * Array of objects mapped for <select> dropdown options
  */

@@ -192,3 +192,28 @@ export async function cancelAdminOrder(
     throw error;
   }
 }
+
+/**
+ * Exports current order listing into a CSV file.
+ * @param queryParams Current filters and sorting search params
+ */
+export async function exportAdminOrdersCSV(
+  queryParams?: URLSearchParams,
+): Promise<Blob> {
+  try {
+    const queryString = queryParams ? `?${queryParams.toString()}` : "";
+    const res = await apiClient.get(`/admin/order/export${queryString}`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error(`Gagal mengekspor pesanan: HTTP ${res.status}`);
+    }
+
+    return await res.blob();
+  } catch (error) {
+    console.error("[adminOrderService] exportAdminOrdersCSV failed:", error);
+    throw error;
+  }
+}
+

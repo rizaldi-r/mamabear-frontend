@@ -9,7 +9,7 @@ interface SidebarCardsProps {
   isUpdating: boolean;
   onUpdateStatus: (status: OrderStatus) => void;
 }
-
+ 
 export function AdminOrderCustomerCard({ order }: { order: OrderDetail }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 flex flex-col gap-2">
