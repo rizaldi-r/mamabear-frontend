@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Filter, Download, ChevronDown, Eraser, Trash, SortDesc, SortAsc } from "lucide-react";
+import { Search, Filter, Download, ChevronDown, Eraser, Trash, SortDesc, SortAsc, ArrowDownUp } from "lucide-react";
 import { ORDER_STATUS_OPTIONS } from "../utils/orderStatus";
 import { Order } from "../types/adminOrder.types";
 import DatePicker from "react-datepicker";
@@ -17,9 +17,13 @@ interface AdminOrderFiltersProps {
   handleErase:()=>void,
   onExport: () => void;
   isExporting: boolean;
+  sortBy: string;
+  sortOrder: string;
+  updateUrlParams: (keyOrUpdates: string | Record<string, string>, value?: string) => void;
 }
 
 export function AdminOrderFilters({
+  orders,
   searchInput,
   setSearchInput,
   currentStatus,
@@ -28,6 +32,9 @@ export function AdminOrderFilters({
   handleErase,
   onExport,
   isExporting,
+  sortBy,
+  sortOrder,
+  updateUrlParams
 }: AdminOrderFiltersProps) {
   const [filter, setFilter] = useState<boolean>(false);
   const [sort, setSort] = useState<string>('ASC');
@@ -35,7 +42,7 @@ export function AdminOrderFilters({
   // Date UI state (IMPORTANT: Date | null)
   const [inputstartDate, setStartDate] = useState<Date | null>(null);
   const [inputendDate, setEndDate] = useState<Date | null>(null);
-  
+  const currentSortValue = `${sortBy}-${sortOrder}`;
 
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
@@ -47,8 +54,8 @@ export function AdminOrderFilters({
 
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-
+    <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+    {filter && <button className="absolute w-[100vw] h-[100vh] cursor-default" onClick={()=>setFilter(false)}/>}
       {/* SEARCH */}
       <div className="flex-1 w-full md:w-auto relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-light-gray)]" />
@@ -99,7 +106,7 @@ export function AdminOrderFilters({
                 inline
                 startDate={inputstartDate}
                 endDate={inputendDate}
-                minDate={inputstartDate || undefined}
+                maxDate={new Date()}
                 onChange={(update: [Date | null, Date | null]) => {
                   let start = update[0];
                   let end = update[1];
@@ -123,30 +130,45 @@ export function AdminOrderFilters({
 
                     setDateInput(startString, endString);
                   }
+                  if (end) {
+                    setFilter(false);
+                  }
                 }}
               />
             </div>
           )}
         </div>
 
-      
+        <div className="relative flex-1 md:flex-none min-w-[160px]">
+          <select
+            value={currentSortValue}
+            onChange={(e) => {
+              const [newSortBy, newSortOrder] = e.target.value.split("-");
+              // We pass an object to batch the updates, preventing URL race conditions
+              updateUrlParams({ sortBy: newSortBy, sortOrder: newSortOrder });
+            }}
+            className="w-full border border-gray-300 rounded-lg pl-10 pr-10 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--mama-hot-pink)] cursor-pointer appearance-none"
+          >
+            <option value="createdAt-desc">Terbaru</option>
+            <option value="createdAt-asc">Terlama</option>
+            <option value="total-desc">Total Tertinggi</option>
+            <option value="total-asc">Total Terendah</option>
+            <option value="status-asc">Status (A-Z)</option>
+          </select>
+          <ArrowDownUp className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-light-gray)] pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-light-gray)] pointer-events-none" />
+        </div>
+
         <button
           onClick={handleErase}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+          className="flex items-center gap-2 px-4 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors cursor-pointer"
         >
           <Trash className="w-4 h-4" />
-          Hapus Filter
         </button>
 
-        <button
-          onClick={()=>setSort((prev)=> prev=='DESC' ? 'ASC' : 'DESC')}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors cursor-pointer"
-        >
-          {sort=='DESC' && <SortDesc className="w-4 h-4" />}
-          {sort=='ASC' && <SortAsc className="w-4 h-4" />}
-        </button>
 
         {/* EXPORT */}
+        {orders.length > 0 &&
         <button 
           onClick={onExport}
           disabled={isExporting}
@@ -160,10 +182,10 @@ export function AdminOrderFilters({
           ) : (
             <>
               <Download className="w-4 h-4" />
-              Ekspor CSV
+              Ekspor Data
             </>
           )}
-        </button>
+        </button>}
 
       </div>
     </div>

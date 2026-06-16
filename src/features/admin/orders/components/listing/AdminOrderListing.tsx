@@ -20,7 +20,10 @@ export function AdminOrderListing() {
     handleFilterDate,
     handleErase,
     handleExportCSV,
-    isExporting
+    isExporting,
+    sortBy,
+    sortOrder,
+    updateUrlParams,
   } = useAdminOrders();
 
   return (
@@ -44,6 +47,9 @@ export function AdminOrderListing() {
         handleErase={handleErase}
         onExport={handleExportCSV}
         isExporting={isExporting}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        updateUrlParams={updateUrlParams}
 
       />
 

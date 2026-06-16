@@ -57,6 +57,9 @@ export const CategoryListItem = ({
             <span className="text-font-2 font-semibold text-[var(--mama-brown)]">
               {category.name}
             </span>
+            <span className="text-sm px-2 text-[var(--color-gray)] rounded-full bg-[var(--mama-pink)]">
+              {category._count.products}
+            </span>
           </div>
           <span className="text-font-1 text-[var(--color-gray)] mt-0.5">
             {category.description || "Tidak ada deskripsi"}

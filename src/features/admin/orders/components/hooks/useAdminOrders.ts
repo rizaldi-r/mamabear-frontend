@@ -141,7 +141,7 @@ export function useAdminOrders() {
   };
 
   const handleExportCSV = async () => {
-    setIsExporting(true);
+    setIsExporting(true); 
     try {
       const blob = await exportAdminOrdersCSV(searchParams);
       const url = window.URL.createObjectURL(blob);
@@ -164,6 +164,47 @@ export function useAdminOrders() {
     }
   };
 
+  const pendingUrlParams = useRef<URLSearchParams | null>(null);
+  const urlUpdateTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const updateUrlParams = (keyOrUpdates: string | Record<string, string>, value?: string) => {
+    // Use pending params if multiple updates are fired synchronously, otherwise start fresh
+    const params = pendingUrlParams.current || new URLSearchParams(searchParams.toString());
+    
+    // Normalize input to always be an object for a single processing loop
+    const updates = typeof keyOrUpdates === "string" 
+      ? { [keyOrUpdates]: value } 
+      : keyOrUpdates;
+
+    // Apply all updates
+    Object.entries(updates).forEach(([k, v]) => {
+      if (v && v !== "ALL" && v !== "null") {
+        params.set(k, v);
+      } else {
+        params.delete(k);
+      }
+    });
+
+    // Reset pagination to page 1 if the updates don't explicitly handle the page
+    if (!("page" in updates)) {
+      params.set("page", "1");
+    }
+
+    // Store the mutated params
+    pendingUrlParams.current = params;
+
+    // Clear previous timeout and set a new one to batch the router.push
+    if (urlUpdateTimeout.current) clearTimeout(urlUpdateTimeout.current);
+
+    urlUpdateTimeout.current = setTimeout(() => {
+      if (pendingUrlParams.current) {
+        router.push(`${pathname}?${pendingUrlParams.current.toString()}`, { scroll: false });
+        pendingUrlParams.current = null;
+      }
+    }, 10); // Small delay batches synchronous updates
+  };
+
+
 
   return {
     orders,
@@ -180,6 +221,9 @@ export function useAdminOrders() {
     handleFilterDate,
     handleErase,
     handleExportCSV,
-    isExporting
+    isExporting,
+    updateUrlParams,
+    sortBy: searchParams.get("sortBy") || "createdAt",
+    sortOrder: searchParams.get("sortOrder") || "desc",
   };
 }
