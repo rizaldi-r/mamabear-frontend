@@ -29,4 +29,6 @@ export interface Category {
   createdAt: string; // ISO Date string
   updatedAt: string; // ISO Date string
   images: CategoryImage[];
+  
+  productCount?: number;
 }
