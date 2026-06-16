@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MamaBear - Platform Untuk Kebutuhan Mama
+
+> Platform ini dikembangkan oleh Team Pegasus, yang menyediakan produk untuk Mama
+
+Link :
+
+--- 
+ 
+ ## Overview
+MamaBear adalah platform e-commerce yang dirancang khusus untuk mendukung kebutuhan wanita selama masa kehamilan, persiapan persalinan, hingga masa menyusui dan perawatan pasca melahirkan.
+
+Platform ini menyediakan berbagai produk nutrisi, kebutuhan ibu, dan perlengkapan pendukung untuk membantu Mama dan Si Kecil menjalani perjalanan yang lebih sehat dan nyaman.
+
+## Screenshots
+
+Screenshots bisa ditambahkan setelah deployment
+
+| Feature | Status |
+|----------|----------|
+| Home Page | Pending |
+| Categories | Pending |
+| Product Detail | Pending |
+| Cart | Pending |
+| Checkout | Pending |
+| Admin Dashboard | Pending |
+
+## Features
+
+- Authentication
+- Home Page
+- Cart
+- Checkout
+- Product Categories
+- Product Detail
+- Product Search
+- Admin Dashboard
+
+## Tech Stack
+
+### Frontend
+| Tech | Usage |
+|---|---|
+| Next.js 14 (App Router) | Framework |
+| TypeScript | Type safety |
+| Tailwind CSS | Styling |
+| Zustand | Client state management |
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repo:
+
+```bash
+git clone https://github.com/rizaldi-r/mamabear-frontend.git
+cd mamabear-frontend
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Setup environment:
+
+```bash
+cp .env.example .env.local
+```
+
+```env
+NEXT_PUBLIC_API_URL="https://mamabear-backend-dev.up.railway.app/api"
+```
+
+4. Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+src/
+├── app/                          # Next.js App Router
+│   ├── (auth)/                   # Authentication pages
+│   ├── (shop)/                   # Customer-facing pages
+│   ├── admin/                    # Admin dashboard & management
+│   ├── api/                      # API routes
+│   └── ...
 
-## Learn More
+├── components/                   # Reusable UI components
+│   ├── icons/
+│   ├── layout/
+│   └── ui/
 
-To learn more about Next.js, take a look at the following resources:
+├── features/                     # Feature-based modules
+│   ├── account/
+│   ├── address/
+│   ├── admin/
+│   ├── auth/
+│   ├── cart/
+│   ├── categories/
+│   ├── checkout/
+│   ├── home/
+│   ├── orders/
+│   └── products/
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+├── lib/                          # Shared utilities & helpers
+│   ├── hooks/
+│   └── ...
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+├── store/                        # Global state management
+├── types/                        # Shared TypeScript types
+└── middleware.ts                 # Route protection & middleware
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Team
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Tim Pegasus**
