@@ -4,11 +4,20 @@
  */
 
 export interface ProductImage {
-  id?: number;
-  imageUrl?: string;
-  // Note: Add additional fields if your image object has them (e.g., publicId, altText)
+  id: number;
+  publicId: string;
+  productId: number | null;
+  variantId: number | null;
+  reviewId: number | null;
+  categoryId: number | null;
+  imageUrl: string;
+  sortOrder: number;
+  altText: string;
+  width: number;
+  height: number;
+  fileSize: number;
+  format: string;
 }
-
 export interface ProductVariant {
   id: number;
   productId: number;
@@ -81,6 +90,10 @@ export interface CreateProductInput {
   metaTitle?: string | null;
   metaDescription?: string | null;
   images?: ProductImage[];
+  priceIdr: string;
+  weightG: number;
+  stock: number;
+  sku?: string;
 }
 
 export interface ProductFilterParams {
