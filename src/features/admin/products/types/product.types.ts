@@ -1,8 +1,35 @@
+import { Category } from "@/features/categories/types/category.types";
+
+export type ViewMode = "grid" | "list";
+
+export type AdminProductSortField =
+  | "name"
+  | "price"
+  | "createdAt"
+  | "totalSold";
+
+/**
+ * Interface mapping to the UI form fields
+ */
+export interface ProductFormValues {
+  name: string;
+  description: string;
+  sku: string;
+  categoryId: string;
+  price: number;
+  stock: number;
+  weightG: number;
+  isActive: string; // "true" or "false" from select
+  metaTitle: string;
+  metaDescription: string;
+  ingredients: string;
+  usageInstructions: string;
+}
+
 /**
  * Product Feature Types
  * Defines the structure of Product entities, variants, and relations.
  */
-
 export interface ProductImage {
   id: number;
   publicId: string;
@@ -42,39 +69,33 @@ export interface ProductHighlight {
   metaDescription: string | null;
 }
 
-export interface ProductCategory {
-  id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  isActive: boolean;
-  sortOrder: number;
-  metaTitle: string | null;
-  metaDescription: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Product {
   id: number;
   name: string;
   slug: string;
   isActive: boolean;
-  totalSold: number;
   categoryId: number;
-  highlightId: number | null;
+  highlightId: number;
   tags: string[];
-  description: string | null;
+  description: string;
   ingredients: string | null;
   usageInstructions: string | null;
-  metaTitle: string | null;
-  metaDescription: string | null;
   createdAt: string;
   updatedAt: string;
-  category?: ProductCategory;
-  highlight?: ProductHighlight;
-  images: ProductImage[];
-  variants: ProductVariant[];
+
+  // Rich relational payloads
+  category?: Category;
+  images?: ProductImage[];
+  variants?: ProductVariant[];
+  highlight?: Highlight | null;
+
+  // Analytical and dynamic pricing fields
+  currentPrice?: string;
+  originalPrice?: string;
+  discountPercent?: number;
+  rating?: number;
+  reviewsCount?: number;
+  totalSold?: number;
 }
 
 export interface CreateProductInput {
