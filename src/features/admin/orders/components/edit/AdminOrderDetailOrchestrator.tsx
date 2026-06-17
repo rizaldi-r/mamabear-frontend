@@ -22,8 +22,16 @@ interface Props {
 
 export function AdminOrderDetailOrchestrator({ orderId }: Props) {
   const router = useRouter();
-  const { order, isLoading, error, isUpdating, updateStatus } =
-    useAdminOrderDetail(orderId);
+  const {
+    order,
+    isLoading,
+    error,
+    isUpdating,
+    isCancelling,
+    updateStatus,
+    updateTracking,
+    cancelOrder,
+  } = useAdminOrderDetail(orderId);
 
   const { download, isDownloading: isDownloadingInvoice } =
     useDownloadInvoice();
@@ -67,7 +75,7 @@ export function AdminOrderDetailOrchestrator({ orderId }: Props) {
             <ArrowLeft className="w-6 h-6 text-[var(--color-gray)]" />
           </button>
           <div className="flex flex-col gap-1">
-            <h1 className="text-font-4 md:text-font-4 font-bold text-[var(--mama-brown)] flex items-center gap-3">
+            <h1 className="text-font-5 md:text-font-6 font-bold text-[var(--mama-brown)] flex items-center gap-3">
               Pesanan #{order.id}
               {order.status === "PAYMENT_PAID" && (
                 <span className="text-sm px-3 py-1 bg-green-100 text-green-700 rounded-full font-medium tracking-wide">
@@ -112,11 +120,19 @@ export function AdminOrderDetailOrchestrator({ orderId }: Props) {
         <div className="flex flex-col gap-6">
           <AdminOrderCustomerCard order={order} />
           <AdminOrderAddressCard order={order} />
-          <AdminOrderDeliveryCard order={order} />
+
+          <AdminOrderDeliveryCard
+            order={order}
+            isUpdating={isUpdating}
+            onUpdateTracking={updateTracking}
+          />
+
           <AdminOrderActionsCard
             order={order}
             isUpdating={isUpdating}
+            isCancelling={isCancelling}
             onUpdateStatus={updateStatus}
+            onCancelOrder={cancelOrder}
           />
         </div>
       </div>
