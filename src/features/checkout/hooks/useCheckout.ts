@@ -1,45 +1,51 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Cart } from "@/features/cart/types/cart.types";
 import { Address } from "@/features/address/types/address.types";
-import { CreateOrderPayload } from "@/features/checkout/types/checkoutOrder.types";
 import { createOrder } from "@/features/checkout/services/checkoutService";
 import { ShippingOption } from "@/features/address/types/shipping.types";
 import { calculateShippingCost } from "@/features/address/services/shippingService";
 import { createPayment } from "@/features/checkout/services/paymentService";
-import { fetchCart, updateCartItemCourier } from "@/features/cart/services/cartService";
+import {
+  fetchCart,
+  updateCartItemCourier,
+} from "@/features/cart/services/cartService";
 import { useCartStore } from "@/features/cart/store/use-cart-store";
+import { CreateOrderPayload } from "@/features/checkout/types/checkoutOrder.types";
 
 export function useCheckout(initialAddresses: Address[], userEmail: string) {
-  // Store selector to refresh checkout items
+  const router = useRouter();
   const initializeCart = useCartStore((state) => state.initializeCart);
 
-  // State: selectedAddressId is managed as string for seamless UI rendering
+  // Form & Data States
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     initialAddresses.length > 0 ? String(initialAddresses[0].id) : null,
   );
-
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoadingCart, setIsLoadingCart] = useState(true);
-
   const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
-  const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null);
-
+  const [selectedShipping, setSelectedShipping] =
+    useState<ShippingOption | null>(null);
   const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [notes, setNotes] = useState<string>("");
 
-  const [isOrderCreated, setIsOrderCreated] = useState(false);
-  const [paymentRedirectUrl, setPaymentRedirectUrl] = useState<string | null>(null);
-
-  // Derived Values: Safe lookup matching as strings
-  const selectedAddress = initialAddresses.find((a) => String(a.id) === selectedAddressId);
-  const subtotal = cart?.items?.reduce((sum, item) => sum + parseInt(item.price) * item.quantity, 0) || 0;
+  // Derived Values
+  const selectedAddress = initialAddresses.find(
+    (a) => String(a.id) === selectedAddressId,
+  );
+  const subtotal =
+    cart?.items?.reduce(
+      (sum, item) => sum + parseInt(item.price as string) * item.quantity,
+      0,
+    ) || 0;
   const shippingCost = selectedShipping?.cost || 0;
-  const promoDiscount = 0; // Placeholder for promo logic
-  const grandTotal = subtotal + shippingCost - promoDiscount;
+  const tax = cart?.taxIdr || 0;
+  const promoDiscount = 0;
+  const grandTotal = subtotal + shippingCost + tax - promoDiscount;
 
-  // Effects
+  // Initial Load & Shipping Calculation Effects
   useEffect(() => {
     async function loadCart() {
       try {
@@ -61,7 +67,6 @@ export function useCheckout(initialAddresses: Address[], userEmail: string) {
         setSelectedShipping(null);
         return;
       }
-
       setIsCalculatingShipping(true);
       try {
         const options = await calculateShippingCost({
@@ -69,23 +74,23 @@ export function useCheckout(initialAddresses: Address[], userEmail: string) {
           priceSortDirection: "lowest",
         });
         setShippingOptions(options);
-        
+
         if (options.length > 0) {
           const defaultOption = options[0];
-          setSelectedShipping(defaultOption); // Default to first option
-          
-          // Automatically hit updateCartItemCourier for the newly defaulted option
+          setSelectedShipping(defaultOption);
           try {
             const updatedCart = await updateCartItemCourier(cart.id, {
               shippingCostIdr: defaultOption.cost,
-              courierName: defaultOption.name || defaultOption.code.toUpperCase(),
+              courierName:
+                defaultOption.name || defaultOption.code.toUpperCase(),
               courierCode: defaultOption.code,
               shippingMethod: defaultOption.service,
             });
-            // Merge updated cart data while retaining existing items
-            setCart((prev) => prev ? { ...updatedCart, items: prev.items } : updatedCart);
+            setCart((prev) =>
+              prev ? { ...updatedCart, items: prev.items } : updatedCart,
+            );
           } catch (updateError) {
-            console.error("Failed to sync default courier with cart backend", updateError);
+            console.error("Failed to sync default courier", updateError);
           }
         }
       } catch (error) {
@@ -95,41 +100,30 @@ export function useCheckout(initialAddresses: Address[], userEmail: string) {
         setIsCalculatingShipping(false);
       }
     }
-
     getShippingOptions();
-    // Intentionally omitting 'cart' from deps to avoid infinite loops when cart is updated
-    // We only want this to run when the address changes, or if the cart ID/items structure changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAddressId, cart?.id, cart?.items?.length]); 
+  }, [selectedAddressId, cart?.id, cart?.items?.length]);
 
   // Handlers
-  const handleSelectAddress = (id: string) => {
-    setSelectedAddressId(id);
-  };
+  const handleSelectAddress = (id: string) => setSelectedAddressId(id);
+  const handleNotesChange = (value: string) => setNotes(value);
 
   const handleSelectShipping = async (optionIndex: number) => {
     const selectedOption = shippingOptions[optionIndex];
     setSelectedShipping(selectedOption);
-
     if (cart && selectedOption) {
       try {
-        // Hit updateCartItemCourier when user manually selects a courier
         const updatedCart = await updateCartItemCourier(cart.id, {
           shippingCostIdr: selectedOption.cost,
           courierName: selectedOption.name || selectedOption.code.toUpperCase(),
           courierCode: selectedOption.code,
           shippingMethod: selectedOption.service,
         });
-        // Merge updated cart data while retaining existing items
-        setCart({ ...updatedCart, items: cart.items }); 
+        setCart({ ...updatedCart, items: cart.items });
       } catch (error) {
-        console.error("Failed to update cart courier selection:", error);
+        console.error("Failed to update cart courier selection", error);
       }
     }
-  };
-
-  const handleNotesChange = (value: string) => {
-    setNotes(value);
   };
 
   const handleCheckout = async () => {
@@ -143,7 +137,6 @@ export function useCheckout(initialAddresses: Address[], userEmail: string) {
 
     try {
       // 1. Post Order Creation
-      // Convert frontend string ID back into a number (integer) for the backend API
       const payload: CreateOrderPayload = {
         cartId: cart.id,
         addressId: Number(selectedAddress.id), // Casted safely to integer (number)
@@ -152,10 +145,9 @@ export function useCheckout(initialAddresses: Address[], userEmail: string) {
 
       const order = await createOrder(payload);
 
-      // 2. Post Payment Session Initiation
+      // 2. Post Payment Session
       const paymentPayload = {
         orderId: order.id,
-        // subtotal: order.subtotalIdr,
         subtotal: grandTotal,
         customerDetails: [
           {
@@ -168,29 +160,25 @@ export function useCheckout(initialAddresses: Address[], userEmail: string) {
 
       const transaction = await createPayment(paymentPayload);
 
-      // 3. Save states, refresh store cart, and Auto-redirect
-      setPaymentRedirectUrl(transaction.redirect_url);
-      setIsOrderCreated(true);
-
+      // Refresh global cart store
       try {
         await initializeCart();
       } catch (cartSyncError) {
-        console.error("Failed to sync cart after purchase:", cartSyncError);
+        console.error("Failed to sync cart", cartSyncError);
       }
 
-      if (transaction.redirect_url) {
-        window.open(transaction.redirect_url, "_blank");
-      }
-
+      // 3. Navigate to Payment Page (Step 2) and pass the midtrans URL safely
+      router.push(
+        `/checkout/payment/${order.id}?payUrl=${encodeURIComponent(transaction.paymentRedirectUrl)}`,
+      );
     } catch (error) {
       console.error("Checkout process failed:", error);
-      const msg =
+      setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Terjadi kesalahan saat memproses pesanan Anda.";
-      setErrorMessage(msg);
-    } finally {
-      setIsSubmitting(false);
+          : "Terjadi kesalahan saat memproses pesanan Anda.",
+      );
+      setIsSubmitting(false); // Only toggle false if failed. If success, keep true to avoid double clicks while redirecting
     }
   };
 
@@ -204,12 +192,11 @@ export function useCheckout(initialAddresses: Address[], userEmail: string) {
     isCalculatingShipping,
     isSubmitting,
     errorMessage,
-    isOrderCreated,
-    paymentRedirectUrl,
     notes,
     totals: {
       subtotal,
       shippingCost,
+      tax,
       promoDiscount,
       grandTotal,
     },

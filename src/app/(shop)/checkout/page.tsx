@@ -2,7 +2,7 @@ import React from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth"; // Adjust to your real auth config
-import { CheckoutView } from "@/features/checkout/components/CheckoutView";
+import { CheckoutView } from "@/features/checkout/components/informations/CheckoutView";
 import {getAddresses} from "@/features/address/services/addressService";
 
 export default async function CheckoutPage() {
