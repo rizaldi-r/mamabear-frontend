@@ -1,10 +1,11 @@
+import { EditProductFormValues } from "@/features/admin/products/hooks/useEditProduct";
 import React from "react";
 import { UseFormRegister } from "react-hook-form";
-import { ProductFormValues } from "@/features/admin/products/types/product.types";
 
 interface StatusSidebarProps {
-  register: UseFormRegister<ProductFormValues>;
+  register: UseFormRegister<EditProductFormValues>;
   isLoading: boolean;
+  isEditMode?: boolean;
   onCancel: () => void;
 }
 
@@ -12,7 +13,12 @@ interface StatusSidebarProps {
  * ProductStatusSidebar
  * Sidebar control panel supporting publication status switching and submission/dismissal triggers.
  */
-export default function ProductStatusSidebar({ register, isLoading, onCancel }: StatusSidebarProps) {
+export default function ProductStatusSidebar({
+  register,
+  isLoading,
+  isEditMode = false,
+  onCancel,
+}: StatusSidebarProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 sticky top-6">
       <h2 className="text-font-3 font-bold text-[var(--mama-brown)] mb-4">
@@ -38,7 +44,11 @@ export default function ProductStatusSidebar({ register, isLoading, onCancel }: 
             disabled={isLoading}
             className="w-full bg-[var(--mama-hot-pink)] text-white py-2 rounded-md font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
-            {isLoading ? "Menyimpan..." : "Buat Produk"}
+            {isLoading
+              ? "Menyimpan..."
+              : isEditMode
+                ? "Simpan Perubahan"
+                : "Buat Produk"}
           </button>
           <button
             type="button"

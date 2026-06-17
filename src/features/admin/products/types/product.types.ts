@@ -1,55 +1,29 @@
-import { Category } from "@/features/categories/types/category.types";
-
-export type ViewMode = "grid" | "list";
-
-export type AdminProductSortField =
-  | "name"
-  | "price"
-  | "createdAt"
-  | "totalSold";
-
-/**
- * Interface mapping to the UI form fields
- */
-export interface ProductFormValues {
-  name: string;
-  description: string;
-  sku: string;
-  categoryId: string;
-  price: number;
-  stock: number;
-  weightG: number;
-  isActive: string; // "true" or "false" from select
-  metaTitle: string;
-  metaDescription: string;
-  ingredients: string;
-  usageInstructions: string;
-}
-
 /**
  * Product Feature Types
- * Defines the structure of Product entities, variants, and relations.
+ * Unified typing for the Product, Variants, Categories, and creation payload.
  */
+
 export interface ProductImage {
-  id: number;
-  publicId: string;
-  productId: number | null;
-  variantId: number | null;
-  reviewId: number | null;
-  categoryId: number | null;
-  imageUrl: string;
-  sortOrder: number;
-  altText: string;
-  width: number;
-  height: number;
-  fileSize: number;
-  format: string;
+  id?: number;
+  imageUrl?: string;
+  publicId?: string;
+  productId?: number | null;
+  variantId?: number | null;
+  reviewId?: number | null;
+  categoryId?: number | null;
+  width?: number;
+  height?: number;
+  fileSize?: number;
+  format?: string;
+  altText?: string | null;
+  sortOrder?: number | null;
 }
+
 export interface ProductVariant {
   id: number;
   productId: number;
   name: string;
-  priceIdr: string; // Represented as string in JSON (e.g., "185000")
+  priceIdr: string;
   weightG: number;
   sku: string;
   stock: number;
@@ -69,33 +43,39 @@ export interface ProductHighlight {
   metaDescription: string | null;
 }
 
+export interface ProductCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  isActive: boolean;
+  sortOrder: number;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Product {
   id: number;
   name: string;
   slug: string;
   isActive: boolean;
+  totalSold: number;
   categoryId: number;
-  highlightId: number;
+  highlightId: number | null;
   tags: string[];
-  description: string;
+  description: string | null;
   ingredients: string | null;
   usageInstructions: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
   createdAt: string;
   updatedAt: string;
-
-  // Rich relational payloads
-  category?: Category;
-  images?: ProductImage[];
-  variants?: ProductVariant[];
-  highlight?: Highlight | null;
-
-  // Analytical and dynamic pricing fields
-  currentPrice?: string;
-  originalPrice?: string;
-  discountPercent?: number;
-  rating?: number;
-  reviewsCount?: number;
-  totalSold?: number;
+  category?: ProductCategory;
+  highlight?: ProductHighlight;
+  images: ProductImage[];
+  variants: ProductVariant[];
 }
 
 export interface CreateProductInput {
@@ -117,10 +97,29 @@ export interface CreateProductInput {
   sku?: string;
 }
 
+/**
+ * Input format for creating a product variant
+ */
+export interface CreateVariantInput {
+  productId: number;
+  name: string;
+  images: ProductImage[];
+  priceIdr: number;
+  weightG: number;
+  sku: string;
+  stock: number;
+  sortOrder: number;
+}
+
 export interface ProductFilterParams {
   categories?: string[];
-  minPrice?: number;
-  maxPrice?: number;
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  inStock?: boolean;
+  priceAscending?: boolean;
+  creationDateAscending?: boolean;
+  popularAscending?: boolean;
+  ratingAscending?: boolean;
   cursor?: string;
   limit?: number;
 }

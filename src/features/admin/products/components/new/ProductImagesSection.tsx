@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { UploadCloud, X, GripHorizontal, ZoomIn } from "lucide-react";
+import { UploadCloud, X, ZoomIn, GripHorizontal } from "lucide-react";
+import { ProductImage } from "@/features/admin/products/types/product.types";
 
 interface ProductImagesProps {
-  selectedImages: File[];
+  selectedImages: (File | ProductImage)[];
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   removeImage: (index: number) => void;
   moveImage: (index: number, direction: "left" | "right" | number) => void;
@@ -138,8 +139,12 @@ export default function ProductImagesSection({
       {}
       {selectedImages.length > 0 && (
         <div className="mt-4 flex gap-4 flex-wrap">
-          {selectedImages.map((file, idx) => {
-            const objectUrl = URL.createObjectURL(file);
+          {selectedImages.map((item, idx) => {
+            const isFile = item instanceof File;
+            const objectUrl = isFile
+              ? URL.createObjectURL(item as File)
+              : (item as ProductImage).imageUrl || "";
+
             const isDragging = idx === draggedIndex;
             const isDragOver = idx === dragOverIndex;
             const isTouchDragging = idx === touchStartIndex;
