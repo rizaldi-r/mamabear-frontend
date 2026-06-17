@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { ProductDetail } from "@/features/products/types/product.types";
 import ProductCard from "@/features/products/components/shared/ProductCard";
+import { Product } from "@/features/products/types/products.types";
 
 interface RelatedProductsProps {
-  products: ProductDetail[];
+  products: Product[];
 }
 
 export const RelatedProducts = ({ products }: RelatedProductsProps) => {

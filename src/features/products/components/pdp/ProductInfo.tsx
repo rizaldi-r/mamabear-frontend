@@ -98,9 +98,9 @@ export const ProductInfo = ({
           {product.name}
         </h1>
         <div className="flex items-center gap-2 text-font-1 text-[var(--color-gray)]">
-          {renderStars(product.rating, 16)}
+          {renderStars(product.rating || 0, 16)}
           <span className="font-bold text-[var(--mama-brown)]">
-            {product.rating.toFixed(1)}
+            {(product.rating || 0).toFixed(1)}
           </span>
           <span>•</span>
           <span>{formatCount(product.reviewsCount)} Penilaian</span>

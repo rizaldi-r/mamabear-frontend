@@ -17,11 +17,10 @@ export const ProductTabs = ({
 }: ProductTabsProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
-  // Helper to determine if we should truncate
+  // Helper to determine if we should truncate based on description length
   const shouldTruncateDescription =
     product.description && product.description.length > 300;
 
-  // Helper to render dynamic stars
   const renderStars = (rating: number, size: number) => {
     return (
       <div className="flex text-[var(--mama-hot-pink)]">
@@ -68,7 +67,8 @@ export const ProductTabs = ({
 
       {/* Tab Content */}
       <div className="text-font-2 text-[var(--color-gray)] whitespace-pre-wrap leading-relaxed relative">
-      {activeTab === "description" && (
+        {}
+        {activeTab === "description" && (
           <div>
             <div
               className={`overflow-hidden transition-all duration-500 ease-in-out ${
@@ -96,6 +96,7 @@ export const ProductTabs = ({
           </div>
         )}
 
+        {}
         {activeTab === "ingredients" &&
           (product.ingredients || "Informasi komposisi belum tersedia.")}
 
@@ -105,6 +106,7 @@ export const ProductTabs = ({
       </div>
 
       {/* Review Section */}
+      {}
       <div className="mt-12">
         <h3 className="text-font-4 font-bold text-[var(--mama-brown)] mb-4">
           Review
@@ -112,11 +114,11 @@ export const ProductTabs = ({
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <span className="text-font-5 font-bold text-[var(--mama-hot-pink)]">
-              {product.rating.toFixed(1)}
+              {(product.rating || 0).toFixed(1)}
             </span>
-            {renderStars(product.rating, 20)}
+            {renderStars(product.rating || 0, 20)}
             <span className="text-font-1 text-[var(--color-gray)]">
-              {product.reviewsCount} Penilaian
+              {product.reviewsCount || 0} Penilaian
             </span>
           </div>
           <button className="text-font-1 text-[var(--color-gray)] hover:text-[var(--mama-hot-pink)] transition-colors">
@@ -131,16 +133,16 @@ export const ProductTabs = ({
               <User size={24} />
             </div>
             <div>
-              <p className="font-bold text-[var(--mama-brown)]">
+              <p className="font-bold text-[var(--mama-brown)] text-font-2">
                 Mama
               </p>
               <div className="my-1">
-                {renderStars(product.topReview.rating, 18)}
+                {renderStars(product.topReview.rating || 0, 12)}
               </div>
-              <p className="font-bold text-[var(--mama-brown)]  mt-2">
+              <p className="font-bold text-[var(--mama-brown)] text-font-1 mt-2">
                 &quot;{product.topReview.title}&quot;
               </p>
-              <p className="text-[var(--color-gray)] mt-1 leading-relaxed">
+              <p className="text-font-1 text-[var(--color-gray)] mt-1 leading-relaxed">
                 {product.topReview.description}
               </p>
             </div>
