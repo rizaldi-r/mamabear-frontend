@@ -1,19 +1,29 @@
 /**
  * Product Feature Types
- * Defines the structure of Product entities, variants, and relations.
+ * Unified typing for the Product, Variants, Categories, and creation payload.
  */
 
 export interface ProductImage {
   id?: number;
   imageUrl?: string;
-  // Note: Add additional fields if your image object has them (e.g., publicId, altText)
+  publicId?: string;
+  productId?: number | null;
+  variantId?: number | null;
+  reviewId?: number | null;
+  categoryId?: number | null;
+  width?: number;
+  height?: number;
+  fileSize?: number;
+  format?: string;
+  altText?: string | null;
+  sortOrder?: number | null;
 }
 
 export interface ProductVariant {
   id: number;
   productId: number;
   name: string;
-  priceIdr: string; // Represented as string in JSON (e.g., "185000")
+  priceIdr: string;
   weightG: number;
   sku: string;
   stock: number;
@@ -81,12 +91,35 @@ export interface CreateProductInput {
   metaTitle?: string | null;
   metaDescription?: string | null;
   images?: ProductImage[];
+  priceIdr: string;
+  weightG: number;
+  stock: number;
+  sku?: string;
+}
+
+/**
+ * Input format for creating a product variant
+ */
+export interface CreateVariantInput {
+  productId: number;
+  name: string;
+  images: ProductImage[];
+  priceIdr: number;
+  weightG: number;
+  sku: string;
+  stock: number;
+  sortOrder: number;
 }
 
 export interface ProductFilterParams {
   categories?: string[];
-  minPrice?: number;
-  maxPrice?: number;
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  inStock?: boolean;
+  priceAscending?: boolean;
+  creationDateAscending?: boolean;
+  popularAscending?: boolean;
+  ratingAscending?: boolean;
   cursor?: string;
   limit?: number;
 }
