@@ -42,6 +42,7 @@ export interface OrderItemVariantImage {
 
 export interface OrderItemVariant {
   name: string;
+  stock?: number;
   priceIdr: string | number;
   images: OrderItemVariantImage[];
 }
@@ -113,6 +114,7 @@ export interface Order {
   courierName: string;
   courierCode: string;
   shippingMethod: string;
+  paymentRedirectUrl?: string | null;
   trackingNumber: string | null;
   paymentMethod: PaymentMethod | string | null;
   notes: string | null;
@@ -121,7 +123,7 @@ export interface Order {
   orderItems: OrderItem[];
   shippingAddress: OrderShippingAddress;
   orderStatusHistory?: OrderStatusHistory[];
-  grandTotal?: number;
+  grandTotalIdr?: number;
 }
 
 /**

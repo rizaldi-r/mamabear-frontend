@@ -19,7 +19,7 @@ export default function OrderDetailSummary({ order }: OrderDetailSummaryProps) {
     Number(order.shippingCostIdr || 0) +
     Number(order.taxIdr || 0);
   const grandTotal =
-    order.grandTotal != null ? Number(order.grandTotal) : totalBeforeDiscount;
+    order.grandTotalIdr != null ? Number(order.grandTotalIdr) : totalBeforeDiscount;
   const promoAmount =
     totalBeforeDiscount > grandTotal ? totalBeforeDiscount - grandTotal : 0;
 

@@ -22,7 +22,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
   // Determine displayed total: if grandTotal isn't present, fallback to subtotal + shipping + tax
   const calculatedTotal =
-    order.grandTotal ??
+    order.grandTotalIdr ??
     order.subtotalIdr + order.shippingCostIdr + order.taxIdr;
 
   return (

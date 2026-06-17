@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import OrderDetailStepper from "./OrderDetailStepper";
 import OrderDetailAddress from "./OrderDetailAddress";
 import OrderDetailSummary from "./OrderDetailSummary";
-import { AlertCircle, Download } from "lucide-react";
-import { useOrderDetail } from "@/features/orders/hooks/useOrderDetail";
+import { AlertCircle, Download, FileText } from "lucide-react";
 import { useDownloadInvoice } from "@/features/orders/hooks/useDownloadInvoice";
+import { useOrderDetail } from "@/features/orders/hooks/useOrderDetail";
 
 interface OrderDetailProps {
   orderId: string;
@@ -55,13 +56,36 @@ export default function OrderDetail({ orderId }: OrderDetailProps) {
 
   return (
     <div className="w-full flex flex-col">
+      {/* Show Midtrans Payment Button if Pending and URL exists */}
+      {order.status === "PAYMENT_PENDING" && order.paymentRedirectUrl && (
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2 mb-6 p-5 bg-red-50 rounded-xl border border-red-100">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-font-3 font-bold text-red-600">
+              Lanjutkan Pembayaran
+            </h3>
+            <p className="text-font-1 text-red-500 max-w-md leading-relaxed">
+              Selesaikan pembayaran Anda menggunakan berbagai metode pembayaran
+              yang tersedia agar pesanan dapat segera diproses.
+            </p>
+          </div>
+          <a
+            href={order.paymentRedirectUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="whitespace-nowrap px-8 py-3 bg-[var(--mama-hot-pink)] text-white rounded-full font-bold hover:bg-pink-600 transition-colors shadow-md text-center w-full md:w-auto"
+          >
+            Bayar Sekarang
+          </a>
+        </div>
+      )}
+
       <OrderDetailStepper
         currentStatus={order.status}
         updatedAt={order.updatedAt}
       />
 
       {/* Header Info */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
         <div className="flex flex-col gap-1">
           <h2 className="text-font-3 font-bold text-[var(--mama-brown)]">
             Order : #{order.orderNumber || order.id.slice(0, 8).toUpperCase()}
@@ -89,6 +113,23 @@ export default function OrderDetail({ orderId }: OrderDetailProps) {
 
       <OrderDetailAddress address={order.shippingAddress} />
 
+      {/* Catatan Pesanan dari Pembeli */}
+      {order.notes && (
+        <div className="border border-gray-200 rounded-xl p-5 mb-6 bg-white shadow-sm flex items-start gap-4">
+          <div className="mt-1 flex-shrink-0">
+            <FileText className="w-6 h-6 text-[var(--mama-brown)]" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <h4 className="text-font-2 font-bold text-[var(--mama-brown)]">
+              Catatan Pesanan
+            </h4>
+            <p className="text-font-2 text-[var(--color-gray)] leading-relaxed mt-1">
+              {order.notes}
+            </p>
+          </div>
+        </div>
+      )}
+
       <OrderDetailSummary order={order} />
 
       {/* Actions & Warning Footer */}
@@ -99,17 +140,15 @@ export default function OrderDetail({ orderId }: OrderDetailProps) {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2 mb-10">
           <p className="text-font-1 text-[var(--color-gray)] max-w-md leading-relaxed">
             Pesanan dapat dibatalkan selama belum masuk ke tahap Diproses.
-            Setelah dikemas oleh MamaBear, pembatalan tidak lagi tersedia.
+            Silakan chat dengan tim MamaBear jika Anda ingin mengajukan pembatalan.
           </p>
-          <button
-            className="whitespace-nowrap px-6 py-3 border-2 border-[var(--mama-hot-pink)] text-[var(--mama-hot-pink)] bg-white rounded-full font-bold hover:bg-pink-50 transition-colors"
-            onClick={() => {
-              // TODO: Implement cancel order mutation hook
-              // alert("Fitur pembatalan pesanan akan segera hadir.");
-            }}
+          <Link
+            href="/contact"
+            target="_blank"
+            className="whitespace-nowrap px-6 py-3 border-2 border-[var(--mama-hot-pink)] text-[var(--mama-hot-pink)] bg-white rounded-full font-bold hover:bg-pink-50 transition-colors text-center w-full md:w-auto"
           >
-            Batalkan Pesanan
-          </button>
+            Chat dengan MamaBear
+          </Link>
         </div>
       )}
     </div>

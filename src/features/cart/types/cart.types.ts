@@ -61,7 +61,14 @@ export interface CartItem {
 export interface Cart {
   id: string;
   userId: string | null;
-  sessionId: string;
+  sessionId: string | null;
+  subtotalIdr: number;
+  taxIdr: number;
+  shippingCostIdr: number;
+  courierName: string | null;
+  courierCode: string | null;
+  shippingMethod: string | null;
+  orderId: string | null;
   createdAt: string;
   updatedAt: string;
   expiresAt: string;

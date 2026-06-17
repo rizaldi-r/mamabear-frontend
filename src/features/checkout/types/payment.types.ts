@@ -21,5 +21,5 @@ export interface CreatePaymentPayload {
  */
 export interface PaymentTransaction {
   token: string;
-  redirect_url: string;
+  paymentRedirectUrl: string;
 }
