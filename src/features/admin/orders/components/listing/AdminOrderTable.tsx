@@ -1,12 +1,18 @@
 "use client";
 
 import React from "react";
-import { Order, OrderStatus } from "../types/adminOrder.types";
-import { ORDER_STATUS_OPTIONS, FAILED_STATUSES } from "../utils/orderStatus";
 import Link from "next/link";
+import {
+  OrderDetail,
+  OrderStatus,
+} from "@/features/admin/orders/types/adminOrder.types";
+import {
+  ORDER_STATUS_OPTIONS,
+  FAILED_STATUSES,
+} from "@/features/admin/orders/utils/orderStatus";
 
 interface AdminOrderTableProps {
-  orders: Order[];
+  orders: OrderDetail[]; // Updated to accept OrderDetail
   isLoading: boolean;
   onUpdateStatus: (id: string, status: OrderStatus) => void;
 }
@@ -54,7 +60,6 @@ const getPaymentBadge = (status: OrderStatus) => {
       </span>
     );
   }
-  // For PAID, CONFIRMED, PROCESSED, SENDING
   return (
     <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold">
       In Progress
@@ -67,6 +72,7 @@ export function AdminOrderTable({
   isLoading,
   onUpdateStatus,
 }: AdminOrderTableProps) {
+  // Skeletons and Empty states omitted for brevity (keep them as they were)
   if (isLoading) {
     return (
       <div className="w-full bg-white rounded-lg shadow border border-gray-100 overflow-hidden animate-pulse">
@@ -118,6 +124,11 @@ export function AdminOrderTable({
           {orders.map((order) => {
             const total =
               order.subtotalIdr + order.taxIdr + order.shippingCostIdr;
+            // Calculate total items properly since we now have the nested orderItems array
+            const totalItems =
+              order.orderItems?.reduce((acc, item) => acc + item.quantity, 0) ||
+              0;
+
             return (
               <tr
                 key={order.id}
@@ -129,12 +140,15 @@ export function AdminOrderTable({
                 <td className="p-4">
                   <div className="flex flex-col">
                     <span className="font-medium text-[var(--mama-brown)]">
-                      User {order.userId.slice(0, 4)}
+                      {order.user?.name || "Customer"}
+                    </span>
+                    <span className="text-xs text-[var(--color-light-gray)]">
+                      {order.user?.email}
                     </span>
                   </div>
                 </td>
                 <td className="p-4 text-sm">{formatDate(order.createdAt)}</td>
-                <td className="p-4 text-center">-</td>
+                <td className="p-4 text-center font-medium">{totalItems}</td>
                 <td className="p-4 font-medium">{formatCurrency(total)}</td>
                 <td className="p-4">{getPaymentBadge(order.status)}</td>
                 <td className="p-4">
@@ -153,7 +167,7 @@ export function AdminOrderTable({
                   </select>
                 </td>
                 <td className="p-4">
-                  <Link 
+                  <Link
                     href={`/admin/orders/${order.id}`}
                     className="inline-block px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
                   >

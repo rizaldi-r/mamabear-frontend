@@ -1,39 +1,43 @@
-import { Order, OrderDetail,
+import {
+  Order,
+  OrderDetail,
   UpdateOrderStatusDto,
   UpdateTrackingDto,
   CancelOrderDto,
-  InvoiceResponse, } from "../types/adminOrder.types";
-
+  InvoiceResponse,
+  PaginatedOrders,
+} from "@/features/admin/orders/types/adminOrder.types";
 
 import { apiClient } from "@/lib/api";
 import { ApiResponse } from "@/types/api.types";
 
 /**
- * Fetches a list of all orders for the admin dashboard.
+ * Fetches a paginated list of all orders for the admin dashboard.
  * @param queryParams Optional URLSearchParams for filtering, sorting, and pagination
  */
 export async function fetchAdminOrders(
   queryParams?: URLSearchParams,
-): Promise<Order[]> {
+): Promise<PaginatedOrders> {
   try {
     const queryString = queryParams ? `?${queryParams.toString()}` : "";
     const res = await apiClient.get(`/admin/order${queryString}`, {
-      cache: "no-store", // Admins need real-time data, avoid caching
+      cache: "no-store",
     });
 
     if (!res.ok) {
       throw new Error(`Gagal mengambil daftar pesanan: HTTP ${res.status}`);
     }
 
-    const response: ApiResponse<Order[]> = await res.json();
+    // The API wraps the paginated result inside the `data` field of the standard ApiResponse
+    const response: ApiResponse<PaginatedOrders> = await res.json();
 
-    if (!response.success) {
+    if (!response.success || !response.data) {
       throw new Error(
         response.message?.[0] || "Gagal mengambil daftar pesanan",
       );
     }
 
-    return response.data || [];
+    return response.data;
   } catch (error) {
     console.error("[adminOrderService] fetchAdminOrders failed:", error);
     throw error;
@@ -216,4 +220,3 @@ export async function exportAdminOrdersCSV(
     throw error;
   }
 }
-

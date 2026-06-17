@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { OrderDetail, OrderStatus } from "../types/adminOrder.types";
-import { ORDER_STATUS_OPTIONS } from "../utils/orderStatus";
+import {
+  OrderDetail,
+  OrderStatus,
+} from "@/features/admin/orders/types/adminOrder.types";
+import { ORDER_STATUS_OPTIONS } from "@/features/admin/orders/utils/orderStatus";
 
 interface SidebarCardsProps {
   order: OrderDetail;
   isUpdating: boolean;
   onUpdateStatus: (status: OrderStatus) => void;
 }
- 
+
 export function AdminOrderCustomerCard({ order }: { order: OrderDetail }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 flex flex-col gap-2">

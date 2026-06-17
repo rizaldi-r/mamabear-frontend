@@ -2,8 +2,11 @@
 
 import React from "react";
 import { Check } from "lucide-react";
-import { OrderDetail } from "../types/adminOrder.types";
-import { STATUS_SEQUENCE, FAILED_STATUSES } from "../utils/orderStatus";
+import { OrderDetail } from "@/features/admin/orders/types/adminOrder.types";
+import {
+  STATUS_SEQUENCE,
+  FAILED_STATUSES,
+} from "@/features/admin/orders/utils/orderStatus";
 
 interface AdminOrderTimelineProps {
   order: OrderDetail;

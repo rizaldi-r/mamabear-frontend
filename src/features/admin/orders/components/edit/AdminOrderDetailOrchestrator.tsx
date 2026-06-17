@@ -13,7 +13,7 @@ import {
   AdminOrderDeliveryCard,
   AdminOrderActionsCard,
 } from "./AdminOrderDetailCards";
-import { useAdminOrderDetail } from "../hooks/useAdminOrderDetail";
+import { useAdminOrderDetail } from "@/features/admin/orders/hooks/useAdminOrderDetail";
 import { useDownloadInvoice } from "@/features/orders/hooks/useDownloadInvoice";
 
 interface Props {

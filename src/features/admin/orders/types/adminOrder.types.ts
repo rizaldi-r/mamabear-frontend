@@ -143,3 +143,21 @@ export interface CancelOrderDto {
 export interface InvoiceResponse {
   invoiceUrl: string;
 }
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+/**
+ * Maps to the nested data object inside the main ApiResponse
+ */
+export interface PaginatedOrders {
+  success: boolean;
+  data: OrderDetail[];
+  pagination: PaginationMeta;
+}

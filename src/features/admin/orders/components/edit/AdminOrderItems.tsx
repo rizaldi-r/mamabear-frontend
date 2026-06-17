@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { OrderDetail } from "../types/adminOrder.types";
+import { OrderDetail } from "@/features/admin/orders/types/adminOrder.types";
 
 interface AdminOrderItemsProps {
   order: OrderDetail;
