@@ -31,6 +31,7 @@ export interface Category {
   metaTitle : string;
   metaDescription : string;
   images: CategoryImage[];
-  
-  productCount?: number;
+  _count : {
+    products : number
+  }
 }
