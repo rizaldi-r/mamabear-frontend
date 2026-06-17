@@ -1,4 +1,4 @@
-import {Category} from "@/features/categories/types/category.types";
+import { Category } from "@/features/categories/types/category.types";
 
 export type ViewMode = "grid" | "list";
 
@@ -50,7 +50,9 @@ export interface Product {
   usageInstructions: string | null;
   createdAt: string; // ISO Date string
   updatedAt: string; // ISO Date string
-
+  metaTitle: string | null;
+  metaDescription: string | null;
+  
   // Rich relational payloads
   category?: Category;
   images?: ProductImage[];
