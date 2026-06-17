@@ -23,6 +23,17 @@ export function AdminOrderCustomerCard({ order }: { order: OrderDetail }) {
       <p className="text-sm text-[var(--color-light-gray)]">
         {order.user?.phone || "N/A"}
       </p>
+
+      {order.notes && (
+        <div className="mt-2 pt-3 border-t border-gray-100 flex flex-col gap-1">
+          <span className="text-xs font-semibold text-[var(--color-light-gray)]">
+            Catatan Pesanan:
+          </span>
+          <p className="text-sm text-[var(--color-gray)] bg-yellow-50 p-3 rounded border border-yellow-100 whitespace-pre-wrap">
+            {order.notes}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -34,7 +45,8 @@ export function AdminOrderAddressCard({ order }: { order: OrderDetail }) {
         Alamat Pengiriman
       </h3>
       <p className="text-font-2 text-[var(--color-gray)] leading-relaxed">
-        {order.shippingAddress?.completeAddress || "No address details available."}
+        {order.shippingAddress?.completeAddress ||
+          "No address details available."}
       </p>
       {order.shippingAddress?.detail && (
         <p className="text-sm text-[var(--color-light-gray)] mt-1">
@@ -47,11 +59,15 @@ export function AdminOrderAddressCard({ order }: { order: OrderDetail }) {
 
 interface DeliveryCardProps {
   order: OrderDetail;
-  isUpdating: boolean;
+  isUpdatingTracking: boolean;
   onUpdateTracking: (trackingNumber: string) => Promise<void>;
 }
 
-export function AdminOrderDeliveryCard({ order, isUpdating, onUpdateTracking }: DeliveryCardProps) {
+export function AdminOrderDeliveryCard({
+  order,
+  isUpdatingTracking,
+  onUpdateTracking,
+}: DeliveryCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [trackingVal, setTrackingVal] = useState(order.trackingNumber || "");
 
@@ -96,12 +112,12 @@ export function AdminOrderDeliveryCard({ order, isUpdating, onUpdateTracking }: 
               onChange={(e) => setTrackingVal(e.target.value)}
               className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--mama-hot-pink)]"
               placeholder="Masukkan nomor resi..."
-              disabled={isUpdating}
+              disabled={isUpdatingTracking}
             />
             <button
               onClick={handleSave}
-              disabled={isUpdating}
-              className="p-1 text-green-600 hover:bg-green-50 rounded"
+              disabled={isUpdatingTracking}
+              className="p-1 text-green-600 hover:bg-green-50 rounded disabled:opacity-50 cursor-pointer"
             >
               <Check className="w-4 h-4" />
             </button>
@@ -110,19 +126,20 @@ export function AdminOrderDeliveryCard({ order, isUpdating, onUpdateTracking }: 
                 setTrackingVal(order.trackingNumber || "");
                 setIsEditing(false);
               }}
-              disabled={isUpdating}
-              className="p-1 text-red-500 hover:bg-red-50 rounded"
+              disabled={isUpdatingTracking}
+              className="p-1 text-red-500 hover:bg-red-50 rounded disabled:opacity-50 cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         ) : (
-          order.status !== 'CANCELLED' && (
+          order.status !== "CANCELLED" && (
             <button
               onClick={() => setIsEditing(true)}
               className="text-xs font-semibold text-[var(--mama-hot-pink)] mt-1 flex items-center gap-1 hover:underline cursor-pointer justify-end"
             >
-              <Edit2 className="w-3 h-3" /> {order.trackingNumber ? "Ubah Nomor Resi" : "Input Nomor Resi"}
+              <Edit2 className="w-3 h-3" />{" "}
+              {order.trackingNumber ? "Ubah Nomor Resi" : "Input Nomor Resi"}
             </button>
           )
         )}
@@ -133,7 +150,7 @@ export function AdminOrderDeliveryCard({ order, isUpdating, onUpdateTracking }: 
 
 interface SidebarCardsProps {
   order: OrderDetail;
-  isUpdating: boolean;
+  isUpdatingStatus: boolean;
   isCancelling: boolean;
   onUpdateStatus: (status: OrderStatus) => void;
   onCancelOrder: (reason?: string) => Promise<void>;
@@ -141,12 +158,14 @@ interface SidebarCardsProps {
 
 export function AdminOrderActionsCard({
   order,
-  isUpdating,
+  isUpdatingStatus,
   isCancelling,
   onUpdateStatus,
   onCancelOrder,
 }: SidebarCardsProps) {
-  const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(order.status);
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(
+    order.status,
+  );
   const [showCancelForm, setShowCancelForm] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
 
@@ -176,8 +195,10 @@ export function AdminOrderActionsCard({
       <select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as OrderStatus)}
-        className="w-full border border-gray-300 rounded-lg px-4 py-2 text-font-2 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--mama-hot-pink)]"
-        disabled={isUpdating || isCancelling || order.status === 'CANCELLED'}
+        className="w-full border border-gray-300 rounded-lg px-4 py-2 text-font-2 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--mama-hot-pink)] cursor-pointer disabled:opacity-50"
+        disabled={
+          isUpdatingStatus || isCancelling || order.status === "CANCELLED"
+        }
       >
         {ORDER_STATUS_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
@@ -188,10 +209,15 @@ export function AdminOrderActionsCard({
 
       <button
         onClick={handleUpdate}
-        disabled={isUpdating || isCancelling || selectedStatus === order.status || order.status === 'CANCELLED'}
-        className="w-full bg-[var(--mama-hot-pink)] text-white py-2.5 rounded-lg text-font-2 font-bold hover:bg-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+        disabled={
+          isUpdatingStatus ||
+          isCancelling ||
+          selectedStatus === order.status ||
+          order.status === "CANCELLED"
+        }
+        className="w-full bg-[var(--mama-hot-pink)] text-white py-2.5 rounded-lg text-font-2 font-bold hover:bg-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 cursor-pointer"
       >
-        {isUpdating ? (
+        {isUpdatingStatus ? (
           <>
             <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             Menyimpan...
@@ -201,8 +227,7 @@ export function AdminOrderActionsCard({
         )}
       </button>
 
-      {/* Cancellation section */}
-      {order.status !== 'CANCELLED' && order.status !== 'COMPLETED' && (
+      {order.status !== "CANCELLED" && order.status !== "COMPLETED" && (
         <div className="border-t border-gray-100 pt-4 mt-2">
           {!showCancelForm ? (
             <button
@@ -212,8 +237,13 @@ export function AdminOrderActionsCard({
               <AlertTriangle className="w-4 h-4" /> Batalkan Pesanan
             </button>
           ) : (
-            <form onSubmit={handleCancelSubmit} className="flex flex-col gap-3 mt-2">
-              <span className="text-xs font-semibold text-red-600">Alasan Pembatalan:</span>
+            <form
+              onSubmit={handleCancelSubmit}
+              className="flex flex-col gap-3 mt-2"
+            >
+              <span className="text-xs font-semibold text-red-600">
+                Alasan Pembatalan:
+              </span>
               <textarea
                 rows={2}
                 value={cancelReason}
@@ -227,7 +257,7 @@ export function AdminOrderActionsCard({
                 <button
                   type="submit"
                   disabled={isCancelling}
-                  className="flex-1 bg-red-600 text-white text-xs font-bold py-1.5 rounded hover:bg-red-700 transition-colors disabled:opacity-50"
+                  className="flex-1 bg-red-600 text-white text-xs font-bold py-1.5 rounded hover:bg-red-700 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   {isCancelling ? "Memproses..." : "Ya, Batalkan"}
                 </button>
@@ -235,7 +265,7 @@ export function AdminOrderActionsCard({
                   type="button"
                   onClick={() => setShowCancelForm(false)}
                   disabled={isCancelling}
-                  className="flex-1 border border-gray-300 text-gray-700 text-xs font-semibold py-1.5 rounded hover:bg-gray-50 transition-colors"
+                  className="flex-1 border border-gray-300 text-gray-700 text-xs font-semibold py-1.5 rounded hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   Batal
                 </button>
