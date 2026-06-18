@@ -134,7 +134,7 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
             {/* Desktop Mini Cart Dropdown */}
             {mounted && isMiniCartOpen && (
               <div className="hidden md:block absolute top-full right-0 pt-2 z-[100]">
-                <MiniCartDropdown isLoggedIn={isLoggedIn} />
+                <MiniCartDropdown />
               </div>
             )}
           </div>

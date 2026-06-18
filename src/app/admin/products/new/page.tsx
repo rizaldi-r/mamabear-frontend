@@ -8,6 +8,8 @@ export const metadata = {
   description: "Buat produk baru untuk e-commerce MamaBear",
 };
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Admin Product Create Page (Server Component)
  * Fetches required category data on the server before passing it to the client form.

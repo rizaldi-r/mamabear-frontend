@@ -1,9 +1,9 @@
-import { EditProductFormValues } from "@/features/admin/products/hooks/useEditProduct";
+import { ProductFormValues } from "@/features/admin/products/types/product.types";
 import React from "react";
 import { UseFormRegister } from "react-hook-form";
 
 interface StatusSidebarProps {
-  register: UseFormRegister<EditProductFormValues>;
+  register: UseFormRegister<ProductFormValues>;
   isLoading: boolean;
   isEditMode?: boolean;
   onCancel: () => void;

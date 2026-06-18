@@ -11,10 +11,11 @@ import { ShareModal } from "./ShareModal";
 import { useProductDetail } from "@/features/products/hooks/useProductDetail";
 import { ProductDetail } from "@/features/products/types/product.types";
 import { AddToCartModal } from "@/features/products/components/shared/AddToCartModal";
+import { Product } from "@/features/products/types/products.types";
 
 interface ProductDetailClientProps {
   product: ProductDetail;
-  relatedProducts: ProductDetail[];
+  relatedProducts: Product[];
 }
 
 export const ProductDetailClient = ({
@@ -112,8 +113,8 @@ export const ProductDetailClient = ({
       />
 
       {/* Mobile Sticky Action Bar */}
-      <ProductBottomBar 
-        onOpenCartModal={() => setIsCartModalOpen(true)} 
+      <ProductBottomBar
+        onOpenCartModal={() => setIsCartModalOpen(true)}
         onOpenShareModal={() => setIsShareModalOpen(true)}
       />
     </div>

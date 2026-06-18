@@ -1,6 +1,6 @@
+import { ProductFormValues } from "@/features/admin/products/types/product.types";
 import React from "react";
 import { UseFormRegister } from "react-hook-form";
-import { ProductFormValues } from "@/features/admin/products/types/product.types";
 
 interface AdditionalDetailsProps {
   register: UseFormRegister<ProductFormValues>;
@@ -10,7 +10,9 @@ interface AdditionalDetailsProps {
  * ProductAdditionalDetailsSection
  * Form section handling ingredients listing and usage guidelines.
  */
-export default function ProductAdditionalDetailsSection({ register }: AdditionalDetailsProps) {
+export default function ProductAdditionalDetailsSection({
+  register,
+}: AdditionalDetailsProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
       <h2 className="text-font-3 font-bold text-[var(--mama-brown)] mb-4">

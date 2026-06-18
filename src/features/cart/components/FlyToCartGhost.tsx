@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
-import { Coordinates } from "@/features/cart/store/use-cart-store";
+import {Coordinates} from "@/store/use-ui-store";
 
 interface FlyToCartGhostProps {
   imageUrl: string;

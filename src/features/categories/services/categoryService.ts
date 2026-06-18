@@ -19,7 +19,8 @@ export async function fetchCategories(): Promise<Category[]> {
     const res = await fetch(`${API_BASE_URL}/categories`, {
       // or use 'force-cache' / 'next: { revalidate }' for better performance if they are mostly static.
       // next: { revalidate: 86400 },
-      cache: "no-store",
+      // cache: "no-store",
+      next: { revalidate: 20 },
     });
 
     if (!res.ok) {

@@ -100,4 +100,6 @@ export interface ProductDetail {
   rating: number;
   reviewsCount: number;
   topReview: TopReview;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }

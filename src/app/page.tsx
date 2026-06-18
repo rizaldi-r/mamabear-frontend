@@ -11,6 +11,8 @@ import { RoadToSale } from "@/features/home/components/RoadToSale";
 import { TestimonialSection } from "@/features/home/components/TestimonialSection";
 import { productService } from "@/features/products/services/productsService";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const data = await productService.fetchFilteredProducts({ limit: 4 });
   const products = data?.data;

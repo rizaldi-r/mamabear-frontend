@@ -4,6 +4,8 @@ import {authOptions} from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import React from "react";
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Server Component for the Admin Settings page.
  * Handles the initial data fetching before rendering the interactive client component.

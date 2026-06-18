@@ -1,6 +1,6 @@
+import {ProductFormValues} from "@/features/admin/products/types/product.types";
 import React from "react";
 import { UseFormRegister } from "react-hook-form";
-import { ProductFormValues } from "@/features/admin/products/types/product.types";
 
 interface SeoInfoProps {
   register: UseFormRegister<ProductFormValues>;

@@ -114,16 +114,23 @@ export const RevenueLineChart = ({ data }: { data: SalesTrend[] }) => {
           />
           <Tooltip
             contentStyle={{ borderRadius: "8px", border: "1px solid #fbcbd9" }}
-            labelFormatter={formatPeriodLabel}
-            formatter={(value: number, name: string) => [
-              name === "Pendapatan (Rp)"
-                ? new Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                  }).format(value)
-                : value,
-              name,
-            ]}
+            labelFormatter={(label: unknown) =>
+              formatPeriodLabel(String(label || ""))
+            }
+            formatter={(value: unknown, name: unknown) => {
+              const nameStr = String(name || "");
+              const valueNum = Number(value || 0);
+              return [
+                nameStr === "Pendapatan (Rp)"
+                  ? new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(valueNum)
+                  : String(valueNum),
+                nameStr,
+              ];
+            }}
           />
           <Legend iconType="circle" wrapperStyle={{ paddingTop: "20px" }} />
           <Line
@@ -251,9 +258,11 @@ export const CategoryPieChart = ({
             outerRadius={100}
             paddingAngle={2}
             dataKey="value"
-            label={({ name, percent }) =>
-              `${name} ${(percent * 100).toFixed(0)}%`
-            }
+            label={(props: { name?: string | number; percent?: number }) => {
+              const labelName = String(props.name || "");
+              const labelPercent = Number(props.percent || 0);
+              return `${labelName} ${(labelPercent * 100).toFixed(0)}%`;
+            }}
             labelLine={false}
           >
             {aggregatedData.map((entry, index) => (

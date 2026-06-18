@@ -6,9 +6,9 @@ import Link from "next/link";
 import { Trash2, ShoppingBag } from "lucide-react";
 import { useCartStore } from "@/features/cart/store/use-cart-store";
 
-interface MiniCartDropdownProps {
-  isLoggedIn: boolean;
-}
+// interface MiniCartDropdownProps {
+//   isLoggedIn: boolean;
+// }
 
 const formatIDR = (amount: string | number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -18,7 +18,7 @@ const formatIDR = (amount: string | number) => {
   }).format(Number(amount));
 };
 
-export const MiniCartDropdown = ({ isLoggedIn }: MiniCartDropdownProps) => {
+export const MiniCartDropdown = () => {
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
 
@@ -92,7 +92,7 @@ export const MiniCartDropdown = ({ isLoggedIn }: MiniCartDropdownProps) => {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        removeItem(item.id, isLoggedIn);
+                        removeItem(item.id);
                       }}
                       className="p-1.5 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
                       aria-label="Hapus produk"

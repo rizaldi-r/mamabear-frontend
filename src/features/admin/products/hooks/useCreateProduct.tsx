@@ -8,8 +8,8 @@ import {
 import {
   CreateProductInput,
   ProductFormValues,
+  ProductImage,
 } from "@/features/admin/products/types/product.types";
-import { ProductImage } from "@/features/products/types/product.types";
 
 export function useCreateProduct() {
   const router = useRouter();

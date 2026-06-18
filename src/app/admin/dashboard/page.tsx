@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description: "Ringkasan performa dan penjualan toko MamaBear.",
 };
 
+export const dynamic = 'force-dynamic';
+
 // ----------------------------------------------------------------------
 // Server Component
 // ----------------------------------------------------------------------

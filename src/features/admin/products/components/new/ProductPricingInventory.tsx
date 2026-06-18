@@ -11,7 +11,10 @@ interface PricingInventoryProps {
  * ProductPricingInventorySection
  * Form section handling pricing variables, stock allocations, and physical shipping weight.
  */
-export default function ProductPricingInventorySection({ register, errors }: PricingInventoryProps) {
+export default function ProductPricingInventorySection({
+  register,
+  errors,
+}: PricingInventoryProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
       <h2 className="text-font-3 font-bold text-[var(--mama-brown)] mb-4">
@@ -23,9 +26,7 @@ export default function ProductPricingInventorySection({ register, errors }: Pri
             Harga
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-2 text-gray-500">
-              Rp
-            </span>
+            <span className="absolute left-3 top-2 text-gray-500">Rp</span>
             <input
               {...register("price", {
                 required: "Harga wajib diisi",

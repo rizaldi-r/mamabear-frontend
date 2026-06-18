@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, X } from "lucide-react";
 import { Category } from "@/features/categories/types/category.types";
-import { Product } from "@/features/admin/products/types/product.types";
 import {
-  EditProductFormValues,
-  useEditProduct,
-} from "@/features/admin/products/hooks/useEditProduct";
+  Product,
+  ProductFormValues,
+} from "@/features/admin/products/types/product.types";
+import { useEditProduct } from "@/features/admin/products/hooks/useEditProduct";
 import ProductBasicInfoSection from "@/features/admin/products/components/new/ProductBasicInfo";
 import ProductAdditionalDetailsSection from "@/features/admin/products/components/new/ProductAdditionalDetails";
 import ProductVariantsSection from "@/features/admin/products/components/new/ProductVariantsSection";
@@ -51,8 +51,8 @@ export default function ProductEditForm({
   // Safely cast the register and errors to match the shared Create form components
   // without using 'any' to satisfy ESLint strict rules.
   const sharedRegister =
-    register as unknown as UseFormRegister<EditProductFormValues>;
-  const sharedErrors = errors as unknown as FieldErrors<EditProductFormValues>;
+    register as unknown as UseFormRegister<ProductFormValues>;
+  const sharedErrors = errors as unknown as FieldErrors<ProductFormValues>;
 
   return (
     <>

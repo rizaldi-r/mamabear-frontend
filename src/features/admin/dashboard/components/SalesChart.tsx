@@ -1,12 +1,12 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { SalesReportData } from "../types/dashboard";
 import { ChartPeriod } from "../hooks/useDashboard";
 import {
   Area,
   AreaChart,
   CartesianGrid,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -30,7 +30,10 @@ interface SalesChartProps {
 /**
  * Formats the raw period string from the backend based on the selected ChartPeriod.
  */
-const formatDisplayDate = (rawPeriod: string, periodType: ChartPeriod): string => {
+const formatDisplayDate = (
+  rawPeriod: string,
+  periodType: ChartPeriod,
+): string => {
   try {
     if (periodType === "daily") {
       const date = new Date(`${rawPeriod}T00:00:00`);
@@ -66,11 +69,15 @@ const formatDisplayDate = (rawPeriod: string, periodType: ChartPeriod): string =
 /**
  * Fills in missing dates with 0 values for daily charts to create a continuous timeline.
  */
-const fillMissingDays = (trends: SalesReportData["trends"]): SalesReportData["trends"] => {
+const fillMissingDays = (
+  trends: SalesReportData["trends"],
+): SalesReportData["trends"] => {
   if (!trends || trends.length === 0) return [];
 
   // Sort chronologically
-  const sortedTrends = [...trends].sort((a, b) => a.period.localeCompare(b.period));
+  const sortedTrends = [...trends].sort((a, b) =>
+    a.period.localeCompare(b.period),
+  );
 
   const startDateStr = sortedTrends[0].period;
   const endDateStr = sortedTrends[sortedTrends.length - 1].period;
@@ -159,6 +166,29 @@ export function SalesChart({
   onPeriodChange,
   isLoading,
 }: SalesChartProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 300 });
+
+  // Dynamically observe container size to prevent ResponsiveContainer size calculation bugs
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (!entries || entries.length === 0) return;
+      const { width, height } = entries[0].contentRect;
+      setDimensions({
+        width: width || 0,
+        height: height || 300,
+      });
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   const periods: { label: string; value: ChartPeriod }[] = [
     { label: "Harian", value: "daily" },
     { label: "Mingguan", value: "weekly" },
@@ -217,26 +247,43 @@ export function SalesChart({
         </div>
       </div>
 
-      <div className="mt-8 h-[300px] w-full relative">
+      <div
+        ref={containerRef}
+        className="mt-8 h-[300px] w-full relative min-w-0"
+      >
         {/* Loading Overlay */}
         {isLoading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/60 backdrop-blur-sm">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--mama-pink)] border-t-[var(--mama-hot-pink)]"></div>
           </div>
         )}
-        
-        <ResponsiveContainer width="100%" height="100%">
+
+        {dimensions.width > 0 ? (
           <AreaChart
+            width={dimensions.width}
+            height={dimensions.height}
             data={chartData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
             <defs>
               <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--mama-hot-pink)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--mama-hot-pink)" stopOpacity={0} />
+                <stop
+                  offset="5%"
+                  stopColor="var(--mama-hot-pink)"
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--mama-hot-pink)"
+                  stopOpacity={0}
+                />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#f3f4f6"
+            />
             <XAxis
               dataKey="displayDate"
               axisLine={false}
@@ -251,7 +298,14 @@ export function SalesChart({
               tickFormatter={formatRupiah}
               dx={-10}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#e5e7eb", strokeWidth: 1, strokeDasharray: "3 3" }} />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{
+                stroke: "#e5e7eb",
+                strokeWidth: 1,
+                strokeDasharray: "3 3",
+              }}
+            />
             <Area
               type="monotone"
               dataKey="revenue"
@@ -259,10 +313,19 @@ export function SalesChart({
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#colorRevenue)"
-              activeDot={{ r: 6, fill: "var(--mama-hot-pink)", stroke: "#fff", strokeWidth: 2 }}
+              activeDot={{
+                r: 6,
+                fill: "var(--mama-hot-pink)",
+                stroke: "#fff",
+                strokeWidth: 2,
+              }}
             />
           </AreaChart>
-        </ResponsiveContainer>
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gray-50/50 rounded-lg">
+            <span className="text-font-1 text-gray-400">Memuat Grafik...</span>
+          </div>
+        )}
       </div>
     </div>
   );

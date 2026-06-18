@@ -1,15 +1,18 @@
 import React from "react";
-import { categoryService } from "@/features/categories/services/categoryService";
 import { CategoryListingClient } from "@/features/admin/categories/components/listing/CategoryListingClient";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { adminCategoryService } from "@/features/admin/categories/services/adminCategoryService";
+
+export const dynamic = "force-dynamic";
+
 /**
  * Admin Categories Page (Server Component)
  * Fetches the initial category list and renders the interactive CategoryList component.
  */
 export default async function AdminCategoriesPage() {
   // Fetch data on the server using our predefined service
-  const categories = await categoryService.fetchCategories();
+  const categories = await adminCategoryService.fetchCategories();
 
   return (
     <>

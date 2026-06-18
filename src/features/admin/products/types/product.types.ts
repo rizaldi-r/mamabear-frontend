@@ -1,7 +1,26 @@
+export type ViewMode = "grid" | "list";
+
+export type AdminProductSortField = "name" | "price" | "createdAt" | "totalSold";
+
 /**
  * Product Feature Types
  * Unified typing for the Product, Variants, Categories, and creation payload.
  */
+
+export interface ProductFormValues {
+  name: string;
+  description: string;
+  sku: string;
+  categoryId: string;
+  price: number;
+  stock: number;
+  weightG: number;
+  isActive: string;
+  metaTitle: string;
+  metaDescription: string;
+  ingredients: string;
+  usageInstructions: string;
+}
 
 export interface ProductImage {
   id?: number;
