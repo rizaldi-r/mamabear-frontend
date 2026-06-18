@@ -18,7 +18,7 @@ export interface ProductCategory {
 export interface ProductImage {
   id: number;
   publicId: string;
-  productId: number;
+  productId: number | null;
   variantId: number | null;
   reviewId: number | null;
   categoryId: number | null;
@@ -45,6 +45,7 @@ export interface ProductVariant {
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
+  images?: ProductImage[]; // Variant specific images
 }
 
 /**
@@ -80,6 +81,7 @@ export interface ProductDetail {
   name: string;
   slug: string;
   isActive: boolean;
+  totalSold: number;
   categoryId: number;
   highlightId: number;
   tags: string[]; // Assuming array of strings based on typical tag usage
@@ -94,8 +96,10 @@ export interface ProductDetail {
   highlight: ProductHighlight;
   currentPrice: string;
   originalPrice: string;
-  discountPercent: number;
+  discountPercent: number | string;
   rating: number;
   reviewsCount: number;
   topReview: TopReview;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }

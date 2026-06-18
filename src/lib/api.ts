@@ -68,6 +68,13 @@ export const apiClient = {
 
   delete: (endpoint: string, options?: RequestInit) =>
     fetchWrapper(endpoint, { ...options, method: "DELETE" }),
+
+  postImage: (endpoint: string, body: FormData, options?: RequestInit) =>
+    fetchWrapper(endpoint, {
+      ...options,
+      method: "POST",
+      body,
+    }),
 };
 
 // Create and export the globally configured client

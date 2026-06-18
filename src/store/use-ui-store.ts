@@ -1,5 +1,12 @@
 import { create } from "zustand";
 
+export interface Coordinates {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 interface UIState {
   // Mobile Sidebar
   isSidebarOpen: boolean;
@@ -15,6 +22,12 @@ interface UIState {
   activeModal: string | null;
   openModal: (modalId: string) => void;
   closeModal: () => void;
+
+  // Cart Animation State
+  cartIconRect: Coordinates | null;
+  isFlying: boolean;
+  setCartIconRect: (rect: Coordinates | null) => void;
+  triggerCartBounce: () => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -33,4 +46,13 @@ export const useUIStore = create<UIState>((set) => ({
   activeModal: null,
   openModal: (modalId) => set({ activeModal: modalId }),
   closeModal: () => set({ activeModal: null }),
+
+  // Cart Animation
+  cartIconRect: null,
+  isFlying: false,
+  setCartIconRect: (rect) => set({ cartIconRect: rect }),
+  triggerCartBounce: () => {
+    set({ isFlying: true });
+    setTimeout(() => set({ isFlying: false }), 300);
+  },
 }));

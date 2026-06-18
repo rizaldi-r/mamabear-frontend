@@ -16,7 +16,7 @@ export default function ShopLayout({
       </Suspense>
 
       {/* Pages like Home, Search, Product Detail render here */}
-      <main className="page-max-width w-full">{children}</main>
+      <main className="page-max-width w-full min-h-screen">{children}</main>
 
       <Footer />
     </div>

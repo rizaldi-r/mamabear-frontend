@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import { SearchX } from "lucide-react";
 import { Footer } from "@/components/layout/Footer";
@@ -7,7 +7,11 @@ import { Navbar } from "@/components/layout/Navbar";
 export default function NotFound() {
   return (
     <>
-      <Navbar />
+      {/* Wrapped in Suspense to prevent CSR bailout from SearchBar's useSearchParams */}
+      <Suspense fallback={<header className="h-16 md:h-20 w-full bg-[var(--mama-pink)] shadow-sm" />}>
+        <Navbar />
+      </Suspense>
+
       <main className="page-max-width min-h-[60vh] flex flex-col items-center justify-center px-4 py-16 text-center">
         {/* Icon Container */}
         <div className="w-24 h-24 bg-[var(--mama-cream)] text-[var(--mama-hot-pink)] rounded-full flex items-center justify-center mb-6 shadow-sm border border-[var(--mama-pink)]">
@@ -16,10 +20,10 @@ export default function NotFound() {
 
         {/* Typography */}
         <h1 className="text-font-6 font-bold text-[var(--mama-brown)] mb-4">
-          Oops, produk yang Mama cari belum ketemu :(
+          Oops, Halaman yang Mama cari belum ketemu :(
         </h1>
-        <p className="text-font-2 text-[var(--color-gray)] max-w-lg mb-8 leading-relaxed">
-          Maaf ya Ma, produk atau halaman yang Mama cari sepertinya tidak ada,
+        <p className="text-font-2 text-[var(--color-gray)] max-w-xl mb-8 leading-relaxed">
+          Maaf Ma, halaman yang Mama cari sepertinya tidak ada,
           atau link-nya mungkin salah.
         </p>
 

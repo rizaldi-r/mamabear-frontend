@@ -73,7 +73,7 @@ export async function verifyEmail(token: string): Promise<ApiResponse<null>> {
  */
 export async function requestPasswordReset(
   email: string,
-): Promise<ApiResponse> {
+): Promise<ApiResponse<null>> {
   const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
     method: "POST",
     headers: {
@@ -98,7 +98,7 @@ export async function requestPasswordReset(
 export async function confirmPasswordReset(
   token: string,
   password: string,
-): Promise<ApiResponse> {
+): Promise<ApiResponse<null>> {
   const res = await fetch(`${API_BASE_URL}/auth/reset-password/${token}`, {
     method: "POST",
     headers: {

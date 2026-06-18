@@ -1,6 +1,7 @@
 import { ApiResponse } from "@/types/api.types";
 import { ProductDetail, ProductVariant } from "../types/product.types";
-import {API_BASE_URL} from "@/lib/config";
+import { API_BASE_URL } from "@/lib/config";
+import { Product } from "@/features/products/types/products.types";
 
 /**
  * Service layer for interacting with Product endpoints.
@@ -53,7 +54,7 @@ export const productService = {
   async getRelatedProducts(
     slug: string,
     options?: RequestInit,
-  ): Promise<ProductDetail[]> {
+  ): Promise<Product[]> {
     try {
       const res = await fetch(`${API_BASE_URL}/products/${slug}/related`, {
         ...options,
@@ -67,7 +68,7 @@ export const productService = {
         throw new Error(`Gagal mengambil produk terkait: HTTP ${res.status}`);
       }
 
-      const response: ApiResponse<ProductDetail[]> = await res.json();
+      const response: ApiResponse<Product[]> = await res.json();
 
       if (!response.success) {
         throw new Error(response.message || "Gagal mengambil produk terkait");

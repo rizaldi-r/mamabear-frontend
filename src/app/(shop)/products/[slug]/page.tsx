@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { productService } from "@/features/products/services/productService";
 import { ProductDetailClient } from "@/features/products/components/pdp/ProductDetailClient";
+import Loading from "@/app/(shop)/products/[slug]/loading";
 
 interface ProductDetailPageProps {
   params: {
@@ -10,7 +11,7 @@ interface ProductDetailPageProps {
 }
 
 // Ensure the page takes advantage of Next.js ISR (Incremental Static Regeneration)
-// export const revalidate = 60;
+export const revalidate = 0;
 
 export default async function ProductDetailPage({
   params,
@@ -25,13 +26,13 @@ export default async function ProductDetailPage({
     if (!product) {
       notFound();
     }
-
+    
     return (
       <main className="page-max-width py-8 px-4 md:px-8">
         {/* Suspense is mandatory here because the Client Component uses useSearchParams */}
         <Suspense
           fallback={
-            <div className="animate-pulse h-96 bg-gray-100 rounded-xl" />
+            <Loading />
           }
         >
           <ProductDetailClient

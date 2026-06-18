@@ -12,9 +12,9 @@ export const searchService = {
    * @returns Promise containing the API response with an array of Product
    */
   async getProducts(query: string): Promise<ApiResponse<Product[]>> {
-    if (!query.trim()) {
-      return { success: true, data: [] };
-    }
+    // if (!query.trim()) {
+    //   return { success: true, data: [] };
+    // }
 
     const response = await fetch(
       `${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`,
@@ -43,9 +43,9 @@ export const searchService = {
   async getSuggestions(
     query: string,
   ): Promise<ApiResponse<SearchSuggestion[]>> {
-    if (!query.trim()) {
-      return { success: true, data: [] };
-    }
+    // if (!query.trim()) {
+    //   return { success: true, data: [] };
+    // }
 
     const response = await fetch(
       `${API_BASE_URL}/products/search/suggestions?q=${encodeURIComponent(query)}`,
