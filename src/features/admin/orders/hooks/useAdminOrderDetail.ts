@@ -1,17 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
-import { OrderDetail, OrderStatus } from '../types/adminOrder.types';
-import { 
-  fetchAdminOrderById, 
+import { useState, useEffect, useCallback } from "react";
+import { OrderDetail, OrderStatus } from "../types/adminOrder.types";
+import {
+  fetchAdminOrderById,
   updateAdminOrderStatus,
+  fetchAdminOrderInvoice,
   updateAdminOrderTracking,
-  cancelAdminOrder
-} from '../service/adminOrderService';
+  cancelAdminOrder,
+} from "../service/adminOrderService";
 
 export function useAdminOrderDetail(orderId: string) {
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState<boolean>(false);
+  const [isUpdatingTracking, setIsUpdatingTracking] = useState<boolean>(false);
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
 
   const fetchOrder = useCallback(async () => {
@@ -20,9 +23,9 @@ export function useAdminOrderDetail(orderId: string) {
     try {
       const data = await fetchAdminOrderById(orderId);
       setOrder(data);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Terjadi kesalahan saat mengambil detail pesanan.';
-      setError(errorMessage);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Terjadi kesalahan saat mengambil detail pesanan.";
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -36,46 +39,59 @@ export function useAdminOrderDetail(orderId: string) {
 
   const updateStatus = async (newStatus: OrderStatus) => {
     if (!order) return;
-    setIsUpdating(true);
+    setIsUpdatingStatus(true);
     try {
       await updateAdminOrderStatus(order.id, { status: newStatus });
       await fetchOrder();
-    } catch (err) {
-      console.error('[useAdminOrderDetail] Failed to update status:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Gagal memperbarui status pesanan.';
-      alert(errorMessage); 
+    } catch (err: unknown) {
+      console.error("[useAdminOrderDetail] Failed to update status:", err);
+      const message = err instanceof Error ? err.message : "Gagal memperbarui status pesanan.";
+      alert(message);
     } finally {
-      setIsUpdating(false);
+      setIsUpdatingStatus(false);
     }
   };
 
   const updateTracking = async (trackingNumber: string) => {
     if (!order) return;
-    setIsUpdating(true);
+    setIsUpdatingTracking(true);
     try {
       await updateAdminOrderTracking(order.id, { trackingNumber });
       await fetchOrder();
-    } catch (err) {
-      console.error('[useAdminOrderDetail] Failed to update tracking:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Gagal memperbarui nomor resi.';
-      alert(errorMessage);
+    } catch (err: unknown) {
+      console.error("[useAdminOrderDetail] Failed to update tracking:", err);
+      const message = err instanceof Error ? err.message : "Gagal memperbarui nomor resi.";
+      alert(message);
     } finally {
-      setIsUpdating(false);
+      setIsUpdatingTracking(false);
     }
   };
 
-  const cancelOrder = async (notes?: string) => {
+  const cancelOrder = async (reason?: string) => {
     if (!order) return;
     setIsCancelling(true);
     try {
-      await cancelAdminOrder(order.id, { notes });
+      await cancelAdminOrder(order.id, { notes: reason });
       await fetchOrder();
-    } catch (err) {
-      console.error('[useAdminOrderDetail] Failed to cancel order:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Gagal membatalkan pesanan.';
-      alert(errorMessage);
+    } catch (err: unknown) {
+      console.error("[useAdminOrderDetail] Failed to cancel order:", err);
+      const message = err instanceof Error ? err.message : "Gagal membatalkan pesanan.";
+      alert(message);
     } finally {
       setIsCancelling(false);
+    }
+  };
+
+  const handlePrintInvoice = async () => {
+    try {
+      const data = await fetchAdminOrderInvoice(orderId);
+      if (data.invoiceUrl) {
+        window.open(data.invoiceUrl, "_blank");
+      }
+    } catch (err: unknown) {
+      console.error("[useAdminOrderDetail] Failed to print invoice:", err);
+      const message = err instanceof Error ? err.message : "Gagal mencetak invoice.";
+      alert(message);
     }
   };
 
@@ -83,11 +99,13 @@ export function useAdminOrderDetail(orderId: string) {
     order,
     isLoading,
     error,
-    isUpdating,
+    isUpdatingStatus,
+    isUpdatingTracking,
     isCancelling,
     updateStatus,
     updateTracking,
     cancelOrder,
-    refetch: fetchOrder
+    handlePrintInvoice,
+    refetch: fetchOrder,
   };
 }

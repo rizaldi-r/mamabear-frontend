@@ -14,15 +14,17 @@ import {
   ExternalLink,
   LogOut,
   X,
+  Shield,
 } from "lucide-react";
 import Image from "next/image";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 // 1. Define Types for Navigation
 interface NavItem {
   title: string;
   href: string;
   icon: React.ElementType;
+  roles?: string[]; // Array of allowed roles. If undefined, visible to all.
 }
 
 // 2. Navigation Data (Indonesian UI Text)
@@ -32,6 +34,7 @@ const MAIN_NAV_ITEMS: NavItem[] = [
   { title: "Pesanan", href: "/admin/orders", icon: ShoppingCart },
   { title: "Kategori", href: "/admin/categories", icon: FolderTree },
   { title: "Pelanggan", href: "/admin/customers", icon: Users },
+  { title: "Manajemen Admin", href: "/admin/users", icon: Shield, roles: ["SUPERADMIN"] },
   { title: "Laporan", href: "/admin/reports", icon: BarChart },
   { title: "Pengaturan", href: "/admin/settings", icon: Settings },
 ];
@@ -44,6 +47,10 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
   const prevPathname = useRef(pathname);
+  
+  // Fetch session to determine user role
+  const { data: session } = useSession();
+  const userRole = (session?.user as { role?: string })?.role;
 
   // Close sidebar automatically ONLY when the route actually changes
   useEffect(() => {
@@ -98,31 +105,33 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
       {/* Main Navigation Links */}
       <nav className="flex-1 space-y-1.5 overflow-y-auto px-4 py-6">
-        {MAIN_NAV_ITEMS.map((item) => {
-          // Check if current route matches to apply active styling
-          const isActive =
-            pathname?.startsWith(item.href) ||
-            // Fallback for visual testing if pathname is empty
-            (pathname === "/" && item.href === "/admin/products");
+        {MAIN_NAV_ITEMS
+          .filter((item) => !item.roles || (userRole && item.roles.includes(userRole)))
+          .map((item) => {
+            // Check if current route matches to apply active styling
+            const isActive =
+              pathname?.startsWith(item.href) ||
+              // Fallback for visual testing if pathname is empty
+              (pathname === "/" && item.href === "/admin/products");
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`group flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
-                isActive
-                  ? "bg-[var(--mama-hot-pink)] text-white shadow-sm"
-                  : "text-[var(--mama-brown)] hover:bg-[var(--mama-pink)] hover:bg-opacity-50"
-              }`}
-            >
-              <item.icon
-                className={`h-5 w-5 ${isActive ? "text-white" : "text-[var(--mama-brown)] group-hover:text-[var(--mama-hot-pink)]"}`}
-                strokeWidth={2}
-              />
-              <span className="text-font-3 font-semibold">{item.title}</span>
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`group flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200 ${
+                  isActive
+                    ? "bg-[var(--mama-hot-pink)] text-white shadow-sm"
+                    : "text-[var(--mama-brown)] hover:bg-[var(--mama-pink)] hover:bg-opacity-50"
+                }`}
+              >
+                <item.icon
+                  className={`h-5 w-5 ${isActive ? "text-white" : "text-[var(--mama-brown)] group-hover:text-[var(--mama-hot-pink)]"}`}
+                  strokeWidth={2}
+                />
+                <span className="text-font-3 font-semibold">{item.title}</span>
+              </Link>
+            );
+          })}
       </nav>
 
       {/* Bottom Action Links */}

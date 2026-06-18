@@ -9,12 +9,10 @@ import { AdminOrderItems } from "./AdminOrderItems";
 import { AdminOrderTimeline } from "./AdminOrderTimeline";
 import {
   AdminOrderCustomerCard,
-  AdminOrderAddressCard,
   AdminOrderDeliveryCard,
   AdminOrderActionsCard,
 } from "./AdminOrderDetailCards";
 import { useAdminOrderDetail } from "@/features/admin/orders/hooks/useAdminOrderDetail";
-import { useDownloadInvoice } from "@/features/orders/hooks/useDownloadInvoice";
 
 interface Props {
   orderId: string;
@@ -22,19 +20,19 @@ interface Props {
 
 export function AdminOrderDetailOrchestrator({ orderId }: Props) {
   const router = useRouter();
-  const {
-    order,
-    isLoading,
-    error,
-    isUpdating,
-    isCancelling,
-    updateStatus,
-    updateTracking,
+  const { 
+    order, 
+    isLoading, 
+    error, 
+    isUpdatingStatus,
+    isUpdatingTracking, 
+    isCancelling, 
+    updateStatus, 
+    updateTracking, 
     cancelOrder,
+    handlePrintInvoice
   } = useAdminOrderDetail(orderId);
 
-  const { download, isDownloading: isDownloadingInvoice } =
-    useDownloadInvoice();
 
   if (isLoading) {
     return (
@@ -55,7 +53,7 @@ export function AdminOrderDetailOrchestrator({ orderId }: Props) {
         </p>
         <button
           onClick={() => router.back()}
-          className="px-6 py-2 bg-white border border-red-200 rounded-lg text-red-600 font-medium hover:bg-red-50"
+          className="px-6 py-2 bg-white border border-red-200 rounded-lg text-red-600 font-medium hover:bg-red-50 cursor-pointer"
         >
           Kembali
         </button>
@@ -70,41 +68,31 @@ export function AdminOrderDetailOrchestrator({ orderId }: Props) {
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push("/admin/orders")}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0 cursor-pointer"
           >
             <ArrowLeft className="w-6 h-6 text-[var(--color-gray)]" />
           </button>
           <div className="flex flex-col gap-1">
             <h1 className="text-font-5 md:text-font-6 font-bold text-[var(--mama-brown)] flex items-center gap-3">
-              Pesanan #{order.id}
+              Pesanan #{order.id.slice(0,8).toUpperCase()}
               {order.status === "PAYMENT_PAID" && (
-                <span className="text-sm px-3 py-1 bg-green-100 text-green-700 rounded-full font-medium tracking-wide">
+                <span className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full font-bold tracking-wide">
                   PAID
                 </span>
               )}
             </h1>
-            <p className="text-font-2 text-[var(--color-gray)]">
-              Detail pesanan dan riwayat pelacakan
+            <p className="text-font-2 text-[var(--color-gray)] font-medium">
+              Tanggal: {new Date(order.createdAt).toLocaleString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
         </div>
 
         <button
-          onClick={() => download(order.id)}
-          disabled={isDownloadingInvoice}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-font-2 font-bold text-[var(--color-gray)] hover:bg-gray-50 transition-colors ml-14 md:ml-0 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={handlePrintInvoice}
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-font-2 font-bold text-[var(--color-gray)] hover:bg-gray-50 transition-colors ml-14 md:ml-0 cursor-pointer"
         >
-          {isDownloadingInvoice ? (
-            <>
-              <span className="w-5 h-5 border-2 border-[var(--color-gray)] border-t-transparent rounded-full animate-spin" />
-              Mengunduh...
-            </>
-          ) : (
-            <>
-              <Printer className="w-5 h-5" />
-              Cetak Invoice
-            </>
-          )}
+          <Printer className="w-5 h-5" />
+          Cetak Invoice
         </button>
       </div>
 
@@ -119,17 +107,16 @@ export function AdminOrderDetailOrchestrator({ orderId }: Props) {
         {/* Right Column (Spans 1 col on Desktop) */}
         <div className="flex flex-col gap-6">
           <AdminOrderCustomerCard order={order} />
-          <AdminOrderAddressCard order={order} />
-
-          <AdminOrderDeliveryCard
-            order={order}
-            isUpdating={isUpdating}
-            onUpdateTracking={updateTracking}
+          
+          <AdminOrderDeliveryCard 
+            order={order} 
+            isUpdatingTracking={isUpdatingTracking} 
+            onUpdateTracking={updateTracking} 
           />
-
+          
           <AdminOrderActionsCard
             order={order}
-            isUpdating={isUpdating}
+            isUpdatingStatus={isUpdatingStatus}
             isCancelling={isCancelling}
             onUpdateStatus={updateStatus}
             onCancelOrder={cancelOrder}

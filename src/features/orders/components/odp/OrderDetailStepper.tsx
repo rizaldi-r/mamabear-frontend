@@ -48,16 +48,15 @@ export default function OrderDetailStepper({
   }
 
   if (isPending) {
-    return (
-      <div className="w-full py-6 flex flex-col justify-center items-center bg-red-50 rounded-xl border border-red-100 mb-8 gap-2">
-        <p className="text-red-600 font-bold text-font-3">
-          Menunggu Pembayaran
-        </p>
-        <p className="text-red-500 text-font-1">
-          Segera selesaikan pembayaran agar pesanan dapat diproses.
-        </p>
-      </div>
-    );
+    return;
+    // <div className="w-full py-6 flex flex-col justify-center items-center bg-red-50 rounded-xl border border-red-100 mb-8 gap-2">
+    //   <p className="text-red-600 font-bold text-font-3">
+    //     Menunggu Pembayaran
+    //   </p>
+    //   <p className="text-red-500 text-font-1">
+    //     Segera selesaikan pembayaran agar pesanan dapat diproses.
+    //   </p>
+    // </div>
   }
 
   return (
