@@ -65,7 +65,7 @@ export default function OrderCard({ order }: OrderCardProps) {
                 src={imageUrl}
                 alt={item.product?.name || "Product Image"}
                 fill
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           );

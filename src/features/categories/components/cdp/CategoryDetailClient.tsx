@@ -30,7 +30,7 @@ export function CategoryDetailClient({ activeCategory, allCategories }: Category
       <CategorySidebar categories={allCategories} />
 
       {/* Main Content Area */}
-      <main className="flex-1 min-w-0">
+      <main className="flex-1 min-w-0 pb-8">
         <CatalogTabs activeTab="categories" />
         
         {/* Header & Utilities */}
