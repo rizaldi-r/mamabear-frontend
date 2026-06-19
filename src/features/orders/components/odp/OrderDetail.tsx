@@ -140,10 +140,11 @@ export default function OrderDetail({ orderId }: OrderDetailProps) {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-2 mb-10">
           <p className="text-font-1 text-[var(--color-gray)] max-w-md leading-relaxed">
             Pesanan dapat dibatalkan selama belum masuk ke tahap Diproses.
-            Silakan chat dengan tim MamaBear jika Anda ingin mengajukan pembatalan.
+            Silakan chat dengan tim MamaBear jika Anda ingin mengajukan
+            pembatalan.
           </p>
           <Link
-            href="/contact"
+            href="https://api.whatsapp.com/send/?phone=628888695757&text&type=phone_number&app_absent=0"
             target="_blank"
             className="whitespace-nowrap px-6 py-3 border-2 border-[var(--mama-hot-pink)] text-[var(--mama-hot-pink)] bg-white rounded-full font-bold hover:bg-pink-50 transition-colors text-center w-full md:w-auto"
           >

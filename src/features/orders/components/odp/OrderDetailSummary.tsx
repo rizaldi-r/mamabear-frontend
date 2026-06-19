@@ -49,7 +49,7 @@ export default function OrderDetailSummary({ order }: OrderDetailSummaryProps) {
                   src={imageUrl}
                   alt={productName}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
               <div className="flex-1 flex flex-col sm:flex-row justify-between gap-4">
