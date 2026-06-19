@@ -1,9 +1,7 @@
-import { Product } from "@/features/products/types/products.types";
+import { PaginatedProducts } from "@/features/products/types/products.types";
 import { SearchSuggestion } from "@/features/products/types/search.types";
+import { API_BASE_URL } from "@/lib/config";
 import { ApiResponse } from "@/types/api.types";
-
-// Assuming you have a base URL configured in your environment variables
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export const searchService = {
   /**
@@ -11,7 +9,7 @@ export const searchService = {
    * @param query The search term
    * @returns Promise containing the API response with an array of Product
    */
-  async getProducts(query: string): Promise<ApiResponse<Product[]>> {
+  async getProducts(query: string): Promise<ApiResponse<PaginatedProducts>> {
     // if (!query.trim()) {
     //   return { success: true, data: [] };
     // }

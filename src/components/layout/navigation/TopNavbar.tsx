@@ -2,14 +2,15 @@
 
 import { Badge } from "@/components/ui/badge";
 import { useUIStore } from "@/store/use-ui-store";
-import { Menu, ShoppingCart } from "lucide-react";
+import { Menu, ShoppingCart, ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { SearchBar } from "@/features/products/components/shared/SearchBar";
 import { UserDropdown } from "./UserDropdown";
 import { MiniCartDropdown } from "@/features/cart/components/MiniCartDropdown";
 import { useEffect, useState, useRef } from "react";
-import {useCartStore} from "@/features/cart/store/use-cart-store";
+import { useCartStore } from "@/features/cart/store/use-cart-store";
 
 interface TopNavbarProps {
   isLoggedIn: boolean;
@@ -32,7 +33,12 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
 
   const [mounted, setMounted] = useState(false);
   const cartIconRef = useRef<HTMLAnchorElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isMiniCartOpen, setIsMiniCartOpen] = useState(false);
+
+  const pathname = usePathname();
+  const router = useRouter();
+  const showBackButton = pathname !== "/";
 
   useEffect(() => {
     setMounted(true);
@@ -66,9 +72,19 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--mama-pink)] shadow-sm py-3 transition-colors">
-      <div className="container mx-auto flex items-center gap-3 md:gap-4 justify-between page-max-width">
-        {/* Hamburger (Desktop only) & Logo */}
-        <div className="flex items-center gap-2 md:gap-4 shrink-0">
+      <div className="mx-auto flex items-center gap-5 md:gap-4 justify-between page-max-width page-spacing">
+        {/* Hamburger (Desktop only), Back Button & Logo */}
+        <div className="flex items-center shrink-0 md:gap-2">
+          {showBackButton && (
+            <button
+              type="button"
+              onClick={() => router.back()}
+              aria-label="Kembali"
+              className="flex text-[var(--mama-brown)] hover:bg-white/40 p-2 -ml-2 rounded-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--mama-hot-pink)] md:hidden"
+            >
+              <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+            </button>
+          )}
           <button
             type="button"
             onClick={toggleSidebar}
@@ -111,9 +127,17 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
 
           {/* Cart - Always visible (Wrapped for Desktop Hover) */}
           <div
-            className="relative flex items-center"
-            onMouseEnter={() => setIsMiniCartOpen(true)}
-            onMouseLeave={() => setIsMiniCartOpen(false)}
+            className="relative flex items-center h-full"
+            onMouseEnter={() => {
+              if (hoverTimeoutRef.current)
+                clearTimeout(hoverTimeoutRef.current);
+              setIsMiniCartOpen(true);
+            }}
+            onMouseLeave={() => {
+              hoverTimeoutRef.current = setTimeout(() => {
+                setIsMiniCartOpen(false);
+              }, 200); // 200ms grace period prevents accidental closures
+            }}
           >
             <Link
               href="/cart"
@@ -133,7 +157,7 @@ export function TopNavbar({ isLoggedIn, user }: TopNavbarProps) {
 
             {/* Desktop Mini Cart Dropdown */}
             {mounted && isMiniCartOpen && (
-              <div className="hidden md:block absolute top-full right-0 pt-2 z-[100]">
+              <div className="hidden md:block absolute top-full right-0 pt-4 z-[100]">
                 <MiniCartDropdown />
               </div>
             )}

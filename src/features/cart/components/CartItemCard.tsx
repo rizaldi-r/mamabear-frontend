@@ -58,7 +58,7 @@ export const CartItemCard = ({
           src={displayImage}
           alt={item.product.name}
           fill
-          className="object-cover"
+          className="object-contain"
           sizes="(max-width: 768px) 96px, 112px"
         />
         {!item.variant.images?.[0] && !item.product.images?.[0] && (

@@ -38,7 +38,7 @@ export const ProductGallery = ({
   return (
     <div className="flex flex-col gap-4">
       {/* Main Image */}
-      <button 
+      <button
         onClick={() => setIsLightboxOpen(true)}
         className="block w-full aspect-square relative rounded-xl overflow-hidden bg-[var(--mama-cream)] border border-[var(--mama-pink)] cursor-zoom-in group"
         aria-label="Zoom in product image"
@@ -49,7 +49,7 @@ export const ProductGallery = ({
               src={mainImage.imageUrl}
               alt={mainImage.altText || "Product Image"}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-contain group-hover:scale-105 transition-transform duration-500"
               priority
               sizes="(max-width: 768px) 100vw, 50vw"
             />
@@ -94,7 +94,7 @@ export const ProductGallery = ({
                 src={img.imageUrl}
                 alt={img.altText || "Thumbnail"}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="80px"
                 unoptimized
               />
@@ -116,7 +116,7 @@ export const ProductGallery = ({
 
       {/* Lightbox Modal */}
       {isLightboxOpen && mainImage && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-8 animate-in fade-in duration-200"
           onClick={() => setIsLightboxOpen(false)}
         >
@@ -130,7 +130,7 @@ export const ProductGallery = ({
           </button>
 
           {/* Zoomed Image Container */}
-          <div 
+          <div
             className="relative w-full max-w-5xl h-full max-h-[85vh] bg-transparent"
             onClick={(e) => e.stopPropagation()} // Prevent clicks on image from closing modal
           >

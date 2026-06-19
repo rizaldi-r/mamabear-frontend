@@ -136,7 +136,7 @@ export const AddToCartModal = ({
                 src={activeImage.imageUrl}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="96px"
               />
             )}

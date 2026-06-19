@@ -1,43 +1,41 @@
-import {
-  CategoryEmptyState,
-  CategoryList,
-  CategoryListHeader,
-  ErrorState,
-} from "@/features/categories/components/listing/CategoryListHeader";
-import { fetchCategories } from "@/features/categories/services/categoryService";
-import { CategoriesMegaMenu } from "@/features/categories/components/megamenu/CategoriesMegaMenu";
+import { Metadata } from "next";
+import { categoryService } from "@/features/categories/services/categoryService";
+import { Suspense } from "react";
+import { Category } from "@/features/categories/types/category.types";
+import { CategorySkeleton } from "@/features/categories/components/listing/CategorySkeleton";
+import { CategoryMenuClient } from "@/features/categories/components/listing/CategoryMenuClient";
+import ProductListingBanner from "@/features/products/components/listing/ProductListingBanner";
 
-/**
- * MAIN PAGE: Category Listing
- * Clean Server Component that orchestrates sub-components.
- */
-export default async function CategoriesPage() {
-   try {
-      const categories = await fetchCategories();
+export const metadata: Metadata = {
+  title: "Menu | MamaBear",
+  description:
+    "Jelajahi berbagai pilihan minuman dan menu terbaru dari MamaBear.",
+};
 
-      return (
-         <div className="max-w-6xl mx-auto px-4 py-12">
-            <CategoriesMegaMenu/>
+export default async function MenuPage() {
+  let initialCategories: Category[] = [];
 
-           <CategoryListHeader />
-      
-           {categories && categories.length > 0 ? (
-             <CategoryList categories={categories} />
-           ) : (
-             <CategoryEmptyState />
-           )}
-         </div>
-       );
+  try {
+    // Fetch data on the server to ensure SEO readiness and immediate rendering
+    initialCategories = await categoryService.fetchCategories();
+  } catch (error) {
+    console.error("[MenuPage] Failed to load categories:", error);
+    // Even if it fails, we pass an empty array and let the client handle error boundaries if necessary,
+    // or the client component can gracefully show the empty state.
+  }
 
-   } catch (error) {
-      return (
-         <div className="max-w-6xl mx-auto px-4 py-12">
-           <CategoryListHeader />
-           <ErrorState message={
-               error instanceof Error ? error.message : "Terjadi kesalahan sistem"
-           } />
-         </div>
-       );
-   }
-
+  return (
+    <div className="page-max-width w-full min-h-screen">
+      <Suspense
+        fallback={
+          <div className="py-8">
+            <CategorySkeleton />
+          </div>
+        }
+      >
+        <ProductListingBanner />
+        <CategoryMenuClient initialCategories={initialCategories} />
+      </Suspense>
+    </div>
+  );
 }

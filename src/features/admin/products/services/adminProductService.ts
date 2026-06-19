@@ -322,7 +322,6 @@ export async function updateProductVariant(
       `/admin/products/variants/${variantId}`,
       data,
     );
-    console.log("🚀 ~ response:", response)
     const result: ApiResponse<ProductVariant> = await response.json();
 
     if (!result.success || !result.data) {

@@ -1,5 +1,6 @@
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { LoginForm } from "@/features/auth/components/LoginForm";
+import { Suspense } from "react";
 
 export default function LoginPage() {
   return (
@@ -11,7 +12,9 @@ export default function LoginPage() {
           backToHref="/"
           backToLabel="Kembali ke Beranda"
         >
-          <LoginForm />
+          <Suspense>
+            <LoginForm />
+          </Suspense>
         </AuthLayout>
       </main>
     </>
