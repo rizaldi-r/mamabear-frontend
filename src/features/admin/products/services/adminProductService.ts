@@ -188,7 +188,7 @@ export async function uploadProductImages(
   formData: FormData,
 ): Promise<ProductImage | ProductImage[]> {
   try {
-    const response = await fetchWrapper("/admin/products/images", {
+    const response = await fetchWrapper("/admin/upload/images", {
       method: "POST",
       body: formData,
     });

@@ -25,20 +25,22 @@ export function useEditProduct(initialData: Product) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
+  
   // Accept both File (new uploads) and ProductImage (existing)
   const [images, setImages] = useState<(File | ProductImage)[]>([]);
 
   const form = useForm<EditProductFormValues>({
-    defaultValues: {
-      name: initialData.name || "",
-      description: initialData.description || "",
-      categoryId: initialData.categoryId?.toString() || "",
-      isActive: initialData.isActive ? "true" : "false",
-      metaTitle: initialData.metaTitle || "",
-      metaDescription: initialData.metaDescription || "",
-      ingredients: initialData.ingredients || "",
-      usageInstructions: initialData.usageInstructions || "",
+    // Use 'values' instead of 'defaultValues' to ensure the form reactively seeds 
+    // the data when initialData is provided/hydrated by the server.
+    values: {
+      name: initialData?.name || "",
+      description: initialData?.description || "",
+      categoryId: initialData?.categoryId?.toString() || "",
+      isActive: initialData?.isActive ? "true" : "false",
+      metaTitle: initialData?.metaTitle || "",
+      metaDescription: initialData?.metaDescription || "",
+      ingredients: initialData?.ingredients || "",
+      usageInstructions: initialData?.usageInstructions || "",
     },
   });
 
@@ -46,7 +48,7 @@ export function useEditProduct(initialData: Product) {
     // Sort initial images by sortOrder to preserve exact arrangement
     if (initialData.images && initialData.images.length > 0) {
       const sortedImages = [...initialData.images].sort(
-        (a, b) => (a.sortOrder || 0) - (b.sortOrder || 0),
+        (a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)
       );
       setImages(sortedImages);
     }
@@ -72,15 +74,9 @@ export function useEditProduct(initialData: Product) {
         return newImages;
       }
       if (direction === "left" && index > 0) {
-        [newImages[index - 1], newImages[index]] = [
-          newImages[index],
-          newImages[index - 1],
-        ];
+        [newImages[index - 1], newImages[index]] = [newImages[index], newImages[index - 1]];
       } else if (direction === "right" && index < newImages.length - 1) {
-        [newImages[index + 1], newImages[index]] = [
-          newImages[index],
-          newImages[index + 1],
-        ];
+        [newImages[index + 1], newImages[index]] = [newImages[index], newImages[index + 1]];
       }
       return newImages;
     });
@@ -99,11 +95,9 @@ export function useEditProduct(initialData: Product) {
       if (newFiles.length > 0) {
         const imageFormData = new FormData();
         newFiles.forEach((file) => imageFormData.append("images", file));
-
+        
         const uploadResult = await uploadProductImages(imageFormData);
-        uploadedImages = Array.isArray(uploadResult)
-          ? uploadResult
-          : [uploadResult];
+        uploadedImages = Array.isArray(uploadResult) ? uploadResult : [uploadResult];
       }
 
       // Reconstruct the exact final array order combining existing DB images and newly generated Cloudinary images
@@ -113,8 +107,7 @@ export function useEditProduct(initialData: Product) {
       images.forEach((item, index) => {
         if (item instanceof File) {
           const uploadedObj = uploadedCopy.shift();
-          if (uploadedObj)
-            finalImages.push({ ...uploadedObj, sortOrder: index });
+          if (uploadedObj) finalImages.push({ ...uploadedObj, sortOrder: index });
         } else {
           finalImages.push({ ...(item as ProductImage), sortOrder: index });
         }
@@ -134,13 +127,11 @@ export function useEditProduct(initialData: Product) {
       };
 
       await updateProduct(initialData.id, updatePayload);
-
+      
       router.push("/admin/products");
       router.refresh();
     } catch (error) {
-      setErrorMsg(
-        error instanceof Error ? error.message : "Gagal memperbarui produk",
-      );
+      setErrorMsg(error instanceof Error ? error.message : "Gagal memperbarui produk");
     } finally {
       setIsLoading(false);
     }
