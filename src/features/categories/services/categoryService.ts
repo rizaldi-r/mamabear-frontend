@@ -20,7 +20,7 @@ export async function fetchCategories(): Promise<Category[]> {
       // or use 'force-cache' / 'next: { revalidate }' for better performance if they are mostly static.
       // next: { revalidate: 86400 },
       // cache: "no-store",
-      next: { revalidate: 15 },
+      next: { revalidate: 12 },
     });
 
     if (!res.ok) {

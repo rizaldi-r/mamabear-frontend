@@ -4,6 +4,8 @@ import { adminProductService } from "@/features/admin/products/services/adminPro
 import { adminCategoryService } from "@/features/admin/categories/services/adminCategoryService";
 import ProductEditForm from "@/features/admin/products/components/edit/ProductEditForm";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Edit Produk | Admin MamaBear",
   description: "Perbarui informasi produk e-commerce MamaBear",
