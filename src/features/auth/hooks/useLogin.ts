@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { getSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LoginPayload } from "@/features/auth/types/auth.types";
 
 /**
@@ -9,6 +9,9 @@ import { LoginPayload } from "@/features/auth/types/auth.types";
  * Uses next-auth/react to handle the session.
  */
 export function useLogin() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -37,7 +40,9 @@ export function useLogin() {
       ) {
         router.push("/admin/dashboard");
       } else {
-        router.push("/");
+        // router.push("/");
+        router.push(callbackUrl);
+        router.refresh(); 
       }
 
       router.refresh();

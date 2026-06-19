@@ -1,35 +1,58 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { getCategoryBySlug } from "../services/categoryService";
-import { Category } from "../types/category.types";
+import { Category } from "@/features/categories/types/category.types";
+import { categoryService } from "@/features/categories/services/categoryService";
+
+export interface GroupedCategories {
+  terbaru: Category[];
+  minuman: Category[];
+}
 
 /**
- * useCategory Hook
- * Encapsulates the loading state and data fetching logic for a single category.
+ * Custom hook to manage category fetching and presentation logic.
+ * Artificially groups the flat category data to match the UI layout requirements.
  */
-export function useCategory(slug: string) {
-  const [category, setCategory] = useState<Category | null>(null);
-  const [loading, setLoading] = useState(true);
+export function useCategories(initialData?: Category[]) {
+  const [categories, setCategories] = useState<Category[]>(initialData || []);
+  const [isLoading, setIsLoading] = useState<boolean>(!initialData);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadCategory() {
+    // Skip client fetch if we already have server-provided initial data
+    if (initialData && initialData.length > 0) return;
+
+    let isMounted = true;
+
+    const fetchCategories = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        setError(null);
-        const data = await getCategoryBySlug(slug);
-        setCategory(data);
-      } catch (error: unknown) {
-        const err = error as Error;
-        setError(err.message);
+        const data = await categoryService.fetchCategories();
+        if (isMounted) setCategories(data);
+      } catch (err) {
+        if (isMounted) {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Gagal memuat kategori");
+          }
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setIsLoading(false);
       }
-    }
+    };
 
-    if (slug) {
-      loadCategory();
-    }
-  }, [slug]);
+    fetchCategories();
 
-  return { category, loading, error };
+    return () => {
+      isMounted = false;
+    };
+  }, [initialData]);
+
+  return {
+    categories,
+    isLoading,
+    error,
+  };
 }

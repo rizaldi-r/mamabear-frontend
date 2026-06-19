@@ -36,7 +36,7 @@ export default function ProductCard({
   const originalPriceStr = product.originalPrice;
   const discount = Math.round(Number(product.discountPercent));
   const rating = product.rating || 0.0;
-  const rawSold = product.totalSold || product.reviewsCount || 0;
+  const rawSold = product.totalSold || 0;
   const sold = formatSold(rawSold);
 
   // Menggunakan tag pertama sebagai badge jika tersedia

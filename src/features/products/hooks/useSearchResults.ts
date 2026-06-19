@@ -24,7 +24,7 @@ export function useSearchResults() {
       try {
         const response = await searchService.getProducts(query);
         if (response.success) {
-          setProducts(response.data);
+          setProducts(response.data.data);
         } else {
           setError(response.message?.[0] || "Gagal memuat hasil pencarian.");
         }

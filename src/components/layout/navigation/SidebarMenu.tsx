@@ -50,6 +50,11 @@ export function SidebarMenu() {
               </h3>
               <ul className="space-y-4 text-stone-600 font-medium">
                 <li>
+                  <Link href="/" onClick={closeSidebar}>
+                    Beranda
+                  </Link>
+                </li>
+                <li>
                   <Link href="/products" onClick={closeSidebar}>
                     Semua Produk
                   </Link>

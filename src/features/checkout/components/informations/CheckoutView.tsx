@@ -48,7 +48,7 @@ export function CheckoutView({
           Keranjang Anda kosong. Silakan belanja terlebih dahulu.
         </p>
         <Link
-          href="/"
+          href="/products"
           className="inline-block bg-[var(--mama-hot-pink)] hover:bg-[#c24467] text-white font-bold py-3 px-6 rounded-full transition-colors text-font-2"
         >
           Mulai Belanja

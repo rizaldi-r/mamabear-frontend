@@ -52,7 +52,7 @@ export interface Product {
   updatedAt: string; // ISO Date string
   metaTitle: string | null;
   metaDescription: string | null;
-  
+
   // Rich relational payloads
   category?: Category;
   images?: ProductImage[];
@@ -65,7 +65,6 @@ export interface Product {
   discountPercent?: number; // Computed discount percent represented as a string
   rating?: number; // Average user rating
   reviewsCount?: number; // Total review count
-  // TODO: this isnt in the response yet
   totalSold?: number;
 }
 
@@ -90,4 +89,16 @@ export interface ProductFilterParams {
 export interface CategoryItem {
   name: string;
   slug: string;
+}
+
+export interface PaginationMeta {
+  limit: number;
+  nextCursor: string | null;
+  hasNextPage: boolean;
+}
+
+export interface PaginatedProducts {
+  success: boolean;
+  data: Product[];
+  pagination: PaginationMeta;
 }

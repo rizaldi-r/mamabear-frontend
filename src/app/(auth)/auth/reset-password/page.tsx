@@ -1,5 +1,3 @@
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { ConfirmResetPasswordForm } from "@/features/auth/components/ConfirmResetPasswordForm";
 
@@ -15,8 +13,6 @@ export default async function ResetPasswordPage({
 
   return (
     <div className="h-svh flex flex-col justify-between">
-      <Navbar />
-
       <AuthLayout
         title="Reset Password"
         subtitle="Masukkan password baru Anda di bawah ini"
@@ -26,8 +22,6 @@ export default async function ResetPasswordPage({
       >
         <ConfirmResetPasswordForm token={token} />
       </AuthLayout>
-
-      <Footer />
     </div>
   );
 }

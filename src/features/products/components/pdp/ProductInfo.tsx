@@ -105,7 +105,7 @@ export const ProductInfo = ({
           <span>•</span>
           <span>{formatCount(product.reviewsCount)} Penilaian</span>
           <span>•</span>
-          <span>{formatCount(10500)} Terjual</span>
+          <span>{formatCount(product.totalSold)} Terjual</span>
         </div>
       </div>
 
@@ -139,7 +139,7 @@ export const ProductInfo = ({
                 <button
                   key={variant.id}
                   onClick={() => onVariantSelect(variant.id)}
-                  className={`px-4 py-1.5 rounded-full text-font-1 font-medium transition-all ${
+                  className={`px-4 py-1.5 rounded-full text-font-1 transition-all font-semibold ${
                     isSelected
                       ? "bg-[var(--mama-hot-pink)] text-white border border-[var(--mama-hot-pink)]"
                       : "bg-[var(--mama-pink)] text-[var(--mama-brown)] border border-transparent hover:bg-[var(--mama-hot-pink)] hover:text-white"

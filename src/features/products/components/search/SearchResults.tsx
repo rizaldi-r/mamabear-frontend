@@ -69,9 +69,9 @@ export function SearchResults() {
       {/* Product Grid */}
       {!isLoading && !error && products.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1.5 md:gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {products.map((product) => {
+            return <ProductCard key={product.id} product={product} />;
+          })}
         </div>
       )}
     </div>

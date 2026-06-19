@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCartStore } from "@/features/cart/store/use-cart-store";
 import { cartService } from "@/features/cart/services/cartService";
-import {useAuth} from "@/features/auth/hooks/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const DUMMY_PROMO_CODE = "MAMABEAR10";
 
@@ -74,6 +74,16 @@ export const useCartLogic = () => {
   };
 
   const handleCheckout = async () => {
+    const itemsQuery = items.map((i) => i.id).join(",");
+    const targetUrl = `/checkout?items=${itemsQuery}`;
+
+    // 1. Immediately redirect guests to login BEFORE running any validation
+    if (!isLoggedIn) {
+      router.push(`/login?callbackUrl=${encodeURIComponent(targetUrl)}`);
+      return;
+    }
+
+    // 2. Only run cart validation if the user is already authenticated
     setIsCheckingOut(true);
     try {
       const validation = await cartService.validateCart();
@@ -88,14 +98,7 @@ export const useCartLogic = () => {
         return;
       }
 
-      const itemsQuery = items.map((i) => i.id).join(",");
-      const targetUrl = `/checkout?items=${itemsQuery}`;
-
-      if (!isLoggedIn) {
-        router.push(`/login?callbackUrl=${encodeURIComponent(targetUrl)}`);
-      } else {
-        router.push(targetUrl);
-      }
+      router.push(targetUrl);
     } catch (error) {
       console.error("Validation error:", error);
       toast.error("Error", {
